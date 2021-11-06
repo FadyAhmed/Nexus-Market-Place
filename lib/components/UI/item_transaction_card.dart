@@ -1,3 +1,4 @@
+import 'package:ds_market_place/components/UI/data_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -23,13 +24,15 @@ class ItemTransactioinCard extends StatelessWidget {
     this.reason = "",
   }) : super(key: key);
 
+  final SizedBox _space = const SizedBox(height: 6);
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ListTile(
           tileColor: Theme.of(context).cardColor,
-          contentPadding: const EdgeInsets.all(16),
+          contentPadding: const EdgeInsets.all(8),
           leading: Image.asset(
             kLogo,
             fit: BoxFit.scaleDown,
@@ -60,41 +63,23 @@ class ItemTransactioinCard extends StatelessWidget {
           ),
         ),
         ListTile(
-          tileColor: Theme.of(context).cardColor,
-          title: SizedBox(
-              width: 200,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Seller: $sellerName",
-                    overflow: TextOverflow.fade,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Buyer: $buyerName",
-                    overflow: TextOverflow.fade,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                  const SizedBox(height: 10),
-                  type == "Failed"
-                      ? Text(
-                          "Reason: $reason",
-                          overflow: TextOverflow.fade,
-                          style: Theme.of(context).textTheme.subtitle1,
-                        )
-                      : const Text(""),
-                  const SizedBox(height: 10),
-                ],
-              )),
-          trailing: Text("Date: $date",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1!
-                  .copyWith(fontWeight: FontWeight.normal)),
-        ),
+            tileColor: Theme.of(context).cardColor,
+            title: SizedBox(
+                width: 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    dataText(context, "Seller", sellerName),
+                    _space,
+                    dataText(context, "Buyer", buyerName),
+                    _space,
+                    reason != ""
+                        ? dataText(context, "Reason", reason)
+                        : Container(),
+                  ],
+                )),
+            trailing: dataText(context, "Date", date)),
       ],
     );
   }

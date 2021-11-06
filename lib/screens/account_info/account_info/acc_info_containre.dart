@@ -26,9 +26,11 @@ class _AccountInfoContainerState extends State<AccountInfoContainer> {
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicatorWeight: 2.6,
                 tabs: [
-                  Tab(child: Text("Sold Items")),
-                  Tab(child: Text("Purshced Items")),
-                  Tab(child: Text("On Sale Items"))
+                  Tab(child: Text("Sold Items", textAlign: TextAlign.center)),
+                  Tab(
+                      child:
+                          Text("Purshced Items", textAlign: TextAlign.center)),
+                  Tab(child: Text("On Sale Items", textAlign: TextAlign.center))
                 ]),
           ),
           body: const TabBarView(children: [

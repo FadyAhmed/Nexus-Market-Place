@@ -33,7 +33,7 @@ class _PurshaceItemScreenState extends State<PurshaceItemScreen> {
         title: const Text("Book Name"),
         centerTitle: true,
       ),
-      body: Column(
+      body: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -52,49 +52,49 @@ class _PurshaceItemScreenState extends State<PurshaceItemScreen> {
             children: [
               tableRow("Name: ", "info", context),
               tableRow("", "", context),
-              tableRow("Name: ", "info", context),
+              tableRow("Description: ", "info", context),
               tableRow("", "", context),
-              tableRow("Name: ", "info", context),
+              tableRow("Seller: ", "info", context),
               tableRow("", "", context),
-              tableRow("Name: ", "info", context),
+              tableRow("Available amount: ", "info", context),
+              tableRow("", "", context),
+              tableRow("Price: ", "info", context),
             ],
           ),
           const SizedBox(height: 50),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Center(
-                    child: Text("Amount",
-                        style: TextStyle(
-                            color: Colors.grey.shade700, fontSize: 20))),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RoundedButton(title: "-", onPressed: _decreaseAmount),
-                    const SizedBox(width: 20),
-                    Text(
-                      amount.toString(),
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(width: 20),
-                    RoundedButton(title: "+", onPressed: _increaseAmount),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                Container(
-                    width: MediaQuery.of(context).size.width - 120,
-                    height: 45,
-                    child: RoundedButton(
-                        title: "Purshace",
-                        onPressed: () {
-                          showSnackbar(
-                              context, Text("Item purshaced succesfully"));
-                          Navigator.of(context).pop();
-                        })),
-                const SizedBox(height: 20),
-              ],
-            ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Center(
+                  child: Text("Amount",
+                      style: TextStyle(
+                          color: Colors.grey.shade700, fontSize: 20))),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RoundedButton(title: "-", onPressed: _decreaseAmount),
+                  const SizedBox(width: 20),
+                  Text(
+                    amount.toString(),
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(width: 20),
+                  RoundedButton(title: "+", onPressed: _increaseAmount),
+                ],
+              ),
+              const SizedBox(height: 15),
+              Container(
+                  width: MediaQuery.of(context).size.width - 120,
+                  height: 45,
+                  child: RoundedButton(
+                      title: "Purchase",
+                      onPressed: () {
+                        showSnackbar(
+                            context, Text("Item purchased succesfully"));
+                        Navigator.of(context).pop();
+                      })),
+              const SizedBox(height: 20),
+            ],
           )
         ],
       ),

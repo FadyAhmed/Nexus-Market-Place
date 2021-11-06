@@ -21,8 +21,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
         padding: const EdgeInsets.only(left: 8, right: 8, top: 16, bottom: 0),
         child: GridView.builder(
           itemCount: 7,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, crossAxisSpacing: 24, mainAxisSpacing: 16.0),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              childAspectRatio: (MediaQuery.of(context).size.width / 2) /
+                  (MediaQuery.of(context).size.height / 3),
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16.0),
           itemBuilder: (BuildContext context, int index) {
             return GestureDetector(
               onTap: () {
@@ -33,48 +37,52 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 );
               },
               child: Card(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset(
-                          kLogo,
-                          width: double.infinity,
-                          height: 100,
-                        ),
-                        const SizedBox(height: 10),
-                      ],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            kLogo,
+                            height: (MediaQuery.of(context).size.height / 7),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('seller name',
-                            style: Theme.of(context)
-                                .textTheme
-                                .caption!
-                                .copyWith(fontSize: 14)),
-                        const SizedBox(height: 5),
-                        Text(
-                          'Item Name',
-                          style: Theme.of(context).textTheme.bodyText1,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 5),
-                        Text('Price',
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('seller',
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption!
+                                  .copyWith(fontSize: 14)),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Item Name',
+                            style: Theme.of(context).textTheme.bodyText1,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText1),
-                      ],
-                    ),
-                  )
-                ],
-              )),
+                          ),
+                          const SizedBox(height: 5),
+                          Text('Price',
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyText1),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
             );
           },
         ),

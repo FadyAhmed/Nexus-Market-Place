@@ -5,18 +5,18 @@ import 'package:ds_market_place/components/UI/text_form_field_class.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:flutter/material.dart';
 
-class EditSaleItemDetails extends StatefulWidget {
+class EditItemDetails extends StatefulWidget {
   final onSubmit;
   final String submitButtonText;
 
-  const EditSaleItemDetails(
+  const EditItemDetails(
       {Key? key, required this.onSubmit, required this.submitButtonText})
       : super(key: key);
   @override
-  _EditSaleItemDetailsState createState() => _EditSaleItemDetailsState();
+  _EditItemDetailsState createState() => _EditItemDetailsState();
 }
 
-class _EditSaleItemDetailsState extends State<EditSaleItemDetails> {
+class _EditItemDetailsState extends State<EditItemDetails> {
   TextEditingController _name = TextEditingController();
   TextEditingController _description = TextEditingController();
   TextEditingController _amount = TextEditingController();
@@ -100,7 +100,10 @@ class _EditSaleItemDetailsState extends State<EditSaleItemDetails> {
               child: ListView(
                 children: [
                   const SizedBox(height: 5),
-                  Container(width: 150, height: 150, child: Image.asset(kLogo)),
+                  Container(
+                      width: 150,
+                      height: 150,
+                      child: Image.asset(kLogo, height: 100)),
                   Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: fields.map((e) {
@@ -124,7 +127,7 @@ class _EditSaleItemDetailsState extends State<EditSaleItemDetails> {
                         if (_formKey.currentState!.validate()) {
                           setState(() {
                             FocusScope.of(context).unfocus();
-                            
+
                             showSnackbar(
                                 context, Text("Item edited successfully"));
 

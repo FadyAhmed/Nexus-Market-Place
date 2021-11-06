@@ -1,7 +1,7 @@
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/screens/inventory/add_item_to_inventory.dart';
-import 'package:ds_market_place/screens/sale/edit_sale_item_details.dart';
+import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:flutter/material.dart';
 
 class SelectItemToSellScreen extends StatefulWidget {
@@ -61,7 +61,7 @@ class _SelectItemToInvenSellnState extends State<SelectItemToSellScreen> {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => EditSaleItemDetails(
+                            builder: (context) => EditItemDetails(
                                 submitButtonText: "Confirm",
                                 onSubmit: () {
                                   showSnackbar(

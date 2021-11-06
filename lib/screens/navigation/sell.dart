@@ -1,5 +1,5 @@
 import 'package:ds_market_place/components/UI/item_card.dart';
-import 'package:ds_market_place/screens/sale/edit_sale_item_details.dart';
+import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:ds_market_place/screens/sale/on_sale_item_details.dart';
 import 'package:ds_market_place/screens/sale/select_item_to_sell.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +35,7 @@ class _SellScreenState extends State<SellScreen> {
             onSelectMenuItem: (choice) {
               if (choice == "Edit") {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => EditSaleItemDetails(
+                  builder: (context) => EditItemDetails(
                     submitButtonText: "Edit",
                     onSubmit: () => {
                       //TODO: add edit habdler

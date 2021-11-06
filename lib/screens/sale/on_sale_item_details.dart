@@ -2,7 +2,7 @@ import 'package:ds_market_place/components/UI/table_row.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
-import 'edit_sale_item_details.dart';
+import '../edit_item_details.dart';
 
 class OnSaleItemDetailsScreen extends StatefulWidget {
   const OnSaleItemDetailsScreen({Key? key}) : super(key: key);
@@ -27,7 +27,10 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset(kLogo),
+                Image.asset(
+                  kLogo,
+                  height: 100,
+                ),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -38,7 +41,7 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                           onPressed: () => {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => EditSaleItemDetails(
+                                builder: (context) => EditItemDetails(
                                   onSubmit: () {
                                     Navigator.of(context).pop();
                                   },

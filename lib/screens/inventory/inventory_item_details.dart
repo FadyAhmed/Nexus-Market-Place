@@ -1,5 +1,5 @@
 import 'package:ds_market_place/components/UI/table_row.dart';
-import 'package:ds_market_place/screens/inventory/edit_inventory_item_details.dart';
+import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -28,7 +28,10 @@ class _InventoryItemDetailsScreenState
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset(kLogo),
+                Image.asset(
+                  kLogo,
+                  height: 100,
+                ),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -39,8 +42,13 @@ class _InventoryItemDetailsScreenState
                           onPressed: () => {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    EditInventoryitemDetails(),
+                                builder: (context) => EditItemDetails(
+                                  submitButtonText: "Edit",
+                                  onSubmit: () => {
+                                    //TODO: add edit habdler
+                                    Navigator.of(context).pop()
+                                  },
+                                ),
                               ),
                             )
                           },

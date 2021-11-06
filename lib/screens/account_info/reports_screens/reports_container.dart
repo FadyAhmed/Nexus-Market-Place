@@ -21,6 +21,7 @@ class _ReportScreenContainerState extends State<ReportScreenContainer> {
           child: Center(
             child: Text(
               title,
+              textAlign: TextAlign.center,
               style: headingStyle,
             ),
           ),

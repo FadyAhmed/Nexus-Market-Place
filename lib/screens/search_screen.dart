@@ -1,7 +1,7 @@
 import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/screens/account_info/account_info/purshaced_items.dart';
-import 'package:ds_market_place/screens/sale/edit_sale_item_details.dart';
+import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:ds_market_place/screens/sale/on_sale_item_details.dart';
 import 'package:flutter/material.dart';
 
@@ -112,7 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                               Navigator.of(context)
                                                   .push(MaterialPageRoute(
                                                 builder: (context) =>
-                                                    EditSaleItemDetails(
+                                                    EditItemDetails(
                                                   submitButtonText: "Edit",
                                                   onSubmit: () => {
                                                     //TODO: add edit habdler

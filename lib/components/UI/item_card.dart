@@ -1,3 +1,4 @@
+import 'package:ds_market_place/components/UI/data_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -50,11 +51,7 @@ class ItemCard extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.normal))
                   : Container(),
               sellerName != "" ? const SizedBox(height: 4) : Container(),
-              Text("Amount: " + amount,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(fontWeight: FontWeight.normal)),
+              dataText(context, "Amount", amount),
             ],
           ),
           trailing: Row(
