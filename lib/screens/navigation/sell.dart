@@ -1,6 +1,6 @@
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
-import 'package:ds_market_place/screens/sale/on_sale_item_details.dart';
+import 'package:ds_market_place/screens/seller_item_details.dart';
 import 'package:ds_market_place/screens/sale/select_item_to_sell.dart';
 import 'package:flutter/material.dart';
 
