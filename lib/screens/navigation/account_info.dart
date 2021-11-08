@@ -46,20 +46,14 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
               color: Theme.of(context).primaryColor,
               child: Row(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.green,
-                    ),
-                  ),
+                  const SizedBox(width: 16),
                   Expanded(
                       child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Zoad",
+                        "Ziad",
                         style: Theme.of(context).textTheme.headline5,
                       ),
                       const SizedBox(height: 5),

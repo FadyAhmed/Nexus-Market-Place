@@ -32,7 +32,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => PurshaceItemScreen(),
+                    builder: (context) => PurchaseItemScreen(),
                   ),
                 );
               },
@@ -47,6 +47,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          const SizedBox(height: 8),
                           Image.asset(
                             kLogo,
                             height: (MediaQuery.of(context).size.height / 7),

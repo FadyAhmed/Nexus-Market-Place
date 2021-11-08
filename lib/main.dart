@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Market Place',
       theme: ThemeData(
           primarySwatch: Colors.yellow,
@@ -40,8 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      child: //WelcomeScreen()
-          WelcomeScreen(),
+      child: WelcomeScreen(),
       onWillPop: () async {
         return ourDialog(
             context: context,

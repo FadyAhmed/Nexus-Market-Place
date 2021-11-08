@@ -56,7 +56,7 @@ class _MarketHomePageState extends State<MarketHomePage> {
               leading: Image.asset(kLogo),
               centerTitle: true,
               title: Text(
-                  "${selectedIndex == 0 ? "MarketPlace" : selectedIndex == 1 ? "Sell" : selectedIndex == 2 ? "Inventory" : selectedIndex == 3 ? "Account info" : ""}"),
+                  "${selectedIndex == 0 ? "Marketplace" : selectedIndex == 1 ? "On Sale Items" : selectedIndex == 2 ? "Inventory" : selectedIndex == 3 ? "Account info" : ""}"),
               actions: [
                 IconButton(
                     onPressed: () => {

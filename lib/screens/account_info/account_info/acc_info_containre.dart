@@ -35,7 +35,7 @@ class _AccountInfoContainerState extends State<AccountInfoContainer> {
           ),
           body: const TabBarView(children: [
             Tab(child: SoldItemsScreen()),
-            Tab(child: PurshacedItemsScreen()),
+            Tab(child: PurchasedItemsScreen()),
             Tab(child: OnSaleItemsScreen())
           ])),
     );

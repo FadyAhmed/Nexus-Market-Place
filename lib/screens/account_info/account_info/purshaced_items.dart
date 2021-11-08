@@ -1,14 +1,14 @@
 import 'package:ds_market_place/components/UI/detailed_item_card.dart';
 import 'package:flutter/material.dart';
 
-class PurshacedItemsScreen extends StatefulWidget {
-  const PurshacedItemsScreen({Key? key}) : super(key: key);
+class PurchasedItemsScreen extends StatefulWidget {
+  const PurchasedItemsScreen({Key? key}) : super(key: key);
 
   @override
-  _PurshacedItemsScreenState createState() => _PurshacedItemsScreenState();
+  _PurchasedItemsScreenState createState() => _PurchasedItemsScreenState();
 }
 
-class _PurshacedItemsScreenState extends State<PurshacedItemsScreen> {
+class _PurchasedItemsScreenState extends State<PurchasedItemsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

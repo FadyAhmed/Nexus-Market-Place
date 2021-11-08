@@ -4,14 +4,14 @@ import 'package:ds_market_place/components/UI/table_row.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:flutter/material.dart';
 
-class PurshaceItemScreen extends StatefulWidget {
-  const PurshaceItemScreen({Key? key}) : super(key: key);
+class PurchaseItemScreen extends StatefulWidget {
+  const PurchaseItemScreen({Key? key}) : super(key: key);
 
   @override
-  _PurshaceItemScreenState createState() => _PurshaceItemScreenState();
+  _PurchaseItemScreenState createState() => _PurchaseItemScreenState();
 }
 
-class _PurshaceItemScreenState extends State<PurshaceItemScreen> {
+class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
   // this is dummy
   int amount = 0;
   void _increaseAmount() {
