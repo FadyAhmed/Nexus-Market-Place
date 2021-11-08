@@ -69,7 +69,7 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
           ),
           const SizedBox(height: 40),
           Table(
-            border: TableBorder.all(),
+            //border: TableBorder.all(),
             children: [
               tableRow("Name: ", "book", context),
               tableRow("", "", context),
