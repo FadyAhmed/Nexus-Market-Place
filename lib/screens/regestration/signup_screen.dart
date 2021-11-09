@@ -33,21 +33,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
           hint: 'Enter first name',
           label: "First name*",
           validator: (String? text) {
-            if (text != null && text.isEmpty) return 'Empty Name';
+            if (text != null && text.isEmpty) return 'Empty';
           }),
       KFormField(
           controller: _lastName,
           hint: 'Enter Last Name',
           label: "Last Name*",
           validator: (text) {
-            if (text != null && text.isEmpty) return 'Empty Name';
+            if (text != null && text.isEmpty) return 'Empty';
+          }),
+      KFormField(
+          controller: _lastName,
+          hint: 'Enter Store Name',
+          label: "Store Name*",
+          validator: (text) {
+            if (text != null && text.isEmpty) return 'Empty';
           }),
       KFormField(
           controller: _userName,
           hint: 'Enter user name',
           label: "Username*",
           validator: (text) {
-            if (text != null && text.isEmpty) return 'Empty Name';
+            if (text != null && text.isEmpty) return 'Empty';
           }),
       KFormField(
           textInputType: TextInputType.emailAddress,
@@ -55,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           hint: 'Enter email',
           label: "Email*",
           validator: (text) => (text != null && text.isEmpty)
-              ? 'Empty Email'
+              ? 'Empty'
               : text == _confirmEmail.text
                   ? null
                   : 'Emails not matching'),
@@ -65,7 +72,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           hint: 'Confirm your email',
           label: "Email confirm*",
           validator: (text) => text != null && text.isEmpty
-              ? 'Empty Email'
+              ? 'Empty'
               : text == _email.text
                   ? null
                   : 'Emails not matching'),

@@ -2,6 +2,7 @@ import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/table_row.dart';
 import 'package:ds_market_place/constants.dart';
+import 'package:ds_market_place/screens/explore/store_items.dart';
 import 'package:flutter/material.dart';
 
 class PurchaseItemScreen extends StatefulWidget {
@@ -13,7 +14,7 @@ class PurchaseItemScreen extends StatefulWidget {
 
 class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
   // this is dummy
-  int amount = 0;
+  int amount = 1;
   void _increaseAmount() {
     setState(() {
       amount++;
@@ -22,7 +23,7 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
 
   void _decreaseAmount() {
     setState(() {
-      if (amount - 1 >= 0) amount--;
+      if (amount - 1 >= 1) amount--;
     });
   }
 
@@ -54,7 +55,30 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
               tableRow("", "", context),
               tableRow("Description: ", "hard cover", context),
               tableRow("", "", context),
-              tableRow("Seller: ", "fady", context),
+              TableRow(children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 35.0),
+                  child: Text("Seller",
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption!
+                          .copyWith(fontSize: 18)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (ctx) => StoreDetailsScreen(
+                                storeName: "Tawheed wel noor",
+                              )));
+                    },
+                    child: Text("Tawheed wel noor",
+                        style: const TextStyle(
+                            fontSize: 18, color: Colors.blueGrey)),
+                  ),
+                ),
+              ]),
               tableRow("", "", context),
               tableRow("Available amount: ", "4", context),
               tableRow("", "", context),
@@ -91,6 +115,18 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                       onPressed: () {
                         showSnackbar(
                             context, Text("Item purchased succesfully"));
+                        Navigator.of(context).pop();
+                      })),
+              const SizedBox(height: 20),
+              Container(
+                  width: MediaQuery.of(context).size.width - 120,
+                  height: 45,
+                  child: RoundedButton(
+                      color: Colors.orange,
+                      title: "Add To My Store",
+                      onPressed: () {
+                        showSnackbar(context,
+                            Text("Item added to your store succesfully"));
                         Navigator.of(context).pop();
                       })),
               const SizedBox(height: 20),

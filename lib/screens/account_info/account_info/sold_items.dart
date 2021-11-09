@@ -21,7 +21,7 @@ class _SoldItemsScreenState extends State<SoldItemsScreen> {
               itemName: "Book",
               price: 15,
               type: "SOLD",
-              name: "Fado Ahemd",
+              name: "Name",
               date: "9/9/2020",
             )),
       ),

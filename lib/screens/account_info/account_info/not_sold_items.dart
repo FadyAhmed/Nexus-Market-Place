@@ -18,10 +18,11 @@ class _OnSaleItemsScreenState extends State<OnSaleItemsScreen> {
         itemBuilder: (context, index) => Padding(
           padding: const EdgeInsets.all(8.0),
           child: ItemCard(
+            menuItems: ["Edit", "Remove"],
             itemName: "item name",
             amount: "11",
             price: 15,
-            onPressed: () => {},
+            onPressed: null,
             onSelectMenuItem: (choice) {
               if (choice == "Edit") {
                 Navigator.of(context).push(MaterialPageRoute(

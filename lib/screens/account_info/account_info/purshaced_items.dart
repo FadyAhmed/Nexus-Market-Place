@@ -21,7 +21,7 @@ class _PurchasedItemsScreenState extends State<PurchasedItemsScreen> {
               itemName: "Book",
               price: 15,
               type: "PURSHACED",
-              name: "Fado Ahemd",
+              name: "Name",
               date: "9/9/2020",
             )),
       ),

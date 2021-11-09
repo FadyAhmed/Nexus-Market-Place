@@ -3,7 +3,7 @@ import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/screens/navigation/account_info.dart';
 import 'package:ds_market_place/screens/navigation/explore.dart';
 import 'package:ds_market_place/screens/navigation/inventory.dart';
-import 'package:ds_market_place/screens/navigation/sell.dart';
+import 'package:ds_market_place/screens/navigation/store.dart';
 import 'package:ds_market_place/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 

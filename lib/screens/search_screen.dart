@@ -96,6 +96,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           );
                                         },
                                         child: ItemCard(
+                                          menuItems: ["Edit", "Remove"],
                                           sellerName: "FATOO",
                                           showActions: false,
                                           itemName: "item name",

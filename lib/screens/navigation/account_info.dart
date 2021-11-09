@@ -17,7 +17,7 @@ ListTile itemTile(BuildContext context,
     {required String title, required IconData icon, required handler}) {
   return ListTile(
       onTap: handler,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 8),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8),
       leading: Icon(
         icon,
         size: 33,
@@ -41,7 +41,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(150),
             child: Container(
-              padding: const EdgeInsets.only(top: 16),
+              padding: const EdgeInsets.only(top: 16, left: 25),
               height: 130,
               color: Theme.of(context).primaryColor,
               child: Row(
@@ -74,40 +74,43 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                 ],
               ),
             )),
-        body: ListView(
-          children: [
-            itemTile(
-              context,
-              title: "Account Info",
-              icon: Icons.account_box,
-              handler: () => {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (ctx) => AccountInfoContainer()))
-              },
-            ),
-            itemTile(context,
-                title: "Inventory",
-                icon: Icons.window,
-                handler: widget.navToInventoryScreen),
-            itemTile(
-              context,
-              title: "Wallet",
-              icon: Icons.account_balance_wallet_outlined,
-              handler: () => {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (ctx) => WalletScreen()))
-              },
-            ),
-            itemTile(
-              context,
-              title: "Reports",
-              icon: Icons.description,
-              handler: () => {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (ctx) => ReportScreenContainer()))
-              },
-            )
-          ],
+        body: Padding(
+          padding: const EdgeInsets.only(left: 40.0),
+          child: ListView(
+            children: [
+              itemTile(
+                context,
+                title: "Account Info",
+                icon: Icons.account_box,
+                handler: () => {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (ctx) => AccountInfoContainer()))
+                },
+              ),
+              itemTile(context,
+                  title: "Inventory",
+                  icon: Icons.window,
+                  handler: widget.navToInventoryScreen),
+              itemTile(
+                context,
+                title: "Wallet",
+                icon: Icons.account_balance_wallet_outlined,
+                handler: () => {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (ctx) => WalletScreen()))
+                },
+              ),
+              itemTile(
+                context,
+                title: "Reports",
+                icon: Icons.description,
+                handler: () => {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (ctx) => ReportScreenContainer()))
+                },
+              )
+            ],
+          ),
         ));
   }
 }

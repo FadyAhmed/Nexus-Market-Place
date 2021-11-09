@@ -61,7 +61,7 @@ class _MyBottomNavBarState extends State<MyBottomNavBar> {
             selectedItemColor),
         _bottomItemContainer(
             Text(
-              "Sell",
+              "Store",
               style: _textStyle(widget.currentIndex),
             ),
             1,

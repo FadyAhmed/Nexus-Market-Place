@@ -54,6 +54,7 @@ class _SelectItemToInvenSellnState extends State<SelectItemToSellScreen> {
               itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ItemCard(
+                      menuItems: ["Edit", "Remove"],
                       itemName: "item name",
                       amount: "11",
                       price: 15,

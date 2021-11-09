@@ -26,6 +26,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
           itemBuilder: (context, index) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: ItemCard(
+                  menuItems: ["Edit", "Remove"],
                   onSelectMenuItem: (choice) {
                     if (choice == "Edit") {
                       print(choice);

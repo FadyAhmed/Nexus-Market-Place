@@ -1,7 +1,7 @@
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
-import 'package:ds_market_place/screens/sale/select_item_to_sell.dart';
+import 'package:ds_market_place/screens/store/select_item_to_sell.dart';
 import 'package:flutter/material.dart';
 
 class SellScreen extends StatefulWidget {
@@ -25,6 +25,8 @@ class _SellScreenState extends State<SellScreen> {
         itemBuilder: (context, index) => Padding(
           padding: const EdgeInsets.all(8.0),
           child: ItemCard(
+            // put another value to get it in menu
+            menuItems: index % 2 == 0 ? ["Edit"] : ["Edit", "Remove"],
             itemName: "item name",
             amount: "11",
             price: 15,
