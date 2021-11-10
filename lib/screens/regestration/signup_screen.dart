@@ -2,6 +2,7 @@ import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
+import 'package:ds_market_place/screens/regestration/signin_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -70,7 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           controller: _confirmEmail,
           textInputType: TextInputType.emailAddress,
           hint: 'Confirm your email',
-          label: "Email confirm*",
+          label: "Confirm Email*",
           validator: (text) => text != null && text.isEmpty
               ? 'Empty'
               : text == _email.text
@@ -156,13 +157,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         _loading
                             ? loading()
                             : Center(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: RoundedButton(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      RoundedButton(
                                         onPressed: () {
                                           _formKey.currentState!.validate();
                                           Navigator.of(context)
@@ -176,8 +177,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         },
                                         title: 'Sign up',
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(height: 15),
+                                      Center(
+                                          child: Text(
+                                        "OR",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6!
+                                            .copyWith(fontSize: 16),
+                                      )),
+                                      SizedBox(height: 15),
+                                      RoundedButton(
+                                          title: 'Log In',
+                                          onPressed: () => Navigator.of(context)
+                                                  .pushReplacement(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SignInScreen()),
+                                              )),
+                                    ],
+                                  ),
                                 ),
                               )
                       ],

@@ -58,11 +58,10 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
               TableRow(children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 35.0),
-                  child: Text("Seller",
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption!
-                          .copyWith(fontSize: 18)),
+                  child: Text("Seller: ",
+                      style: Theme.of(context).textTheme.caption!.copyWith(
+                            fontSize: 18,
+                          )),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
@@ -74,8 +73,10 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                               )));
                     },
                     child: Text("Tawheed wel noor",
-                        style: const TextStyle(
-                            fontSize: 18, color: Colors.blueGrey)),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Color(0xFF487E89),
+                            fontWeight: FontWeight.w700)),
                   ),
                 ),
               ]),

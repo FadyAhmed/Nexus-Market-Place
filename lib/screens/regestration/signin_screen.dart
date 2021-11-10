@@ -3,6 +3,7 @@ import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/screens/home_page_screen.dart';
+import 'package:ds_market_place/screens/regestration/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -70,13 +71,13 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: RoundedButton(
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RoundedButton(
                               onPressed: () {
                                 Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
@@ -85,8 +86,25 @@ class _SignInScreenState extends State<SignInScreen> {
                               },
                               title: 'Log in',
                             ),
-                          ),
-                        ],
+                            SizedBox(height: 15),
+                            Center(
+                                child: Text(
+                              "OR",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6!
+                                  .copyWith(fontSize: 16),
+                            )),
+                            SizedBox(height: 15),
+                            RoundedButton(
+                                title: 'Register',
+                                onPressed: () =>
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) => SignUpScreen()),
+                                    )),
+                          ],
+                        ),
                       ),
                     ],
                   ),
