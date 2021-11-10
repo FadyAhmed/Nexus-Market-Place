@@ -1,4 +1,4 @@
-import 'package:ds_market_place/screens/account_info/reports_screens/failed_transactions.dart';
+import 'package:ds_market_place/screens/account_info/reports_screens/system_users_list.dart';
 import 'package:ds_market_place/screens/account_info/reports_screens/system_transactions.dart';
 import 'package:flutter/material.dart';
 
@@ -46,8 +46,7 @@ class _ReportScreenContainerState extends State<ReportScreenContainer> {
               card("View System Transactions", headingStyle,
                   SystemTransactionsScreen()),
               const SizedBox(height: 16),
-              card("Failed Transactions", headingStyle,
-                  SystemFailedTransactionsScreen()),
+              card("View System Users", headingStyle, UsersListScreen()),
             ],
           ),
         ));
