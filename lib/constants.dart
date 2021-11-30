@@ -32,4 +32,4 @@ const kListTileMargin = EdgeInsets.all(8);
 const kUserPlaceholder = AssetImage('assets/images/user.png');
 const kLibraryPlaceholder = AssetImage('assets/images/library.png');
 const kItemPlaceholder = AssetImage('assets/images/book.png');
-const kLogo = 'assets/images/app-logo1.png';
+const kLogo = 'assets/images/logo.png';

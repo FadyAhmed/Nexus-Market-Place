@@ -27,19 +27,19 @@ class _MyBottomNavBarState extends State<MyBottomNavBar> {
   }
 
   BottomNavigationBarItem _bottomItemContainer(
-      String title, int index, var selectedItemColor) {
+      Widget title, int index, var selectedItemColor) {
     return BottomNavigationBarItem(
       tooltip: '',
-      icon: Container(
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-            color:
-                widget.currentIndex == index ? selectedItemColor : Colors.white,
-            borderRadius: const BorderRadius.all(Radius.elliptical(5, 20))),
-        child: Text(
-          title,
-          style: _textStyle(index),
-        ),
+      icon: FittedBox(
+        child: Container(
+            padding: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+                color: widget.currentIndex == index
+                    ? selectedItemColor
+                    : Colors.transparent,
+                borderRadius:
+                    const BorderRadius.all(Radius.elliptical(20, 20))),
+            child: title),
       ),
       label: "",
     );
@@ -49,28 +49,37 @@ class _MyBottomNavBarState extends State<MyBottomNavBar> {
   Widget build(BuildContext context) {
     var selectedItemColor = Theme.of(context).primaryColor;
     return BottomNavigationBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      type: BottomNavigationBarType.shifting,
+      elevation: 5,
+      type: BottomNavigationBarType.fixed,
       items: <BottomNavigationBarItem>[
-        _bottomItemContainer("Explore", 0, selectedItemColor),
-        _bottomItemContainer("Sell", 1, selectedItemColor),
-        _bottomItemContainer("Inventory", 2, selectedItemColor),
-        BottomNavigationBarItem(
-            tooltip: '',
-            icon: Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                    color: widget.currentIndex == 3
-                        ? selectedItemColor
-                        : Colors.white,
-                    borderRadius:
-                        const BorderRadius.all(Radius.elliptical(5, 20))),
-                child: const Icon(
-                  Icons.menu,
-                  color: selectedItemTextColor,
-                )),
-            label: ""),
+        _bottomItemContainer(
+            Text(
+              "Explore",
+              style: _textStyle(widget.currentIndex),
+            ),
+            0,
+            selectedItemColor),
+        _bottomItemContainer(
+            Text(
+              "Store",
+              style: _textStyle(widget.currentIndex),
+            ),
+            1,
+            selectedItemColor),
+        _bottomItemContainer(
+            Text(
+              "Inventory",
+              style: _textStyle(widget.currentIndex),
+            ),
+            2,
+            selectedItemColor),
+        _bottomItemContainer(
+            const Icon(
+              Icons.menu,
+              color: selectedItemTextColor,
+            ),
+            3,
+            selectedItemColor),
       ],
       currentIndex: widget.currentIndex,
       onTap: (index) => widget.onItemTapped(index),

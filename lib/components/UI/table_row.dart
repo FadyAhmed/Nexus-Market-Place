@@ -7,6 +7,9 @@ TableRow tableRow(String title, String info, BuildContext context) {
       child: Text(title,
           style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 18)),
     ),
-    Text(info, style: const TextStyle(fontSize: 18)),
+    Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: Text(info, style: const TextStyle(fontSize: 18)),
+    ),
   ]);
 }

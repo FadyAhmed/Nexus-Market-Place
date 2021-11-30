@@ -1,8 +1,8 @@
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/screens/inventory/add_item_to_inventory.dart';
-import 'package:ds_market_place/screens/inventory/edit_inventory_item_details.dart';
-import 'package:ds_market_place/screens/sale/on_sale_item_details.dart';
+import 'package:ds_market_place/screens/edit_item_details.dart';
+import 'package:ds_market_place/screens/seller_item_details.dart';
 import 'package:flutter/material.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -26,10 +26,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
           itemBuilder: (context, index) => Padding(
               padding: const EdgeInsets.all(8.0),
               child: ItemCard(
+                  menuItems: ["Edit", "Remove"],
                   onSelectMenuItem: (choice) {
                     if (choice == "Edit") {
+                      print(choice);
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => EditInventoryitemDetails(),
+                        builder: (context) => EditItemDetails(
+                          submitButtonText: "Edit",
+                          onSubmit: () => {
+                            //TODO: add edit habdler
+                            Navigator.of(context).pop()
+                          },
+                        ),
                       ));
                     } else {
                       //TODO: remove handler

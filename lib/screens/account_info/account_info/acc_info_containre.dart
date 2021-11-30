@@ -1,7 +1,7 @@
-import 'package:ds_market_place/screens/account_info/account_info/on_sale_items.dart';
+import 'package:ds_market_place/screens/account_info/account_info/not_sold_items.dart';
 import 'package:ds_market_place/screens/account_info/account_info/purshaced_items.dart';
 import 'package:ds_market_place/screens/account_info/account_info/sold_items.dart';
-import 'package:ds_market_place/screens/sale/on_sale_item_details.dart';
+import 'package:ds_market_place/screens/seller_item_details.dart';
 import 'package:flutter/material.dart';
 
 class AccountInfoContainer extends StatefulWidget {
@@ -26,14 +26,18 @@ class _AccountInfoContainerState extends State<AccountInfoContainer> {
                 indicatorSize: TabBarIndicatorSize.tab,
                 indicatorWeight: 2.6,
                 tabs: [
-                  Tab(child: Text("Sold Items")),
-                  Tab(child: Text("Purshced Items")),
-                  Tab(child: Text("On Sale Items"))
+                  Tab(child: Text("Sold Items", textAlign: TextAlign.center)),
+                  Tab(
+                      child:
+                          Text("Purshced Items", textAlign: TextAlign.center)),
+                  Tab(
+                      child:
+                          Text("Items Not Sold", textAlign: TextAlign.center))
                 ]),
           ),
           body: const TabBarView(children: [
             Tab(child: SoldItemsScreen()),
-            Tab(child: PurshacedItemsScreen()),
+            Tab(child: PurchasedItemsScreen()),
             Tab(child: OnSaleItemsScreen())
           ])),
     );

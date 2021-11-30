@@ -5,18 +5,19 @@ import 'package:ds_market_place/components/UI/text_form_field_class.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:flutter/material.dart';
 
-class EditSaleItemDetails extends StatefulWidget {
+class ConfirmItemToSellScreen extends StatefulWidget {
   final onSubmit;
   final String submitButtonText;
 
-  const EditSaleItemDetails(
+  const ConfirmItemToSellScreen(
       {Key? key, required this.onSubmit, required this.submitButtonText})
       : super(key: key);
   @override
-  _EditSaleItemDetailsState createState() => _EditSaleItemDetailsState();
+  _ConfirmItemToSellScreenState createState() =>
+      _ConfirmItemToSellScreenState();
 }
 
-class _EditSaleItemDetailsState extends State<EditSaleItemDetails> {
+class _ConfirmItemToSellScreenState extends State<ConfirmItemToSellScreen> {
   TextEditingController _name = TextEditingController();
   TextEditingController _description = TextEditingController();
   TextEditingController _amount = TextEditingController();
@@ -38,14 +39,6 @@ class _EditSaleItemDetailsState extends State<EditSaleItemDetails> {
   Widget build(BuildContext context) {
     List<KFormField> fields = [
       KFormField(
-          controller: _name,
-          hint: 'Item Name',
-          label: "Name",
-          obsecure: false,
-          validator: (text) {
-            if (text == null || text.isEmpty) return 'Empty';
-          }),
-      KFormField(
           controller: _amount,
           hint: 'Enter amount ',
           label: "Amount",
@@ -65,22 +58,6 @@ class _EditSaleItemDetailsState extends State<EditSaleItemDetails> {
               : double.tryParse(s) == null
                   ? 'Not A Number!'
                   : null),
-      KFormField(
-          controller: _description,
-          hint: 'Enter description',
-          label: "Description",
-          obsecure: false,
-          validator: (text) {
-            return (text!.isEmpty) ? 'Empty' : null;
-          }),
-      KFormField(
-          controller: _imageLink,
-          hint: 'Image Link',
-          label: "Image Link",
-          obsecure: false,
-          validator: (text) {
-            if (text == null || text.isEmpty) return 'Empty';
-          }),
     ];
 
     return Scaffold(
@@ -100,7 +77,10 @@ class _EditSaleItemDetailsState extends State<EditSaleItemDetails> {
               child: ListView(
                 children: [
                   const SizedBox(height: 5),
-                  Container(width: 150, height: 150, child: Image.asset(kLogo)),
+                  Container(
+                      width: 150,
+                      height: 150,
+                      child: Image.asset(kLogo, height: 100)),
                   Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: fields.map((e) {
@@ -124,7 +104,7 @@ class _EditSaleItemDetailsState extends State<EditSaleItemDetails> {
                         if (_formKey.currentState!.validate()) {
                           setState(() {
                             FocusScope.of(context).unfocus();
-                            
+
                             showSnackbar(
                                 context, Text("Item edited successfully"));
 

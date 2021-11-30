@@ -1,3 +1,4 @@
+import 'package:ds_market_place/components/UI/data_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -9,6 +10,7 @@ class ItemCard extends StatelessWidget {
   final int price;
   final onPressed;
   final onSelectMenuItem;
+  final List<String>? menuItems;
   final bool showActions;
   const ItemCard(
       {Key? key,
@@ -18,7 +20,8 @@ class ItemCard extends StatelessWidget {
       required this.onPressed,
       this.showActions = true,
       this.onSelectMenuItem,
-      this.sellerName = ""})
+      this.sellerName = "",
+      this.menuItems})
       : super(key: key);
 
   @override
@@ -50,11 +53,7 @@ class ItemCard extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.normal))
                   : Container(),
               sellerName != "" ? const SizedBox(height: 4) : Container(),
-              Text("Amount: " + amount,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(fontWeight: FontWeight.normal)),
+              dataText(context, "Amount", amount),
             ],
           ),
           trailing: Row(
@@ -66,16 +65,14 @@ class ItemCard extends StatelessWidget {
                       .bodyText1!
                       .copyWith(fontWeight: FontWeight.normal)),
               const SizedBox(width: 0),
-              showActions
+              showActions && menuItems != null
                   ? PopupMenuButton<String>(
                       onSelected: onSelectMenuItem,
                       itemBuilder: (BuildContext context) {
-                        return [
-                          const PopupMenuItem<String>(
-                              value: "Edit", child: Text('Edit')),
-                          const PopupMenuItem<String>(
-                              value: "Remove", child: Text('Remove'))
-                        ];
+                        return menuItems!.map((item) {
+                          return PopupMenuItem<String>(
+                              value: item, child: Text(item));
+                        }).toList();
                       },
                     )
                   : Container(),

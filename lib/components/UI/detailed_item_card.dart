@@ -1,3 +1,4 @@
+import 'package:ds_market_place/components/UI/data_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -41,11 +42,7 @@ class DetailedItemCard extends StatelessWidget {
                       .headline6!
                       .copyWith(fontWeight: FontWeight.normal)),
               const SizedBox(height: 4),
-              Text("Amount: " + amount,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle1!
-                      .copyWith(fontWeight: FontWeight.normal)),
+              dataText(context, "Amount", amount)
             ],
           ),
           trailing: Row(
@@ -68,18 +65,11 @@ class DetailedItemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    (type == "SOLD" ? "Buyer: " : "Seller: ") + "$name",
-                    overflow: TextOverflow.fade,
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
+                  dataText(
+                      context, (type == "SOLD" ? "Buyer" : "Seller"), name),
                 ],
               )),
-          trailing: Text("Date: $date",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText1!
-                  .copyWith(fontWeight: FontWeight.normal)),
+          trailing: dataText(context, "Date", date),
         ),
       ],
     );

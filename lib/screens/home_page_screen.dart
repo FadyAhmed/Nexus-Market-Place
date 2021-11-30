@@ -3,7 +3,7 @@ import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/screens/navigation/account_info.dart';
 import 'package:ds_market_place/screens/navigation/explore.dart';
 import 'package:ds_market_place/screens/navigation/inventory.dart';
-import 'package:ds_market_place/screens/navigation/sell.dart';
+import 'package:ds_market_place/screens/navigation/store.dart';
 import 'package:ds_market_place/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +56,7 @@ class _MarketHomePageState extends State<MarketHomePage> {
               leading: Image.asset(kLogo),
               centerTitle: true,
               title: Text(
-                  "${selectedIndex == 0 ? "MarketPlace" : selectedIndex == 1 ? "Sell" : selectedIndex == 2 ? "Inventory" : selectedIndex == 3 ? "Account info" : ""}"),
+                  "${selectedIndex == 0 ? "Marketplace" : selectedIndex == 1 ? "On Sale Items" : selectedIndex == 2 ? "Inventory" : selectedIndex == 3 ? "Account info" : ""}"),
               actions: [
                 IconButton(
                     onPressed: () => {

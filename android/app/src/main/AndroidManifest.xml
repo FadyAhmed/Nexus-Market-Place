@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ds_market_place">
    <application
-        android:label="ds_market_place"
-        android:icon="@mipmap/ic_launcher">
+        android:label="Nexus Marketplace"
+        android:icon="@mipmap/logo">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

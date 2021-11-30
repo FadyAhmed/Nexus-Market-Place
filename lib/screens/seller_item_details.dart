@@ -1,19 +1,18 @@
 import 'package:ds_market_place/components/UI/table_row.dart';
-import 'package:ds_market_place/screens/inventory/edit_inventory_item_details.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
+import '../constants.dart';
+import 'edit_item_details.dart';
 
-class InventoryItemDetailsScreen extends StatefulWidget {
-  const InventoryItemDetailsScreen({Key? key}) : super(key: key);
+class OnSaleItemDetailsScreen extends StatefulWidget {
+  const OnSaleItemDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  _InventoryItemDetailsScreenState createState() =>
-      _InventoryItemDetailsScreenState();
+  _OnSaleItemDetailsScreenState createState() =>
+      _OnSaleItemDetailsScreenState();
 }
 
-class _InventoryItemDetailsScreenState
-    extends State<InventoryItemDetailsScreen> {
+class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +27,10 @@ class _InventoryItemDetailsScreenState
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset(kLogo),
+                Image.asset(
+                  kLogo,
+                  height: 100,
+                ),
                 Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -39,8 +41,12 @@ class _InventoryItemDetailsScreenState
                           onPressed: () => {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    EditInventoryitemDetails(),
+                                builder: (context) => EditItemDetails(
+                                  onSubmit: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  submitButtonText: "Edit",
+                                ),
                               ),
                             )
                           },
@@ -63,14 +69,15 @@ class _InventoryItemDetailsScreenState
           ),
           const SizedBox(height: 40),
           Table(
+            //border: TableBorder.all(),
             children: [
-              tableRow("Name: ", "info", context),
+              tableRow("Name: ", "book", context),
               tableRow("", "", context),
-              tableRow("Name: ", "info", context),
+              tableRow("Description: ", "hard cover", context),
               tableRow("", "", context),
-              tableRow("Name: ", "info", context),
+              tableRow("Available amount: ", "4", context),
               tableRow("", "", context),
-              tableRow("Name: ", "info", context),
+              tableRow("Price: ", "\$10", context),
             ],
           ),
           const SizedBox(height: 50),

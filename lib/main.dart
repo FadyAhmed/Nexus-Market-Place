@@ -32,11 +32,12 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Market Place',
-        theme: ThemeData(
-            primarySwatch: Colors.yellow,
-            scaffoldBackgroundColor: const Color(0xFFD6D6D6)),
-        home: const MyHomePage(title: 'Market Place'),
+      debugShowCheckedModeBanner: false,
+      title: 'Market Place',
+      theme: ThemeData(
+          primarySwatch: Colors.yellow,
+          scaffoldBackgroundColor: const Color(0xFFD6D6D6)),
+      home: const MyHomePage(title: 'Market Place'),
       ),
     );
   }
