@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/models/login.dart';
 import 'package:ds_market_place/models/signup.dart';
 import 'package:http/http.dart' as http;
 import 'package:ds_market_place/constants/routes_constants.dart';
@@ -12,11 +14,19 @@ class AuthenticationWebService {
 
   AuthenticationWebService({required this.client});
 
-  Future<AuthenticationModel> signIn(String email, String password) async {
+  Future<String> signIn(Login loginData) async {
     http.Response response =
-        await client.get(Uri.parse(RoutesConstants.signIn));
-    // if (response.statusCode != 200) throw ServerException();
-    return AuthenticationModel.fromJson(jsonDecode(response.body));
+        await client.post(
+      Uri.parse(RoutesConstants.signIn),
+      body: jsonEncode(loginData.toJson()),
+      headers: {'Content-type': 'application/json'},
+    );
+    var body = jsonDecode(response.body);
+    if (!body['success']) {
+      print('authentication: login: error');
+      throw ServerException(generateErrorMessage(body));
+    }
+    return body['token'];
   }
 
   Future<bool> signUp(Signup signupData) async {

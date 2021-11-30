@@ -1,5 +1,6 @@
 import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/models/login.dart';
 import 'package:ds_market_place/models/signup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ds_market_place/constants/enums.dart';
@@ -15,17 +16,12 @@ class AuthenticationProvider with ChangeNotifier {
 
   String? get token => authenticationModel?.token;
 
-  Future<void> signIn(
-    String email,
-    String password, {
-    bool notifyWhenLoading = true,
-  }) async {
+  Future<void> signIn(Login loginData, {bool notifyWhenLoading = true}) async {
     loadingStatus = LoadingStatus.loading;
     if (notifyWhenLoading) notifyListeners();
 
-    authenticationModel =
-        await authenticationWebService.signIn(email, password);
-    globals.token = authenticationModel?.token;
+    String token = await authenticationWebService.signIn(loginData);
+    globals.token = token;
     loadingStatus = LoadingStatus.done;
     notifyListeners();
   }

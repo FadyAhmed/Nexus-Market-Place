@@ -2,6 +2,9 @@ import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/constants.dart';
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/models/login.dart';
 import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/screens/home_page_screen.dart';
 import 'package:ds_market_place/screens/regestration/signup_screen.dart';
@@ -14,9 +17,23 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  TextEditingController _textEditingController1 = TextEditingController();
-  TextEditingController _textEditingController2 = TextEditingController();
+  TextEditingController _username = TextEditingController();
+  TextEditingController _password = TextEditingController();
   bool _bigLoading = false;
+
+  Future<void> submitForm() async {
+    try {
+      Login loginData =
+          Login(username: _username.text, password: _password.text);
+      await Provider.of<AuthenticationProvider>(context, listen: false)
+          .signIn(loginData);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => MarketHomePage()),
+          (Route<dynamic> route) => false);
+    } on ServerException catch (e) {
+      showMessageDialogue(context, e.message);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +69,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                   child: myTextFormField(
                                       context: context,
                                       textInputType: TextInputType.name,
-                                      controller: _textEditingController1,
+                                      controller: _username,
                                       hint: "Enter user name",
                                       label: "Username"),
                                 ),
@@ -65,7 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     hint: "Enter password",
                                     label: "Passowrd",
                                     obsecure: true,
-                                    controller: _textEditingController2,
+                                    controller: _password,
                                   ),
                                 ),
                               ]),
@@ -80,16 +97,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             RoundedButton(
-                              onPressed: () {
-                                Provider.of<AuthenticationProvider>(context,
-                                        listen: false)
-                                    .signIn(_textEditingController1.text,
-                                        _textEditingController2.text);
-                                Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) => MarketHomePage()),
-                                    (Route<dynamic> route) => false);
-                              },
+                              onPressed: submitForm,
                               title: 'Log in',
                             ),
                             SizedBox(height: 15),
