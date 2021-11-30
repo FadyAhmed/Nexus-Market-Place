@@ -1,9 +1,13 @@
 import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/models/signup.dart';
 import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/screens/regestration/signin_screen.dart';
 import 'package:ds_market_place/screens/regestration/signup_screen.dart';
+import 'package:ds_market_place/services/authentication_web_service.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
@@ -71,10 +75,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       const SizedBox(height: 10),
                       RoundedButton(
                           title: 'Register',
-                          onPressed: () => Navigator.of(context).push(
+                          onPressed: () {
+                            Navigator.of(context).push(
                                 MaterialPageRoute(
                                     builder: (context) => SignUpScreen()),
-                              )),
+                              );
+                          }),
                     ],
                   ),
                 ),

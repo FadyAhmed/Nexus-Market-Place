@@ -2,8 +2,14 @@ import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
+import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/models/signup.dart';
+import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/screens/regestration/signin_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 import '../home_page_screen.dart';
@@ -16,6 +22,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _firstName = TextEditingController();
   TextEditingController _lastName = TextEditingController();
+  TextEditingController _storeName = TextEditingController();
   TextEditingController _userName = TextEditingController();
   TextEditingController _email = TextEditingController();
   TextEditingController _confirmEmail = TextEditingController();
@@ -26,8 +33,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool _loading = false;
   bool _bigLoading = false;
+
+  Future<void> submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        Signup signupData = Signup(
+          firstName: _firstName.text,
+          lastName: _lastName.text,
+          username: _userName.text,
+          email: _email.text,
+          phoneNumber: _phoneNum.text,
+          password: _password.text,
+          storeName: _storeName.text,
+        );
+        await Provider.of<AuthenticationProvider>(context, listen: false)
+            .signUp(signupData);
+        Navigator.of(context).pop();
+      } on ServerException catch (e) {
+        showMessageDialogue(context, e.message);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthenticationProvider>(context);
     List<KFormField> _fields = [
       KFormField(
           controller: _firstName,
@@ -44,7 +74,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (text != null && text.isEmpty) return 'Empty';
           }),
       KFormField(
-          controller: _lastName,
+          controller: _storeName,
           hint: 'Enter Store Name',
           label: "Store Name*",
           validator: (text) {
@@ -163,20 +193,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      RoundedButton(
-                                        onPressed: () {
-                                          _formKey.currentState!.validate();
-                                          Navigator.of(context)
-                                              .pushAndRemoveUntil(
-                                                  MaterialPageRoute(
-                                                      builder:
-                                                          (context) =>
-                                                              MarketHomePage()),
-                                                  (Route<dynamic> route) =>
-                                                      false);
-                                        },
-                                        title: 'Sign up',
-                                      ),
+                                      if (authProvider.loadingStatus !=
+                                          LoadingStatus.loading)
+                                        RoundedButton(
+                                          onPressed: submitForm,
+                                          title: 'Sign up',
+                                        ),
+                                      if (authProvider.loadingStatus ==
+                                          LoadingStatus.loading)
+                                        Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
                                       SizedBox(height: 15),
                                       Center(
                                           child: Text(

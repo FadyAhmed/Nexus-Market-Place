@@ -1,4 +1,6 @@
 import 'package:ds_market_place/globals.dart' as globals;
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/models/signup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/authentication_model.dart';
@@ -26,5 +28,15 @@ class AuthenticationProvider with ChangeNotifier {
     globals.token = authenticationModel?.token;
     loadingStatus = LoadingStatus.done;
     notifyListeners();
+  }
+
+  Future<bool> signUp(Signup signupData) async {
+    loadingStatus = LoadingStatus.loading;
+    notifyListeners();
+
+    await authenticationWebService.signUp(signupData);
+    loadingStatus = LoadingStatus.done;
+    notifyListeners();
+    return true;
   }
 }
