@@ -1,8 +1,10 @@
 import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
+import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/screens/regestration/signin_screen.dart';
 import 'package:ds_market_place/screens/regestration/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 

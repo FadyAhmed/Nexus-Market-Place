@@ -2,8 +2,10 @@ import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/constants.dart';
+import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/screens/home_page_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -78,6 +80,10 @@ class _SignInScreenState extends State<SignInScreen> {
                             padding: const EdgeInsets.all(16.0),
                             child: RoundedButton(
                               onPressed: () {
+                                Provider.of<AuthenticationProvider>(context,
+                                        listen: false)
+                                    .signIn(_textEditingController1.text,
+                                        _textEditingController2.text);
                                 Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
                                         builder: (context) => MarketHomePage()),

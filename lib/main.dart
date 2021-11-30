@@ -1,6 +1,10 @@
+import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/screens/welcome_screen.dart';
+import 'package:ds_market_place/services/authentication_web_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 import 'components/UI/dialog.dart';
 
@@ -17,12 +21,23 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Market Place',
-      theme: ThemeData(
-          primarySwatch: Colors.yellow,
-          scaffoldBackgroundColor: const Color(0xFFD6D6D6)),
-      home: const MyHomePage(title: 'Market Place'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthenticationProvider(
+            authenticationWebService: AuthenticationWebService(
+              client: http.Client(),
+            ),
+          ),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Market Place',
+        theme: ThemeData(
+            primarySwatch: Colors.yellow,
+            scaffoldBackgroundColor: const Color(0xFFD6D6D6)),
+        home: const MyHomePage(title: 'Market Place'),
+      ),
     );
   }
 }
@@ -40,8 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      child: //WelcomeScreen()
-          WelcomeScreen(),
+      child: const WelcomeScreen(),
       onWillPop: () async {
         return ourDialog(
             context: context,
