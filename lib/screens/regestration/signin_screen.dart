@@ -2,6 +2,7 @@ import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/constants.dart';
+import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/login.dart';
@@ -37,6 +38,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var authProvider = Provider.of<AuthenticationProvider>(context);
     return Scaffold(
       body: _bigLoading
           ? loading()
@@ -96,10 +98,15 @@ class _SignInScreenState extends State<SignInScreen> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            if (authProvider.loadingStatus !=
+                                LoadingStatus.loading)
                             RoundedButton(
                               onPressed: submitForm,
                               title: 'Log in',
                             ),
+                            if (authProvider.loadingStatus ==
+                                LoadingStatus.loading)
+                              Center(child: CircularProgressIndicator()),
                             SizedBox(height: 15),
                             Center(
                                 child: Text(
