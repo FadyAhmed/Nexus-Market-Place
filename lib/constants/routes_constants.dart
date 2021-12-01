@@ -12,4 +12,7 @@ class RoutesConstants {
       RoutesConstants.usersBaseUrl + '/wallet/withdraw';
 
   static String addItemToInventory = RoutesConstants.baseUrl + '/myinventory';
+  static String getAllInventoryItems = RoutesConstants.baseUrl + '/myinventory';
+  static String getInventoryItemById(String id) =>
+      RoutesConstants.baseUrl + '/myinventory/' + id;
 }

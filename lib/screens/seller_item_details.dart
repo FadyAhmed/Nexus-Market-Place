@@ -1,11 +1,13 @@
 import 'package:ds_market_place/components/UI/table_row.dart';
+import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
 import 'edit_item_details.dart';
 
 class OnSaleItemDetailsScreen extends StatefulWidget {
-  const OnSaleItemDetailsScreen({Key? key}) : super(key: key);
+  final InventoryItem item;
+  OnSaleItemDetailsScreen(this.item, {Key? key}) : super(key: key);
 
   @override
   _OnSaleItemDetailsScreenState createState() =>
@@ -71,13 +73,15 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
           Table(
             //border: TableBorder.all(),
             children: [
-              tableRow("Name: ", "book", context),
+              tableRow("Name: ", widget.item.name, context),
               tableRow("", "", context),
-              tableRow("Description: ", "hard cover", context),
+              tableRow("Description: ", widget.item.description, context),
               tableRow("", "", context),
-              tableRow("Available amount: ", "4", context),
+              tableRow(
+                  "Available amount: ", widget.item.amount.toString(), context),
               tableRow("", "", context),
-              tableRow("Price: ", "\$10", context),
+              tableRow("Price: ", "\$${widget.item.price.toStringAsFixed(2)}",
+                  context),
             ],
           ),
           const SizedBox(height: 50),

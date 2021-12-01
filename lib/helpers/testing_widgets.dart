@@ -8,6 +8,7 @@ import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:ds_market_place/screens/home_page_screen.dart';
+import 'package:ds_market_place/services/inventories_web_service.dart';
 import 'package:ds_market_place/services/users_web_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,20 +20,8 @@ class TestingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        var item = InventoryItem(
-          name: 'item1',
-          amount: 1,
-          price: 10.99,
-          description: 'description1',
-          imageLink: 'link1',
-        );
-        try {
-          await Provider.of<InventoriesProvider>(context, listen: false)
-              .addItem(item);
-          print('success');
-        } catch (e) {
-          print('error');
-        }
+        print(await Provider.of<InventoriesProvider>(context, listen: false)
+            .getItemById('61a7c3b06a36c2198212d205'));
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),

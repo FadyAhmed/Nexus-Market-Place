@@ -1,4 +1,5 @@
 import 'package:ds_market_place/components/UI/item_card.dart';
+import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
 import 'package:ds_market_place/screens/store/select_item_to_sell.dart';
@@ -31,8 +32,15 @@ class _SellScreenState extends State<SellScreen> {
             amount: "11",
             price: 15,
             onPressed: () {
+              var item = InventoryItem(
+                name: 'name',
+                amount: 1,
+                price: 1,
+                description: 'description',
+                imageLink: 'imageLink',
+              );
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => OnSaleItemDetailsScreen()));
+                  builder: (context) => OnSaleItemDetailsScreen(item)));
             },
             onSelectMenuItem: (choice) {
               if (choice == "Edit") {

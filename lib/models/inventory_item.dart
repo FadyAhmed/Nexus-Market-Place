@@ -4,6 +4,8 @@ part 'inventory_item.g.dart';
 
 @JsonSerializable()
 class InventoryItem {
+  @JsonKey(includeIfNull: false)
+  String? id;
   String name;
   int amount;
   double price;
@@ -11,6 +13,7 @@ class InventoryItem {
   String imageLink;
 
   InventoryItem({
+    this.id,
     required this.name,
     required this.amount,
     required this.price,

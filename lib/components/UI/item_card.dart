@@ -7,7 +7,7 @@ class ItemCard extends StatelessWidget {
   final String itemName;
   final String amount;
   final String sellerName;
-  final int price;
+  final double price;
   final onPressed;
   final onSelectMenuItem;
   final List<String>? menuItems;

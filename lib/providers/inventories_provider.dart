@@ -8,12 +8,47 @@ class InventoriesProvider with ChangeNotifier {
 
   LoadingStatus loadingStatus = LoadingStatus.done;
 
+  List<InventoryItem>? items;
+
   Future<void> addItem(InventoryItem item) async {
     loadingStatus = LoadingStatus.loading;
     notifyListeners();
 
     try {
       await inventoriesWebService.addItem(item);
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
+  Future<List<InventoryItem>> getAllItems({notifyWhenLoading = true}) async {
+    loadingStatus = LoadingStatus.loading;
+    if (notifyWhenLoading) notifyListeners();
+
+    try {
+      List<InventoryItem> fetchedItems =
+          await inventoriesWebService.getAllItems();
+      items = fetchedItems;
+      return fetchedItems;
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
+  Future<InventoryItem> getItemById(String id,
+      {notifyWhenLoading = true}) async {
+    loadingStatus = LoadingStatus.loading;
+    if (notifyWhenLoading) notifyListeners();
+
+    try {
+      InventoryItem item = await inventoriesWebService.getItemById(id);
+      return item;
     } catch (e) {
       throw e;
     } finally {

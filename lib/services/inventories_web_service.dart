@@ -18,4 +18,32 @@ class InventoriesWebService {
     );
     checkResponse(response);
   }
+
+  Future<List<InventoryItem>> getAllItems() async {
+    var response = await http.get(
+      Uri.parse(RoutesConstants.getAllInventoryItems),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+      },
+    );
+    checkResponse(response);
+
+    Map<String, dynamic> body = jsonDecode(response.body);
+    return (body['items'] as List)
+        .map((json) => InventoryItem.fromJson(json))
+        .toList();
+  }
+
+  Future<InventoryItem> getItemById(String id) async {
+    var response = await http.get(
+      Uri.parse(RoutesConstants.getInventoryItemById(id)),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+      },
+    );
+    checkResponse(response);
+
+    Map<String, dynamic> body = jsonDecode(response.body);
+    return InventoryItem.fromJson(body['item']);
+  }
 }
