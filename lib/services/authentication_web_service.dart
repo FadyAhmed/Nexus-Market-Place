@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/login.dart';
 import 'package:ds_market_place/models/signup.dart';

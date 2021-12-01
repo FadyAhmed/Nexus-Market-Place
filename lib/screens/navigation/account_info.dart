@@ -1,8 +1,12 @@
+import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/models/profile.dart';
+import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:ds_market_place/screens/account_info/account_info/acc_info_containre.dart';
 import 'package:ds_market_place/screens/account_info/reports_screens/reports_container.dart';
 import 'package:ds_market_place/screens/account_info/wallet.dart';
 import 'package:ds_market_place/screens/navigation/inventory.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AccountInfoScreen extends StatefulWidget {
   final Function navToInventoryScreen;
@@ -35,44 +39,63 @@ ListTile itemTile(BuildContext context,
 }
 
 class _AccountInfoScreenState extends State<AccountInfoScreen> {
+  late Profile profile;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<UsersProvider>(context, listen: false)
+        .getMyProfile(notifyWhenLoaded: false)
+        .then((fetchedProfile) => profile = fetchedProfile);
+  }
+
   @override
   Widget build(BuildContext context) {
+    UsersProvider usersProvider = Provider.of<UsersProvider>(context);
     return Scaffold(
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(150),
             child: Container(
-              padding: const EdgeInsets.only(top: 16, left: 25),
+                    padding: const EdgeInsets.only(top: 16, left: 25),
               height: 130,
               color: Theme.of(context).primaryColor,
-              child: Row(
-                children: [
-                  const SizedBox(width: 16),
-                  Expanded(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Ziad",
-                        style: Theme.of(context).textTheme.headline5,
+                    child: usersProvider.loadingStatus == LoadingStatus.loading
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).scaffoldBackgroundColor,
                       ),
-                      const SizedBox(height: 5),
-                      Row(
-                        children: [
-                          const Icon(Icons.account_balance_wallet_outlined),
-                          Text(
-                            " " + "1500\$",
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle1!
-                                .copyWith(fontSize: 16),
-                          ),
-                        ],
-                      )
-                    ],
-                  ))
-                ],
-              ),
+                    )
+                  : Row(
+                      children: [
+                        const SizedBox(width: 16),
+                        Expanded(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              profile.firstName + ' ' + profile.lastName,
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            const SizedBox(height: 5),
+                            Row(
+                              children: [
+                                const Icon(
+                                    Icons.account_balance_wallet_outlined),
+                                Text(
+                                  " " +
+                                      "${profile.balance.toStringAsFixed(2)}\$",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle1!
+                                      .copyWith(fontSize: 16),
+                                ),
+                              ],
+                            )
+                          ],
+                        ))
+                      ],
+                    ),
             )),
         body: Padding(
           padding: const EdgeInsets.only(left: 40.0),

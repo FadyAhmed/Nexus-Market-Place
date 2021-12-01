@@ -1,4 +1,5 @@
 import 'package:ds_market_place/providers/authentication_provider.dart';
+import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:ds_market_place/screens/welcome_screen.dart';
 import 'package:ds_market_place/services/authentication_web_service.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        ChangeNotifierProvider(create: (context) => UsersProvider()),
       ],
       child: MaterialApp(
       debugShowCheckedModeBanner: false,

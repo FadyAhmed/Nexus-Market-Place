@@ -30,7 +30,9 @@ String generateErrorMessage(Map<String, dynamic> badRequest) {
   }
   switch (badRequest['status']) {
     case 'storeName already exists':
-      return 'store name already exists';
+      return 'Store name already exists.';
+    case 'token verification failed':
+      return 'Token verification failed. Couldn\'t establish a session.';
     default:
       return badRequest['status'] as String;
   }
