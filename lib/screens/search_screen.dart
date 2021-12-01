@@ -123,6 +123,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   .push(MaterialPageRoute(
                                                 builder: (context) =>
                                                     EditItemDetails(
+                                                      item: InventoryItem(
+                                                    name: 'name',
+                                                    amount: 1,
+                                                    price: 1,
+                                                    description: 'description',
+                                                    imageLink: 'imageLink',
+                                                  ),
                                                   submitButtonText: "Edit",
                                                   onSubmit: () => {
                                                     //TODO: add edit habdler

@@ -56,4 +56,22 @@ class InventoriesProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> editItem(InventoryItem item) async {
+    assert(item.id != null);
+    loadingStatus = LoadingStatus.loading;
+    notifyListeners();
+
+    try {
+      await inventoriesWebService.editItem(item);
+      int index = items!.indexWhere((it) => it.id == item.id);
+      items!.removeAt(index);
+      items!.insert(index, item);
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
 }

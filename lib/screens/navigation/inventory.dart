@@ -47,6 +47,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                               print(choice);
                               Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => EditItemDetails(
+                                  item: items[index],
                                   submitButtonText: "Edit",
                                   onSubmit: () => {
                                     //TODO: add edit habdler

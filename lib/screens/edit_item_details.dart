@@ -3,15 +3,24 @@ import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
 import 'package:ds_market_place/constants.dart';
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditItemDetails extends StatefulWidget {
   final onSubmit;
   final String submitButtonText;
+  final InventoryItem item;
 
-  const EditItemDetails(
-      {Key? key, required this.onSubmit, required this.submitButtonText})
-      : super(key: key);
+  const EditItemDetails({
+    Key? key,
+    required this.onSubmit,
+    required this.submitButtonText,
+    required this.item,
+  }) : super(key: key);
   @override
   _EditItemDetailsState createState() => _EditItemDetailsState();
 }
@@ -26,12 +35,34 @@ class _EditItemDetailsState extends State<EditItemDetails> {
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    _name = TextEditingController(text: "ما وراء الطبيعة");
-    _description = TextEditingController(text: "كتاب كدة");
-    _amount = TextEditingController(text: "15");
-    _price = TextEditingController(text: "200");
-    _imageLink = TextEditingController(text: "https://asd");
+    InventoryItem item = widget.item;
+    _name = TextEditingController(text: item.name);
+    _description = TextEditingController(text: item.description);
+    _amount = TextEditingController(text: item.amount.toString());
+    _price = TextEditingController(text: item.price.toStringAsFixed(2));
+    _imageLink = TextEditingController(text: item.imageLink);
     super.initState();
+  }
+
+  void submitEditItem() async {
+    if (_formKey.currentState!.validate()) {
+      InventoryItem item = InventoryItem(
+        id: widget.item.id,
+        name: _name.text,
+        amount: int.parse(_amount.text),
+        price: double.parse(_price.text),
+        description: _description.text,
+        imageLink: _imageLink.text,
+      );
+      try {
+        await Provider.of<InventoriesProvider>(context, listen: false)
+            .editItem(item);
+        showSnackbar(context, Text("Item edited successfully"));
+        Navigator.of(context).pop();
+      } on ServerException catch (e) {
+        showMessageDialogue(context, e.message);
+      }
+    }
   }
 
   @override
@@ -123,18 +154,7 @@ class _EditItemDetailsState extends State<EditItemDetails> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: RoundedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            FocusScope.of(context).unfocus();
-
-                            showSnackbar(
-                                context, Text("Item edited successfully"));
-
-                            widget.onSubmit();
-                          });
-                        }
-                      },
+                      onPressed: submitEditItem,
                       title: widget.submitButtonText,
                     ),
                   ),

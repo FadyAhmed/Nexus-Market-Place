@@ -1,6 +1,8 @@
 import 'package:ds_market_place/components/UI/table_row.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import 'edit_item_details.dart';
@@ -17,6 +19,9 @@ class OnSaleItemDetailsScreen extends StatefulWidget {
 class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    InventoryItem item = Provider.of<InventoriesProvider>(context)
+        .items!
+        .firstWhere((it) => it.id == widget.item.id);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Item Details"),
@@ -44,6 +49,7 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => EditItemDetails(
+                                  item: widget.item,
                                   onSubmit: () {
                                     Navigator.of(context).pop();
                                   },
@@ -73,14 +79,15 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
           Table(
             //border: TableBorder.all(),
             children: [
-              tableRow("Name: ", widget.item.name, context),
+              tableRow("Name: ", item.name, context),
               tableRow("", "", context),
-              tableRow("Description: ", widget.item.description, context),
+              tableRow("Description: ", item.description, context),
               tableRow("", "", context),
               tableRow(
-                  "Available amount: ", widget.item.amount.toString(), context),
+                  "Available amount: ", item.amount.toString(), context),
               tableRow("", "", context),
-              tableRow("Price: ", "\$${widget.item.price.toStringAsFixed(2)}",
+              tableRow(
+                  "Price: ", "\$${item.price.toStringAsFixed(2)}",
                   context),
             ],
           ),

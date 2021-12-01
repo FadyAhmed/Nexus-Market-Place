@@ -20,8 +20,15 @@ class TestingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        print(await Provider.of<InventoriesProvider>(context, listen: false)
-            .getItemById('61a7c3b06a36c2198212d205'));
+        var item = InventoryItem(
+          id: '61a7c3b06a36c2198212d205',
+          name: 'item0',
+          amount: 1,
+          price: 0.99,
+          description: 'description0',
+          imageLink: 'link0',
+        );
+        Provider.of<InventoriesProvider>(context, listen: false).editItem(item);
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),

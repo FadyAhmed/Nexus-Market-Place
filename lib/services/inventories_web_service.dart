@@ -37,13 +37,24 @@ class InventoriesWebService {
   Future<InventoryItem> getItemById(String id) async {
     var response = await http.get(
       Uri.parse(RoutesConstants.getInventoryItemById(id)),
-      headers: {
-        'Authorization': 'Bearer ${globals.token}',
-      },
+      headers: {'Authorization': 'Bearer ${globals.token}'},
     );
     checkResponse(response);
 
     Map<String, dynamic> body = jsonDecode(response.body);
     return InventoryItem.fromJson(body['item']);
+  }
+
+  Future<void> editItem(InventoryItem item) async {
+    assert(item.id != null);
+    var response = await http.put(
+      Uri.parse(RoutesConstants.editInventoryItem(item.id!)),
+      body: jsonEncode(item.toJson()),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+        'Content-Type': 'application/json',
+      },
+    );
+    checkResponse(response);
   }
 }
