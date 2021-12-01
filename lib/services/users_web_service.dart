@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:ds_market_place/constants/routes_constants.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/models/add_balance_request.dart';
 import 'package:ds_market_place/models/profile.dart';
 import 'package:http/http.dart' as http;
 import 'package:ds_market_place/globals.dart' as globals;
@@ -13,8 +14,32 @@ class UsersWebService {
       Uri.parse(RoutesConstants.getMyProfile),
       headers: {'Authorization': 'Bearer ${globals.token}'},
     );
-    Map<String, dynamic> body = jsonDecode(response.body);
-    if (!body['success']) throw ServerException(generateErrorMessage(body));
+    checkResponse(response);
+    var body = jsonDecode(response.body);
     return Profile.fromJson(body['user']);
+  }
+
+  Future<void> addBalance(AddBalanceRequest addBalanceRequest) async {
+    var response = await http.put(
+      Uri.parse(RoutesConstants.addBalance),
+      body: jsonEncode(addBalanceRequest.toJson()),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+        'Content-Type': 'application/json',
+      },
+    );
+    checkResponse(response);
+  }
+
+  Future<void> removeBalance(AddBalanceRequest addBalanceRequest) async {
+    var response = await http.put(
+      Uri.parse(RoutesConstants.removeBalance),
+      body: jsonEncode(addBalanceRequest.toJson()),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+        'Content-Type': 'application/json',
+      },
+    );
+    checkResponse(response);
   }
 }

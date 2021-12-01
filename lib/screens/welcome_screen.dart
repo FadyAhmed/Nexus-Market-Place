@@ -86,6 +86,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           }),
                       LoginAsUser1Button(),
                       TestingButton(),
+                      GoToMarketPlace(),
                     ],
                   ),
                 ),

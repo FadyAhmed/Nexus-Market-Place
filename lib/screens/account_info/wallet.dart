@@ -2,7 +2,14 @@ import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
+import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/models/add_balance_request.dart';
+import 'package:ds_market_place/models/profile.dart';
+import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum TransactionType { withdraw, deposit }
 
@@ -19,19 +26,58 @@ class _WalletScreenState extends State<WalletScreen> {
   TextEditingController _cvvNumberController = TextEditingController();
 
   TransactionType? _transactionType = TransactionType.deposit;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<UsersProvider>(context, listen: false)
+        .getMyProfile(notifyWhenLoaded: false);
+  }
+
+  void submitRequest() async {
+    if (_formKey.currentState!.validate()) {
+      var userProvider = Provider.of<UsersProvider>(context, listen: false);
+      var addBalanceRequest = AddBalanceRequest(
+        cardNum: _cardNumberController.text,
+        amount: double.parse(_amountController.text),
+        cvv: _cvvNumberController.text,
+      );
+      try {
+        if (_transactionType == TransactionType.deposit)
+          await userProvider.addBalance(addBalanceRequest);
+        else
+          await userProvider.removeBalance(addBalanceRequest);
+        showSnackbar(context, Text("Transaction done"));
+      } on ServerException catch (e) {
+        showMessageDialogue(context, e.message)
+            .then((_) => Navigator.of(context).pop());
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<UsersProvider>(context);
     List<KFormField> fields = [
       KFormField(
           controller: _amountController,
           hint: 'Enter amount ',
           label: "Amount",
           obsecure: false,
-          validator: (String? s) => s == null || s.isEmpty
-              ? 'Empty'
-              : double.tryParse(s) == null
-                  ? 'Not A Number!'
-                  : null),
+          validator: (String? s) {
+            if (s == null || s.isEmpty) {
+              return 'Empty';
+            } else if (double.tryParse(s) == null) {
+              return 'Not A Number!';
+            } else if (double.parse(s) <= 0) {
+              return 'invalid amount';
+            } else if ((_transactionType == TransactionType.withdraw &&
+                userProvider.profile!.balance - double.parse(s) < 0)) {
+              return 'insufficient balance';
+            } else {
+              return null;
+            }
+          }),
       KFormField(
           controller: _cardNumberController,
           hint: 'Enter Card Number',
@@ -42,7 +88,7 @@ class _WalletScreenState extends State<WalletScreen> {
               : double.tryParse(s) == null
                   ? 'Not A Number!'
                   : s.length != 12
-                      ? "Wrong number"
+                      ? "card number should be 12 digits"
                       : null),
       KFormField(
           controller: _cvvNumberController,
@@ -54,7 +100,7 @@ class _WalletScreenState extends State<WalletScreen> {
               : double.tryParse(s) == null
                   ? 'Not A Number!'
                   : s.length != 3
-                      ? "Wrong number"
+                      ? "CVV should be 3 digits"
                       : null),
     ];
     return Scaffold(
@@ -67,10 +113,12 @@ class _WalletScreenState extends State<WalletScreen> {
           children: [
             const SizedBox(height: 30),
             Center(
-              child: Text(
-                "Balance:   \$1500",
-                style: Theme.of(context).textTheme.headline5,
-              ),
+              child: userProvider.profileLoadingStatus == LoadingStatus.loading
+                  ? CircularProgressIndicator()
+                  : Text(
+                      "Balance:   \$${userProvider.profile!.balance.toStringAsFixed(2)}",
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
             ),
             const SizedBox(height: 30),
             Column(
@@ -141,16 +189,13 @@ class _WalletScreenState extends State<WalletScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: RoundedButton(
-                        onPressed: () {
-                          _formKey.currentState!.validate();
-
-                          showSnackbar(context, Text("Transaction done"));
-
-                          Navigator.of(context).pop();
-                        },
-                        title: 'Confirm',
-                      ),
+                      child: (userProvider.balanceLoadingStatus ==
+                              LoadingStatus.loading)
+                          ? Center(child: CircularProgressIndicator())
+                          : RoundedButton(
+                              onPressed: submitRequest,
+                              title: 'Confirm',
+                            ),
                     ),
                   ],
                 ),

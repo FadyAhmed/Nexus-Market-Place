@@ -1,7 +1,11 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-void showMessageDialogue(BuildContext context, String message) {
-  showDialog(
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+Future<void> showMessageDialogue(BuildContext context, String message) {
+  return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -16,6 +20,11 @@ void showMessageDialogue(BuildContext context, String message) {
           ],
         );
       });
+}
+
+void checkResponse(http.Response response) {
+  Map<String, dynamic> body = jsonDecode(response.body);
+  if (!body['success']) throw ServerException(generateErrorMessage(body));
 }
 
 String generateErrorMessage(Map<String, dynamic> badRequest) {

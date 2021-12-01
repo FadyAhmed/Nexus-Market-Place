@@ -1,9 +1,11 @@
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/models/add_balance_request.dart';
 import 'package:ds_market_place/models/login.dart';
 import 'package:ds_market_place/models/profile.dart';
 import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/providers/users_provider.dart';
+import 'package:ds_market_place/screens/home_page_screen.dart';
 import 'package:ds_market_place/services/users_web_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +17,17 @@ class TestingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        Profile profile =
-            await Provider.of<UsersProvider>(context, listen: false)
-                .getMyProfile();
-        print(profile);
+        var addBalanceRequest = AddBalanceRequest(
+          cardNum: '123',
+          amount: 100,
+          cvv: '123',
+        );
+        try {
+          await UsersWebService().removeBalance(addBalanceRequest);
+          print('success');
+        } catch (e) {
+          print('error');
+        }
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),
@@ -43,6 +52,23 @@ class LoginAsUser1Button extends StatelessWidget {
         }
       },
       child: Text('Login as user1'),
+      style: ElevatedButton.styleFrom(primary: Colors.purple),
+    );
+  }
+}
+
+class GoToMarketPlace extends StatelessWidget {
+  const GoToMarketPlace({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => MarketHomePage()),
+            (Route<dynamic> route) => false);
+      },
+      child: Text('Go To Marketplace'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),
     );
   }

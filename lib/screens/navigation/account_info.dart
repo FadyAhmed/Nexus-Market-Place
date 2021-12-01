@@ -39,14 +39,11 @@ ListTile itemTile(BuildContext context,
 }
 
 class _AccountInfoScreenState extends State<AccountInfoScreen> {
-  late Profile profile;
-
   @override
   void initState() {
     super.initState();
     Provider.of<UsersProvider>(context, listen: false)
-        .getMyProfile(notifyWhenLoaded: false)
-        .then((fetchedProfile) => profile = fetchedProfile);
+        .getMyProfile(notifyWhenLoaded: false);
   }
 
   @override
@@ -59,7 +56,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                     padding: const EdgeInsets.only(top: 16, left: 25),
               height: 130,
               color: Theme.of(context).primaryColor,
-                    child: usersProvider.loadingStatus == LoadingStatus.loading
+                    child: usersProvider.profileLoadingStatus == LoadingStatus.loading
                   ? Center(
                       child: CircularProgressIndicator(
                         color: Theme.of(context).scaffoldBackgroundColor,
@@ -74,7 +71,9 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              profile.firstName + ' ' + profile.lastName,
+                              usersProvider.profile!.firstName +
+                                  ' ' +
+                                  usersProvider.profile!.lastName,
                               style: Theme.of(context).textTheme.headline5,
                             ),
                             const SizedBox(height: 5),
@@ -84,7 +83,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                                     Icons.account_balance_wallet_outlined),
                                 Text(
                                   " " +
-                                      "${profile.balance.toStringAsFixed(2)}\$",
+                                      "${usersProvider.profile!.balance.toStringAsFixed(2)}\$",
                                   style: Theme.of(context)
                                       .textTheme
                                       .subtitle1!
