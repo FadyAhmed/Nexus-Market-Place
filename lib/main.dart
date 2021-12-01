@@ -1,4 +1,5 @@
 import 'package:ds_market_place/providers/authentication_provider.dart';
+import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:ds_market_place/screens/welcome_screen.dart';
 import 'package:ds_market_place/services/authentication_web_service.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         ChangeNotifierProvider(create: (context) => UsersProvider()),
+        ChangeNotifierProvider(create: (context) => InventoriesProvider()),
       ],
       child: MaterialApp(
       debugShowCheckedModeBanner: false,

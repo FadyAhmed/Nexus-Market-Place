@@ -1,9 +1,11 @@
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/add_balance_request.dart';
+import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/login.dart';
 import 'package:ds_market_place/models/profile.dart';
 import 'package:ds_market_place/providers/authentication_provider.dart';
+import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:ds_market_place/screens/home_page_screen.dart';
 import 'package:ds_market_place/services/users_web_service.dart';
@@ -17,13 +19,16 @@ class TestingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        var addBalanceRequest = AddBalanceRequest(
-          cardNum: '123',
-          amount: 100,
-          cvv: '123',
+        var item = InventoryItem(
+          name: 'item1',
+          amount: 1,
+          price: 10.99,
+          description: 'description1',
+          imageLink: 'link1',
         );
         try {
-          await UsersWebService().removeBalance(addBalanceRequest);
+          await Provider.of<InventoriesProvider>(context, listen: false)
+              .addItem(item);
           print('success');
         } catch (e) {
           print('error');

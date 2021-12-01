@@ -2,7 +2,11 @@ import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
+import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddItemToInventory extends StatefulWidget {
   @override
@@ -18,8 +22,26 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
   TextEditingController _priceController = TextEditingController();
   TextEditingController _imageUrlController = TextEditingController();
 
+  void submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      InventoryItem item = InventoryItem(
+        name: _nameController.text,
+        amount: int.parse(_amountController.text),
+        price: double.parse(_priceController.text),
+        description: _descController.text,
+        imageLink: _imageUrlController.text,
+      );
+      await Provider.of<InventoriesProvider>(context, listen: false)
+          .addItem(item);
+
+      showSnackbar(context, Text("Item added to inventory"));
+      Navigator.of(context).pop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var inventoriesProvider = Provider.of<InventoriesProvider>(context);
     List<KFormField> fields = [
       KFormField(
           controller: _nameController,
@@ -34,21 +56,33 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
           hint: 'Enter amount ',
           label: "Amount",
           obsecure: false,
-          validator: (String? s) => s == null || s.isEmpty
-              ? 'Empty'
-              : double.tryParse(s) == null
-                  ? 'Not A Number!'
-                  : null),
+          validator: (String? s) {
+            if (s == null || s.isEmpty) {
+              return 'Empty';
+            } else if (int.tryParse(s) == null) {
+              return 'Not A Number!';
+            } else if (int.parse(s) <= 0) {
+              return 'Only positive amount is allowed';
+            } else {
+              return null;
+            }
+          }),
       KFormField(
           controller: _priceController,
           hint: 'Enter price',
           label: "Price",
           obsecure: false,
-          validator: (String? s) => s == null || s.isEmpty
-              ? 'Empty'
-              : double.tryParse(s) == null
-                  ? 'Not A Number!'
-                  : null),
+          validator: (String? s) {
+            if (s == null || s.isEmpty) {
+              return 'Empty';
+            } else if (double.tryParse(s) == null) {
+              return 'Not A Number!';
+            } else if (double.parse(s) <= 0) {
+              return 'Only positive price is allowed';
+            } else {
+              return null;
+            }
+          }),
       KFormField(
           controller: _descController,
           hint: 'Enter description',
@@ -111,16 +145,13 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: RoundedButton(
-                        onPressed: () {
-                          _formKey.currentState!.validate();
-                          showSnackbar(
-                              context, Text("Item added to inventory"));
-
-                          Navigator.of(context).pop();
-                        },
-                        title: 'Add Item',
-                      ),
+                      child: inventoriesProvider.loadingStatus ==
+                              LoadingStatus.loading
+                          ? Center(child: CircularProgressIndicator())
+                          : RoundedButton(
+                              onPressed: submitForm,
+                              title: 'Add Item',
+                            ),
                     ),
                   ],
                 ),
