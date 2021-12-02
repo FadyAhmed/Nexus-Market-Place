@@ -13,7 +13,7 @@ StoreItem _$StoreItemFromJson(Map<String, dynamic> json) => StoreItem(
       amount: json['amount'] as int,
       imageLink: json['imageLink'] as String,
       description: json['description'] as String,
-      state: $enumDecode(_$StoreItemStateEnumMap, json['state']),
+      state: $enumDecodeNullable(_$StoreItemStateEnumMap, json['state']),
       storeId: json['storeId'] as String,
       storeName: json['storeName'] as String,
     );
@@ -33,7 +33,7 @@ Map<String, dynamic> _$StoreItemToJson(StoreItem instance) {
   val['amount'] = instance.amount;
   val['imageLink'] = instance.imageLink;
   val['description'] = instance.description;
-  val['state'] = _$StoreItemStateEnumMap[instance.state];
+  writeNotNull('state', _$StoreItemStateEnumMap[instance.state]);
   val['storeId'] = instance.storeId;
   val['storeName'] = instance.storeName;
   return val;

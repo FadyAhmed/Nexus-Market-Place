@@ -15,7 +15,8 @@ class StoreItem {
   int amount;
   String imageLink;
   String description;
-  StoreItemState state;
+  @JsonKey(includeIfNull: false)
+  StoreItemState? state;
   String storeId;
   String storeName;
 

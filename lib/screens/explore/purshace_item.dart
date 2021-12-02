@@ -2,11 +2,18 @@ import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/table_row.dart';
 import 'package:ds_market_place/constants.dart';
+import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/models/store_item.dart';
+import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/explore/store_items.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PurchaseItemScreen extends StatefulWidget {
-  const PurchaseItemScreen({Key? key}) : super(key: key);
+  final StoreItem item;
+  PurchaseItemScreen(this.item, {Key? key}) : super(key: key);
 
   @override
   _PurchaseItemScreenState createState() => _PurchaseItemScreenState();
@@ -27,11 +34,23 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
     });
   }
 
+  void submitAddToMyStore(String id) async {
+    try {
+      await Provider.of<StoresProvider>(context, listen: false)
+          .addAnotherStoreItemToMyStore(id);
+      showSnackbar(context, Text("Item added to your store succesfully"));
+      Navigator.of(context).pop();
+    } on ServerException catch (e) {
+      showMessageDialogue(context, e.message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var storesProvider = Provider.of<StoresProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Book Name"),
+        title: Text(widget.item.name),
         centerTitle: true,
       ),
       body: ListView(
@@ -51,9 +70,9 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
           const SizedBox(height: 40),
           Table(
             children: [
-              tableRow("Name: ", "book", context),
+              tableRow("Name: ", widget.item.name, context),
               tableRow("", "", context),
-              tableRow("Description: ", "hard cover", context),
+              tableRow("Description: ", widget.item.description, context),
               tableRow("", "", context),
               TableRow(children: [
                 Padding(
@@ -72,7 +91,7 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                                 storeName: "Tawheed wel noor",
                               )));
                     },
-                    child: Text("Tawheed wel noor",
+                    child: Text(widget.item.storeName,
                         style: TextStyle(
                             fontSize: 18,
                             color: Color(0xFF487E89),
@@ -81,9 +100,11 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                 ),
               ]),
               tableRow("", "", context),
-              tableRow("Available amount: ", "4", context),
+              tableRow(
+                  "Available amount: ", widget.item.amount.toString(), context),
               tableRow("", "", context),
-              tableRow("Price: ", "\$10", context),
+              tableRow("Price: ", "\$${widget.item.price.toStringAsFixed(2)}",
+                  context),
             ],
           ),
           const SizedBox(height: 50),
@@ -122,14 +143,15 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
               Container(
                   width: MediaQuery.of(context).size.width - 120,
                   height: 45,
-                  child: RoundedButton(
-                      color: Colors.orange,
-                      title: "Add To My Store",
-                      onPressed: () {
-                        showSnackbar(context,
-                            Text("Item added to your store succesfully"));
-                        Navigator.of(context).pop();
-                      })),
+                  child: storesProvider.loadingStatus == LoadingStatus.loading
+                      ? Center(
+                          child:
+                              CircularProgressIndicator(color: Colors.orange))
+                      : RoundedButton(
+                          color: Colors.orange,
+                          title: "Add To My Store",
+                          onPressed: () =>
+                              submitAddToMyStore(widget.item.id!))),
               const SizedBox(height: 20),
             ],
           )

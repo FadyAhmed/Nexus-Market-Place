@@ -1,4 +1,5 @@
 import 'package:ds_market_place/constants.dart';
+import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
@@ -40,76 +41,80 @@ class _ExploreScreenState extends State<ExploreScreen> {
       onRefresh: () => _onRefresh(context),
       child: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8, top: 16, bottom: 0),
-        child: GridView.builder(
-          itemCount: storesProvider.allItems!.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            childAspectRatio: (MediaQuery.of(context).size.width / 2) /
-                (MediaQuery.of(context).size.height / 3),
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16.0,
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            StoreItem item = storesProvider.allItems![index];
-            return GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => PurchaseItemScreen(),
-                  ),
-                );
-              },
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+        child: storesProvider.loadingStatus == LoadingStatus.loading
+            ? Center(child: CircularProgressIndicator())
+            : GridView.builder(
+                itemCount: storesProvider.allItems!.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: (MediaQuery.of(context).size.width / 2) /
+                      (MediaQuery.of(context).size.height / 3),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16.0,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const SizedBox(height: 8),
-                          Image.asset(
-                            kLogo,
-                            height: (MediaQuery.of(context).size.height / 7),
-                          ),
-                          const SizedBox(height: 10),
-                        ],
+                itemBuilder: (BuildContext context, int index) {
+                  StoreItem item = storesProvider.allItems![index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PurchaseItemScreen(item),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(item.storeName,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .caption!
-                                  .copyWith(fontSize: 14)),
-                          const SizedBox(height: 5),
-                          Text(
-                            item.name,
-                            style: Theme.of(context).textTheme.bodyText1,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                          Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(height: 8),
+                                Image.asset(
+                                  kLogo,
+                                  height:
+                                      (MediaQuery.of(context).size.height / 7),
+                                ),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 5),
-                          Text(item.price.toStringAsFixed(2),
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyText1),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item.storeName,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .caption!
+                                        .copyWith(fontSize: 14)),
+                                const SizedBox(height: 5),
+                                Text(
+                                  item.name,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 5),
+                                Text(item.price.toStringAsFixed(2),
+                                    overflow: TextOverflow.ellipsis,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1),
+                              ],
+                            ),
+                          )
                         ],
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
     ));
   }

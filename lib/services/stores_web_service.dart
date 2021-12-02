@@ -51,6 +51,19 @@ class StoresWebService {
     return body['id'];
   }
 
+  Future<StoreItem> addAnotherStoreItemToMyStore(String id) async {
+    var response = await http.put(
+      Uri.parse(RoutesConstants.addAnotherStoreItemToMyStore(id)),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+        'Content-Type': 'application/json',
+      },
+    );
+    checkResponse(response);
+    var body = jsonDecode(response.body);
+    return StoreItem.fromJson(body['item']);
+  }
+
   Future<void> removeItemFromMyStore(String id) async {
     var response = await http.delete(
       Uri.parse(RoutesConstants.removeItemFromMyStore(id)),

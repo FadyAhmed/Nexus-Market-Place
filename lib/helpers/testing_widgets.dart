@@ -33,8 +33,7 @@ class TestingButton extends StatelessWidget {
         //   storeId: 'storeId',
         //   storeName: 'storeName',
         // );
-        print(await Provider.of<StoresProvider>(context, listen: false)
-            .getAllItemsFromAllStores());
+        print(await StoresWebService().getAllItemsFromAllStores());
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),

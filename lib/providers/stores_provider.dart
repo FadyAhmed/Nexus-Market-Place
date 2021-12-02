@@ -70,6 +70,22 @@ class StoresProvider with ChangeNotifier {
     }
   }
 
+  Future<StoreItem> addAnotherStoreItemToMyStore(String id) async {
+    loadingStatus = LoadingStatus.loading;
+    notifyListeners();
+
+    try {
+      StoreItem item = await storesWebService.addAnotherStoreItemToMyStore(id);
+      items!.add(item);
+      return item;
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
   Future<void> removeItemFromMyStore(String id) async {
     loadingStatus = LoadingStatus.loading;
     notifyListeners();
@@ -92,7 +108,7 @@ class StoresProvider with ChangeNotifier {
 
     try {
       List<StoreItem> fetchedItems =
-          await storesWebService.getAllItemsFromMyStore();
+          await storesWebService.getAllItemsFromAllStores();
       allItems = fetchedItems;
       return fetchedItems;
     } catch (e) {
