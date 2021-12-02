@@ -1,10 +1,12 @@
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/models/profile.dart';
 import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:ds_market_place/screens/account_info/account_info/acc_info_containre.dart';
 import 'package:ds_market_place/screens/account_info/reports_screens/reports_container.dart';
 import 'package:ds_market_place/screens/account_info/wallet.dart';
 import 'package:ds_market_place/screens/navigation/inventory.dart';
+import 'package:ds_market_place/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -53,10 +55,10 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
         appBar: PreferredSize(
             preferredSize: const Size.fromHeight(150),
             child: Container(
-                    padding: const EdgeInsets.only(top: 16, left: 25),
+              padding: const EdgeInsets.only(top: 16, left: 25),
               height: 130,
               color: Theme.of(context).primaryColor,
-                    child: usersProvider.profileLoadingStatus == LoadingStatus.loading
+              child: usersProvider.profileLoadingStatus == LoadingStatus.loading
                   ? Center(
                       child: CircularProgressIndicator(
                         color: Theme.of(context).scaffoldBackgroundColor,
@@ -129,6 +131,18 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                 handler: () => {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (ctx) => ReportScreenContainer()))
+                },
+              ),
+              itemTile(
+                context,
+                title: "Log Out",
+                icon: Icons.supervised_user_circle_rounded,
+                handler: () {
+                  globals.token = null;
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (ctx) => WelcomeScreen()),
+                    (Route route) => false,
+                  );
                 },
               )
             ],
