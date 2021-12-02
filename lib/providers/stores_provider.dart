@@ -27,4 +27,21 @@ class StoresProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<StoreItem> getItemFromMyStore(String id,
+      {notifyWhenLoading = true}) async {
+    loadingStatus = LoadingStatus.loading;
+    if (notifyWhenLoading) notifyListeners();
+
+    try {
+      StoreItem item = await storesWebService.getItemFromMyStore(id);
+      return item;
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
 }

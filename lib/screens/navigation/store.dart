@@ -48,10 +48,9 @@ class _SellScreenState extends State<SellScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: ItemCard(
                     // put another value to get it in menu
-                    menuItems: /* index % 2 == 0 ? ["Edit"] : */ [
-                      "Edit",
-                      "Remove"
-                    ],
+                    menuItems: item.state == StoreItemState.imported
+                        ? ["Remove"]
+                        : ["Edit", "Remove"],
                     itemName: item.name,
                     amount: item.amount.toString(),
                     price: item.price,

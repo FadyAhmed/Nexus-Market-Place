@@ -27,4 +27,6 @@ class RoutesConstants {
 
   static String getAllItemsFromMyStore =
       RoutesConstants.storesBaseUrl + '/mystore';
+  static String getItemFromMyStore(String id) =>
+      RoutesConstants.storesBaseUrl + '/mystore/' + id;
 }
