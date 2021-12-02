@@ -75,6 +75,19 @@ class StoresWebService {
     checkResponse(response);
   }
 
+  Future<void> editItemInMyStore(StoreItem item) async {
+    assert(item.id != null);
+    var response = await http.put(
+      Uri.parse(RoutesConstants.editItemInMyStore(item.id!)),
+      body: jsonEncode(item.toJson()),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+        'Content-Type': 'application/json',
+      },
+    );
+    checkResponse(response);
+  }
+
   Future<List<StoreItem>> getAllItemsFromAllStores() async {
     var response = await http.get(
       Uri.parse(RoutesConstants.getAllItemsFromAllStores),

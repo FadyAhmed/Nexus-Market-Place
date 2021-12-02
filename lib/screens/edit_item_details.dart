@@ -3,11 +3,13 @@ import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
 import 'package:ds_market_place/constants.dart';
+import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
+import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,39 +41,53 @@ class _EditItemDetailsState extends State<EditItemDetails> {
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    var item = widget.inventoryItem;
-    _name = TextEditingController(text: item!.name);
-    _description = TextEditingController(text: item.description);
-    _amount = TextEditingController(text: item.amount.toString());
-    _price = TextEditingController(text: item.price.toStringAsFixed(2));
-    _imageLink = TextEditingController(text: item.imageLink);
+    if (widget.inventoryItem != null) {
+      var item = widget.inventoryItem;
+      _name = TextEditingController(text: item!.name);
+      _description = TextEditingController(text: item.description);
+      _amount = TextEditingController(text: item.amount.toString());
+      _price = TextEditingController(text: item.price.toStringAsFixed(2));
+      _imageLink = TextEditingController(text: item.imageLink);
+    } else {
+      var item = widget.storeItem;
+      _name = TextEditingController(text: item!.name);
+      _description = TextEditingController(text: item.description);
+      _amount = TextEditingController(text: item.amount.toString());
+      _price = TextEditingController(text: item.price.toStringAsFixed(2));
+      _imageLink = TextEditingController(text: item.imageLink);
+    }
     super.initState();
   }
 
   void submitEditItem() async {
     if (_formKey.currentState!.validate()) {
-      var item = widget.inventoryItem != null
-          ? InventoryItem(
-              id: widget.inventoryItem!.id,
-              name: _name.text,
-              amount: int.parse(_amount.text),
-              price: double.parse(_price.text),
-              description: _description.text,
-              imageLink: _imageLink.text,
-            )
-          : StoreItem(
-              name: _name.text,
-              price: double.parse(_price.text),
-              amount: int.parse(_amount.text),
-              imageLink: _imageLink.text,
-              description: _description.text,
-              state: widget.storeItem!.state,
-              storeId: widget.storeItem!.storeId,
-              storeName: widget.storeItem!.storeName,
-            );
       try {
-        await Provider.of<InventoriesProvider>(context, listen: false)
-            .editItem(widget.inventoryItem!);
+        if (widget.inventoryItem != null) {
+          InventoryItem item = InventoryItem(
+            id: widget.inventoryItem!.id,
+            name: _name.text,
+            amount: int.parse(_amount.text),
+            price: double.parse(_price.text),
+            description: _description.text,
+            imageLink: _imageLink.text,
+          );
+          await Provider.of<InventoriesProvider>(context, listen: false)
+              .editItem(item);
+        } else {
+          StoreItem item = StoreItem(
+            id: widget.storeItem!.id,
+            name: _name.text,
+            price: double.parse(_price.text),
+            amount: int.parse(_amount.text),
+            imageLink: _imageLink.text,
+            description: _description.text,
+            state: widget.storeItem!.state,
+            storeId: widget.storeItem!.storeId,
+            storeName: widget.storeItem!.storeName,
+          );
+          await Provider.of<StoresProvider>(context, listen: false)
+              .editItemInMyStore(item);
+        }
         showSnackbar(context, Text("Item edited successfully"));
         Navigator.of(context).pop();
       } on ServerException catch (e) {
@@ -82,6 +98,8 @@ class _EditItemDetailsState extends State<EditItemDetails> {
 
   @override
   Widget build(BuildContext context) {
+    var inventoriesProvider = Provider.of<InventoriesProvider>(context);
+    var storesProvider = Provider.of<StoresProvider>(context);
     List<KFormField> fields = [
       KFormField(
           controller: _name,
@@ -100,7 +118,9 @@ class _EditItemDetailsState extends State<EditItemDetails> {
               ? 'Empty'
               : double.tryParse(s) == null
                   ? 'Not A Number!'
-                  : null),
+                  : double.parse(s) <= 0
+                      ? 'Only positive numbers are allowed'
+                      : null),
       KFormField(
           controller: _price,
           hint: 'Enter price',
@@ -110,7 +130,9 @@ class _EditItemDetailsState extends State<EditItemDetails> {
               ? 'Empty'
               : double.tryParse(s) == null
                   ? 'Not A Number!'
-                  : null),
+                  : double.parse(s) <= 0
+                      ? 'Only positive numbers are allowed'
+                      : null),
       KFormField(
           controller: _description,
           hint: 'Enter description',
@@ -168,10 +190,15 @@ class _EditItemDetailsState extends State<EditItemDetails> {
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: RoundedButton(
-                      onPressed: submitEditItem,
-                      title: widget.submitButtonText,
-                    ),
+                    child: inventoriesProvider.loadingStatus ==
+                                LoadingStatus.loading ||
+                            storesProvider.loadingStatus ==
+                                LoadingStatus.loading
+                        ? Center(child: CircularProgressIndicator())
+                        : RoundedButton(
+                            onPressed: submitEditItem,
+                            title: widget.submitButtonText,
+                          ),
                   ),
                   const SizedBox(height: 30)
                 ],

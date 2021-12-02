@@ -101,6 +101,24 @@ class StoresProvider with ChangeNotifier {
     }
   }
 
+  Future<void> editItemInMyStore(StoreItem item) async {
+    assert(item.id != null);
+    loadingStatus = LoadingStatus.loading;
+    notifyListeners();
+
+    try {
+      await storesWebService.editItemInMyStore(item);
+      int index = items!.indexWhere((it) => it.id == item.id);
+      items!.removeAt(index);
+      items!.insert(index, item);
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
   Future<List<StoreItem>> getAllItemsFromAllStores(
       {notifyWhenLoading = true}) async {
     loadingStatus = LoadingStatus.loading;
