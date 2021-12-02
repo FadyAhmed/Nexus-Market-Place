@@ -40,4 +40,6 @@ class RoutesConstants {
   static String getAllItemsFromAllStores = RoutesConstants.storesBaseUrl;
   static String getAllItemsOfAParticularStore(String id) =>
       RoutesConstants.storesBaseUrl + '/' + id;
+  static String searchAllStores(String searchTerm) =>
+      RoutesConstants.storesBaseUrl + '/search/items?name=' + searchTerm;
 }

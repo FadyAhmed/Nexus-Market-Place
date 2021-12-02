@@ -1,10 +1,16 @@
 import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
+import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/account_info/account_info/purshaced_items.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
+import 'package:ds_market_place/screens/explore/purshace_item.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -15,7 +21,17 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   TextEditingController _query = TextEditingController();
 
+  void submitSearch(String val) async {
+    try {
+      await Provider.of<StoresProvider>(context, listen: false)
+          .searchAllStores(val);
+    } on ServerException catch (e) {
+      showMessageDialogue(context, e.message);
+    }
+  }
+
   Widget build(BuildContext context) {
+    var storesProvider = Provider.of<StoresProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         physics: const ScrollPhysics(),
@@ -27,9 +43,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             TextField(
               cursorColor: Colors.black,
-              onSubmitted: (val) {
-                setState(() {});
-              },
+              onSubmitted: submitSearch,
               textInputAction: TextInputAction.search,
               controller: _query,
               decoration: InputDecoration(
@@ -64,96 +78,78 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             Container(
-              child: FutureBuilder(
-                future: Future.delayed(Duration.zero),
-                builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return loading();
-                  } else if (snapshot.connectionState == ConnectionState.done) {
-                    if (!snapshot.hasData) {
-                      return Text(_query.text.isEmpty ? '' : 'No Data Found!!');
-                    } else {
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          var item = snapshot.data[index];
-                          return snapshot.data.length == 0
-                              ? const Text('No Data Found!!')
-                              : Card(
+              child: storesProvider.loadingStatus == LoadingStatus.loading
+                  ? Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  : storesProvider.searchItems == null
+                      ? const Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Text('Enter a search term'),
+                        )
+                      : storesProvider.searchItems!.length == 0
+                          ? const Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: const Text('No Items Found!'),
+                            )
+                          : ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: storesProvider.searchItems!.length,
+                              itemBuilder: (context, index) {
+                                var item = storesProvider.searchItems![index];
+                                return Card(
                                   margin: const EdgeInsets.only(
                                       bottom: 8, left: 8, right: 8),
                                   child: Padding(
                                     padding: const EdgeInsets.all(0.0),
                                     child: Column(children: [
-                                      InkWell(
-                                        onTap: () {
+                                      ItemCard(
+                                        // menuItems: ["Edit", "Remove"],
+                                        sellerName: item.storeName,
+                                        showActions: false,
+                                        itemName: item.name,
+                                        amount: item.amount.toString(),
+                                        price: item.price,
+                                        onPressed: () {
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  PurchasedItemsScreen(),
+                                                  PurchaseItemScreen(item),
                                             ),
                                           );
                                         },
-                                        child: ItemCard(
-                                          menuItems: ["Edit", "Remove"],
-                                          sellerName: "FATOO",
-                                          showActions: false,
-                                          itemName: "item name",
-                                          amount: "11",
-                                          price: 15,
-                                          onPressed: () {
-                                            var item = InventoryItem(
-                                              name: 'name',
-                                              amount: 1,
-                                              price: 1,
-                                              description: 'description',
-                                              imageLink: 'imageLink',
-                                            );
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        OnSaleItemDetailsScreen(
-                                                            item)));
-                                          },
-                                          onSelectMenuItem: (choice) {
-                                            if (choice == "Edit") {
-                                              Navigator.of(context)
-                                                  .push(MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditItemDetails(
-                                                      inventoryItem: InventoryItem(
-                                                    name: 'name',
-                                                    amount: 1,
-                                                    price: 1,
-                                                    description: 'description',
-                                                    imageLink: 'imageLink',
-                                                  ),
-                                                  submitButtonText: "Edit",
-                                                  onSubmit: () => {
-                                                    //TODO: add edit habdler
-                                                    Navigator.of(context).pop()
-                                                  },
-                                                ),
-                                              ));
-                                            } else {
-                                              //TODO: remove handler
-                                            }
-                                          },
-                                        ),
+                                        onSelectMenuItem: (choice) {
+                                          // if (choice == "Edit") {
+                                          //   Navigator.of(context)
+                                          //       .push(MaterialPageRoute(
+                                          //     builder: (context) =>
+                                          //         EditItemDetails(
+                                          //       inventoryItem: InventoryItem(
+                                          //         name: 'name',
+                                          //         amount: 1,
+                                          //         price: 1,
+                                          //         description: 'description',
+                                          //         imageLink: 'imageLink',
+                                          //       ),
+                                          //       submitButtonText: "Edit",
+                                          //       onSubmit: () => {
+                                          //         //TODO: add edit habdler
+                                          //         Navigator.of(context).pop()
+                                          //       },
+                                          //     ),
+                                          //   ));
+                                          // } else {
+                                          //   //TODO: remove handler
+                                          // }
+                                        },
                                       ),
                                     ]),
                                   ),
                                 );
-                        },
-                      );
-                    }
-                  } else {
-                    return const Text('');
-                  }
-                },
-              ),
+                              },
+                            ),
             ),
           ],
         ),

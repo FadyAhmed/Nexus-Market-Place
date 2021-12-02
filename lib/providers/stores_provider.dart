@@ -11,6 +11,7 @@ class StoresProvider with ChangeNotifier {
   List<StoreItem>? items;
   List<StoreItem>? allItems;
   List<StoreItem>? storeItems;
+  List<StoreItem>? searchItems;
 
   Future<List<StoreItem>> getAllItemsFromMyStore(
       {notifyWhenLoading = true}) async {
@@ -147,6 +148,24 @@ class StoresProvider with ChangeNotifier {
       List<StoreItem> fetchedItems =
           await storesWebService.getAllItemsOfAParticularStore(id);
       storeItems = fetchedItems;
+      return fetchedItems;
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
+  Future<List<StoreItem>> searchAllStores(String searchTerm,
+      {notifyWhenLoading = true}) async {
+    loadingStatus = LoadingStatus.loading;
+    if (notifyWhenLoading) notifyListeners();
+
+    try {
+      List<StoreItem> fetchedItems =
+          await storesWebService.searchAllStores(searchTerm);
+      searchItems = fetchedItems;
       return fetchedItems;
     } catch (e) {
       throw e;

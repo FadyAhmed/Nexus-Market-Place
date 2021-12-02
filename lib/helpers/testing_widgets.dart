@@ -35,7 +35,7 @@ class TestingButton extends StatelessWidget {
         //   storeName: 'storeName',
         // );
         print(await Provider.of<StoresProvider>(context, listen: false)
-            .getAllItemsOfAParticularStore('61a7ec3d01148e1f0eb0fc64'));
+            .searchAllStores('item'));
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),
