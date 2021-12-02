@@ -1,4 +1,5 @@
 import 'package:ds_market_place/components/UI/item_card.dart';
+import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
@@ -27,6 +28,16 @@ class _SellScreenState extends State<SellScreen> {
         .catchError((e) {
       showMessageDialogue(context, e.message);
     });
+  }
+
+  void submitRemove(String id) async {
+    try {
+      await Provider.of<StoresProvider>(context, listen: false)
+          .removeItemFromMyStore(id);
+      showSnackbar(context, Text('Item is removed'));
+    } on ServerException catch (e) {
+      showMessageDialogue(context, e.message);
+    }
   }
 
   @override
@@ -72,7 +83,7 @@ class _SellScreenState extends State<SellScreen> {
                           ),
                         ));
                       } else {
-                        //TODO: remove handler
+                        submitRemove(item.id!);
                       }
                     },
                   ),

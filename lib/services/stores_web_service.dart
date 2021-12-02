@@ -50,4 +50,15 @@ class StoresWebService {
     var body = jsonDecode(response.body);
     return body['id'];
   }
+
+  Future<void> removeItemFromMyStore(String id) async {
+    var response = await http.delete(
+      Uri.parse(RoutesConstants.removeItemFromMyStore(id)),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+        'Content-Type': 'application/json',
+      },
+    );
+    checkResponse(response);
+  }
 }

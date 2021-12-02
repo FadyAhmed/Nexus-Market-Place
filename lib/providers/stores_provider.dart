@@ -68,4 +68,19 @@ class StoresProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> removeItemFromMyStore(String id) async {
+    loadingStatus = LoadingStatus.loading;
+    notifyListeners();
+
+    try {
+      await storesWebService.removeItemFromMyStore(id);
+      items!.removeWhere((it) => it.id == id);
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
 }
