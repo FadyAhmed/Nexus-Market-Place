@@ -32,4 +32,22 @@ class StoresWebService {
     Map<String, dynamic> body = jsonDecode(response.body);
     return StoreItem.fromJson(body['item']);
   }
+
+  Future<String> addInventoryItemToMyStore({
+    required String id,
+    required double price,
+    required int amount,
+  }) async {
+    var response = await http.post(
+      Uri.parse(RoutesConstants.addInventoryItemToMyStore(id)),
+      body: jsonEncode({'amount': amount, 'price': price}),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+        'Content-Type': 'application/json',
+      },
+    );
+    checkResponse(response);
+    var body = jsonDecode(response.body);
+    return body['id'];
+  }
 }

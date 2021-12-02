@@ -44,4 +44,28 @@ class StoresProvider with ChangeNotifier {
     }
   }
 
+  Future<void> addInventoryItemToMyStore({
+    required String id,
+    required int amount,
+    required double price,
+  }) async {
+    loadingStatus = LoadingStatus.loading;
+    notifyListeners();
+
+    try {
+      String itemId = await storesWebService.addInventoryItemToMyStore(
+        id: id,
+        amount: amount,
+        price: price,
+      );
+      // get the store item
+      StoreItem item = await storesWebService.getItemFromMyStore(itemId);
+      items!.add(item);
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
 }
