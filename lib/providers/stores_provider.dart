@@ -9,6 +9,7 @@ class StoresProvider with ChangeNotifier {
   LoadingStatus loadingStatus = LoadingStatus.done;
 
   List<StoreItem>? items;
+  List<StoreItem>? allItems;
 
   Future<List<StoreItem>> getAllItemsFromMyStore(
       {notifyWhenLoading = true}) async {
@@ -76,6 +77,24 @@ class StoresProvider with ChangeNotifier {
     try {
       await storesWebService.removeItemFromMyStore(id);
       items!.removeWhere((it) => it.id == id);
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
+  Future<List<StoreItem>> getAllItemsFromAllStores(
+      {notifyWhenLoading = true}) async {
+    loadingStatus = LoadingStatus.loading;
+    if (notifyWhenLoading) notifyListeners();
+
+    try {
+      List<StoreItem> fetchedItems =
+          await storesWebService.getAllItemsFromMyStore();
+      allItems = fetchedItems;
+      return fetchedItems;
     } catch (e) {
       throw e;
     } finally {

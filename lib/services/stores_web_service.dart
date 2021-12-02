@@ -61,4 +61,17 @@ class StoresWebService {
     );
     checkResponse(response);
   }
+
+  Future<List<StoreItem>> getAllItemsFromAllStores() async {
+    var response = await http.get(
+      Uri.parse(RoutesConstants.getAllItemsFromAllStores),
+      headers: {'Authorization': 'Bearer ${globals.token}'},
+    );
+    checkResponse(response);
+
+    Map<String, dynamic> body = jsonDecode(response.body);
+    return (body['items'] as List)
+        .map((json) => StoreItem.fromJson(json))
+        .toList();
+  }
 }

@@ -35,4 +35,5 @@ class RoutesConstants {
       RoutesConstants.storesBaseUrl + '/add/' + id;
   static String removeItemFromMyStore(String id) =>
       RoutesConstants.storesBaseUrl + '/mystore/' + id;
+  static String getAllItemsFromAllStores = RoutesConstants.storesBaseUrl;
 }

@@ -1,6 +1,10 @@
 import 'package:ds_market_place/constants.dart';
+import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/models/store_item.dart';
+import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/explore/purshace_item.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ExploreScreen extends StatefulWidget {
   const ExploreScreen({Key? key}) : super(key: key);
@@ -9,25 +13,44 @@ class ExploreScreen extends StatefulWidget {
   _ExploreScreenState createState() => _ExploreScreenState();
 }
 
-Future<void> _onRefresh() async {}
+Future<void> _onRefresh(BuildContext context) async {
+  Provider.of<StoresProvider>(context, listen: false)
+      .getAllItemsFromAllStores()
+      .catchError((e) {
+    showMessageDialogue(context, e.message);
+  });
+}
 
 class _ExploreScreenState extends State<ExploreScreen> {
   @override
+  void initState() {
+    super.initState();
+    Provider.of<StoresProvider>(context, listen: false)
+        .getAllItemsFromAllStores(notifyWhenLoading: false)
+        .catchError((e) {
+      showMessageDialogue(context, e.message);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var storesProvider = Provider.of<StoresProvider>(context);
     return Scaffold(
         body: RefreshIndicator(
-      onRefresh: _onRefresh,
+      onRefresh: () => _onRefresh(context),
       child: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8, top: 16, bottom: 0),
         child: GridView.builder(
-          itemCount: 7,
+          itemCount: storesProvider.allItems!.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              childAspectRatio: (MediaQuery.of(context).size.width / 2) /
-                  (MediaQuery.of(context).size.height / 3),
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16.0),
+            childAspectRatio: (MediaQuery.of(context).size.width / 2) /
+                (MediaQuery.of(context).size.height / 3),
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16.0,
+          ),
           itemBuilder: (BuildContext context, int index) {
+            StoreItem item = storesProvider.allItems![index];
             return GestureDetector(
               onTap: () {
                 Navigator.of(context).push(
@@ -61,7 +84,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('seller',
+                          Text(item.storeName,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
@@ -69,13 +92,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                   .copyWith(fontSize: 14)),
                           const SizedBox(height: 5),
                           Text(
-                            'Item Name',
+                            item.name,
                             style: Theme.of(context).textTheme.bodyText1,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                           const SizedBox(height: 5),
-                          Text('Price',
+                          Text(item.price.toStringAsFixed(2),
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.bodyText1),
                         ],
