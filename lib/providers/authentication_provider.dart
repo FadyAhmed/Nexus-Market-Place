@@ -20,19 +20,29 @@ class AuthenticationProvider with ChangeNotifier {
     loadingStatus = LoadingStatus.loading;
     if (notifyWhenLoading) notifyListeners();
 
-    String token = await authenticationWebService.signIn(loginData);
-    globals.token = token;
-    loadingStatus = LoadingStatus.done;
-    notifyListeners();
+    try {
+      String token = await authenticationWebService.signIn(loginData);
+      globals.token = token;
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
   }
 
   Future<bool> signUp(Signup signupData) async {
     loadingStatus = LoadingStatus.loading;
     notifyListeners();
 
-    await authenticationWebService.signUp(signupData);
-    loadingStatus = LoadingStatus.done;
-    notifyListeners();
-    return true;
+    try {
+      await authenticationWebService.signUp(signupData);
+      return true;
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
   }
 }
