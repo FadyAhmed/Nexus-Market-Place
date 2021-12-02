@@ -6,6 +6,7 @@ import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,14 +14,17 @@ import 'package:provider/provider.dart';
 class EditItemDetails extends StatefulWidget {
   final onSubmit;
   final String submitButtonText;
-  final InventoryItem item;
+  final InventoryItem? inventoryItem;
+  final StoreItem? storeItem;
 
   const EditItemDetails({
     Key? key,
     required this.onSubmit,
     required this.submitButtonText,
-    required this.item,
-  }) : super(key: key);
+    this.inventoryItem,
+    this.storeItem,
+  })  : assert(inventoryItem != null || storeItem != null),
+        super(key: key);
   @override
   _EditItemDetailsState createState() => _EditItemDetailsState();
 }
@@ -35,8 +39,8 @@ class _EditItemDetailsState extends State<EditItemDetails> {
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    InventoryItem item = widget.item;
-    _name = TextEditingController(text: item.name);
+    var item = widget.inventoryItem;
+    _name = TextEditingController(text: item!.name);
     _description = TextEditingController(text: item.description);
     _amount = TextEditingController(text: item.amount.toString());
     _price = TextEditingController(text: item.price.toStringAsFixed(2));
@@ -46,17 +50,28 @@ class _EditItemDetailsState extends State<EditItemDetails> {
 
   void submitEditItem() async {
     if (_formKey.currentState!.validate()) {
-      InventoryItem item = InventoryItem(
-        id: widget.item.id,
-        name: _name.text,
-        amount: int.parse(_amount.text),
-        price: double.parse(_price.text),
-        description: _description.text,
-        imageLink: _imageLink.text,
-      );
+      var item = widget.inventoryItem != null
+          ? InventoryItem(
+              id: widget.inventoryItem!.id,
+              name: _name.text,
+              amount: int.parse(_amount.text),
+              price: double.parse(_price.text),
+              description: _description.text,
+              imageLink: _imageLink.text,
+            )
+          : StoreItem(
+              name: _name.text,
+              price: double.parse(_price.text),
+              amount: int.parse(_amount.text),
+              imageLink: _imageLink.text,
+              description: _description.text,
+              state: widget.storeItem!.state,
+              storeId: widget.storeItem!.storeId,
+              storeName: widget.storeItem!.storeName,
+            );
       try {
         await Provider.of<InventoriesProvider>(context, listen: false)
-            .editItem(item);
+            .editItem(widget.inventoryItem!);
         showSnackbar(context, Text("Item edited successfully"));
         Navigator.of(context).pop();
       } on ServerException catch (e) {

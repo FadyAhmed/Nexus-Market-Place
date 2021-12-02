@@ -65,7 +65,7 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => EditItemDetails(
-                                  item: widget.item,
+                                  inventoryItem: widget.item,
                                   onSubmit: () {
                                     Navigator.of(context).pop();
                                   },

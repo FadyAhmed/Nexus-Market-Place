@@ -123,7 +123,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   .push(MaterialPageRoute(
                                                 builder: (context) =>
                                                     EditItemDetails(
-                                                      item: InventoryItem(
+                                                      inventoryItem: InventoryItem(
                                                     name: 'name',
                                                     amount: 1,
                                                     price: 1,

@@ -1,6 +1,7 @@
 class RoutesConstants {
   static String baseUrl = 'https://nexus-market.herokuapp.com/api';
 
+// USERS API
   static String usersBaseUrl = RoutesConstants.baseUrl + '/users';
 
   static String signIn = RoutesConstants.usersBaseUrl + '/login';
@@ -11,6 +12,7 @@ class RoutesConstants {
   static String removeBalance =
       RoutesConstants.usersBaseUrl + '/wallet/withdraw';
 
+  // INVENTORIES API
   static String addItemToInventory = RoutesConstants.baseUrl + '/myinventory';
   static String getAllInventoryItems = RoutesConstants.baseUrl + '/myinventory';
   static String getInventoryItemById(String id) =>
@@ -19,4 +21,10 @@ class RoutesConstants {
       RoutesConstants.baseUrl + '/myinventory/' + id;
   static String removeInventoryItem(String id) =>
       RoutesConstants.baseUrl + '/myinventory/' + id;
+
+  // STORES API
+  static String storesBaseUrl = RoutesConstants.baseUrl + '/stores';
+
+  static String getAllItemsFromMyStore =
+      RoutesConstants.storesBaseUrl + '/mystore';
 }

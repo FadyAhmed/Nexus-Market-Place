@@ -4,11 +4,14 @@ import 'package:ds_market_place/models/add_balance_request.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/login.dart';
 import 'package:ds_market_place/models/profile.dart';
+import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
+import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:ds_market_place/screens/home_page_screen.dart';
 import 'package:ds_market_place/services/inventories_web_service.dart';
+import 'package:ds_market_place/services/stores_web_service.dart';
 import 'package:ds_market_place/services/users_web_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,15 +23,18 @@ class TestingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        var item = InventoryItem(
-          id: '61a7c3b06a36c2198212d205',
-          name: 'item0',
-          amount: 1,
-          price: 0.99,
-          description: 'description0',
-          imageLink: 'link0',
-        );
-        Provider.of<InventoriesProvider>(context, listen: false).editItem(item);
+        // var item = StoreItem(
+        //   name: 'name',
+        //   price: 1,
+        //   amount: 1,
+        //   imageLink: 'imageLink',
+        //   description: 'description',
+        //   state: StoreItemState.owned,
+        //   storeId: 'storeId',
+        //   storeName: 'storeName',
+        // );
+        print(await Provider.of<StoresProvider>(context, listen: false)
+            .getAllItemsFromMyStore());
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),
