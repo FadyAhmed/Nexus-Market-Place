@@ -57,4 +57,15 @@ class InventoriesWebService {
     );
     checkResponse(response);
   }
+  
+  Future<void> removeItem(String id) async {
+    var response = await http.delete(
+      Uri.parse(RoutesConstants.editInventoryItem(id)),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+        'Content-Type': 'application/json',
+      },
+    );
+    checkResponse(response);
+  }
 }

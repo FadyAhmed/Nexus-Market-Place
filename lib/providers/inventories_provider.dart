@@ -16,6 +16,8 @@ class InventoriesProvider with ChangeNotifier {
 
     try {
       await inventoriesWebService.addItem(item);
+      // TODO: add new items to items list (but after the item id is received from the API)
+      // items!.add(item);
     } catch (e) {
       throw e;
     } finally {
@@ -67,6 +69,21 @@ class InventoriesProvider with ChangeNotifier {
       int index = items!.indexWhere((it) => it.id == item.id);
       items!.removeAt(index);
       items!.insert(index, item);
+    } catch (e) {
+      throw e;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
+  Future<void> removeItem(String id) async {
+    loadingStatus = LoadingStatus.loading;
+    notifyListeners();
+
+    try {
+      await inventoriesWebService.removeItem(id);
+      items!.removeWhere((it) => it.id == id);
     } catch (e) {
       throw e;
     } finally {

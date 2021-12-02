@@ -1,6 +1,8 @@
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/screens/inventory/add_item_to_inventory.dart';
@@ -20,7 +22,18 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<InventoriesProvider>(context, listen: false).getAllItems();
+    Provider.of<InventoriesProvider>(context, listen: false)
+        .getAllItems(notifyWhenLoading: false);
+  }
+
+  void submitDelete(InventoryItem item) async {
+    try {
+      await Provider.of<InventoriesProvider>(context, listen: false)
+          .removeItem(item.id!);
+      showSnackbar(context, Text('Item is deleted'));
+    } on ServerException catch (e) {
+      showMessageDialogue(context, e.message);
+    }
   }
 
   @override
@@ -56,11 +69,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
                                 ),
                               ));
                             } else {
-                              //TODO: remove handler
-                              showSnackbar(context, Text("Item removed"));
+                              submitDelete(items[index]);
                             }
                           },
-                        itemName: items[index].name,
+                          itemName: items[index].name,
                           amount: items[index].amount.toString(),
                           price: items[index].price,
                           onPressed: () {

@@ -17,4 +17,6 @@ class RoutesConstants {
       RoutesConstants.baseUrl + '/myinventory/' + id;
   static String editInventoryItem(String id) =>
       RoutesConstants.baseUrl + '/myinventory/' + id;
+  static String removeInventoryItem(String id) =>
+      RoutesConstants.baseUrl + '/myinventory/' + id;
 }

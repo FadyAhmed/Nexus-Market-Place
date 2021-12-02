@@ -1,4 +1,7 @@
+import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/table_row.dart';
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +12,9 @@ import 'edit_item_details.dart';
 
 class OnSaleItemDetailsScreen extends StatefulWidget {
   final InventoryItem item;
-  OnSaleItemDetailsScreen(this.item, {Key? key}) : super(key: key);
+  OnSaleItemDetailsScreen(this.item, {Key? key})
+      : assert(item.id != null),
+        super(key: key);
 
   @override
   _OnSaleItemDetailsScreenState createState() =>
@@ -17,6 +22,17 @@ class OnSaleItemDetailsScreen extends StatefulWidget {
 }
 
 class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
+  void submitDelete() async {
+    try {
+      await Provider.of<InventoriesProvider>(context, listen: false)
+          .removeItem(widget.item.id!);
+      showSnackbar(context, Text('Item is deleted'));
+      Navigator.of(context).pop();
+    } on ServerException catch (e) {
+      showMessageDialogue(context, e.message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     InventoryItem item = Provider.of<InventoriesProvider>(context)
@@ -65,7 +81,7 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                       Container(
                         color: Colors.red,
                         child: IconButton(
-                          onPressed: () => {},
+                          onPressed: submitDelete,
                           icon: const Icon(Icons.delete, color: Colors.white),
                         ),
                       ),
@@ -83,12 +99,10 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
               tableRow("", "", context),
               tableRow("Description: ", item.description, context),
               tableRow("", "", context),
-              tableRow(
-                  "Available amount: ", item.amount.toString(), context),
+              tableRow("Available amount: ", item.amount.toString(), context),
               tableRow("", "", context),
               tableRow(
-                  "Price: ", "\$${item.price.toStringAsFixed(2)}",
-                  context),
+                  "Price: ", "\$${item.price.toStringAsFixed(2)}", context),
             ],
           ),
           const SizedBox(height: 50),
