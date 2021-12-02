@@ -38,4 +38,6 @@ class RoutesConstants {
   static String editItemInMyStore(String id) =>
       RoutesConstants.storesBaseUrl + '/mystore/' + id;
   static String getAllItemsFromAllStores = RoutesConstants.storesBaseUrl;
+  static String getAllItemsOfAParticularStore(String id) =>
+      RoutesConstants.storesBaseUrl + '/' + id;
 }

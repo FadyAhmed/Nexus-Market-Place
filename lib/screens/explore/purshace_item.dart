@@ -88,7 +88,8 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (ctx) => StoreDetailsScreen(
-                                storeName: "Tawheed wel noor",
+                                storeName: widget.item.storeName,
+                                storeId: widget.item.storeId,
                               )));
                     },
                     child: Text(widget.item.storeName,

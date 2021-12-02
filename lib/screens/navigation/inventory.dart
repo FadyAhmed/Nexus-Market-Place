@@ -23,7 +23,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
   void initState() {
     super.initState();
     Provider.of<InventoriesProvider>(context, listen: false)
-        .getAllItems(notifyWhenLoading: false);
+        .getAllItems(notifyWhenLoading: false)
+        .catchError((e) {
+      showMessageDialogue(context, e.message);
+    });
   }
 
   void submitDelete(InventoryItem item) async {

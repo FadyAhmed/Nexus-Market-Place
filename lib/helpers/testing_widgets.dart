@@ -23,19 +23,19 @@ class TestingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        var item = StoreItem(
-          id: '61a8b5c21bf9c65143eb0963',
-          name: 'item2.5',
-          price: 2.95,
-          amount: 2,
-          imageLink: 'link2.5',
-          description: 'desc2.5',
-          state: StoreItemState.owned,
-          storeId: 'storeId',
-          storeName: 'storeName',
-        );
-        await Provider.of<StoresProvider>(context, listen: false)
-            .editItemInMyStore(item);
+        // var item = StoreItem(
+        //   id: '61a8b5c21bf9c65143eb0963',
+        //   name: 'item2.5',
+        //   price: 2.95,
+        //   amount: 2,
+        //   imageLink: 'link2.5',
+        //   description: 'desc2.5',
+        //   state: StoreItemState.owned,
+        //   storeId: 'storeId',
+        //   storeName: 'storeName',
+        // );
+        print(await Provider.of<StoresProvider>(context, listen: false)
+            .getAllItemsOfAParticularStore('61a7ec3d01148e1f0eb0fc64'));
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),
