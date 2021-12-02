@@ -7,7 +7,7 @@ import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:http/http.dart' as http;
 
 class InventoriesWebService {
-  Future<void> addItem(InventoryItem item) async {
+  Future<String> addItem(InventoryItem item) async {
     var response = await http.post(
       Uri.parse(RoutesConstants.addItemToInventory),
       body: jsonEncode(item.toJson()),
@@ -17,6 +17,8 @@ class InventoriesWebService {
       },
     );
     checkResponse(response);
+    var body = jsonDecode(response.body);
+    return body['id'];
   }
 
   Future<List<InventoryItem>> getAllItems() async {
@@ -57,7 +59,7 @@ class InventoriesWebService {
     );
     checkResponse(response);
   }
-  
+
   Future<void> removeItem(String id) async {
     var response = await http.delete(
       Uri.parse(RoutesConstants.editInventoryItem(id)),

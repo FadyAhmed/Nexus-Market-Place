@@ -15,9 +15,9 @@ class InventoriesProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      await inventoriesWebService.addItem(item);
-      // TODO: add new items to items list (but after the item id is received from the API)
-      // items!.add(item);
+      String itemId = await inventoriesWebService.addItem(item);
+      item.id = itemId;
+      items!.add(item);
     } catch (e) {
       throw e;
     } finally {
