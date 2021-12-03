@@ -44,4 +44,12 @@ class RoutesConstants {
       RoutesConstants.storesBaseUrl + '/search/items?name=' + searchTerm;
   static String purchaseItem(String id) =>
       RoutesConstants.storesBaseUrl + '/purchase/' + id;
+
+  // TRANSATIONS API
+  static String transactionsBaseUrl = RoutesConstants.baseUrl + '/transactions';
+
+  static String getSoldItems = RoutesConstants.transactionsBaseUrl + '/sold';
+  static String getPurchasedItems =
+      RoutesConstants.transactionsBaseUrl + '/purchased';
+  static String getAllTransactions = RoutesConstants.transactionsBaseUrl;
 }

@@ -9,7 +9,7 @@ class DetailedItemCard extends StatelessWidget {
   final String date;
   final String name;
   final String type;
-  final int price;
+  final double price;
   const DetailedItemCard({
     Key? key,
     required this.itemName,

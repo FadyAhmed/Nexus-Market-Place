@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/add_balance_request.dart';
@@ -5,16 +7,20 @@ import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/login.dart';
 import 'package:ds_market_place/models/profile.dart';
 import 'package:ds_market_place/models/store_item.dart';
+import 'package:ds_market_place/models/transaction.dart';
 import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
+import 'package:ds_market_place/providers/transactions_provider.dart';
 import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:ds_market_place/screens/home_page_screen.dart';
 import 'package:ds_market_place/services/inventories_web_service.dart';
 import 'package:ds_market_place/services/stores_web_service.dart';
+import 'package:ds_market_place/services/transactions_web_service.dart';
 import 'package:ds_market_place/services/users_web_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class TestingButton extends StatelessWidget {
   const TestingButton({Key? key}) : super(key: key);
@@ -23,19 +29,8 @@ class TestingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        // var item = StoreItem(
-        //   id: '61a8b5c21bf9c65143eb0963',
-        //   name: 'item2.5',
-        //   price: 2.95,
-        //   amount: 2,
-        //   imageLink: 'link2.5',
-        //   description: 'desc2.5',
-        //   state: StoreItemState.owned,
-        //   storeId: 'storeId',
-        //   storeName: 'storeName',
-        // );
-        print(await Provider.of<StoresProvider>(context, listen: false)
-            .purchaseItem('61aa0894b707043e181acdec', 1));
+        print(await Provider.of<TransactionsProvider>(context, listen: false)
+            .getSoldItems());
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),

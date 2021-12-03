@@ -1,5 +1,12 @@
 import 'package:ds_market_place/components/UI/detailed_item_card.dart';
+import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/models/transaction.dart';
+import 'package:ds_market_place/providers/transactions_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class SoldItemsScreen extends StatefulWidget {
   const SoldItemsScreen({Key? key}) : super(key: key);
@@ -9,22 +16,38 @@ class SoldItemsScreen extends StatefulWidget {
 }
 
 class _SoldItemsScreenState extends State<SoldItemsScreen> {
+  void fetchSoldItems() async {
+    try {
+      await Provider.of<TransactionsProvider>(context, listen: false)
+          .getSoldItems();
+    } on ServerException catch (e) {
+      showMessageDialogue(context, e.message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    var transactionsProvider = Provider.of<TransactionsProvider>(context);
     return Scaffold(
-      body: ListView.builder(
-        itemCount: 7,
-        itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: DetailedItemCard(
-              amount: "41",
-              itemName: "Book",
-              price: 15,
-              type: "SOLD",
-              name: "Name",
-              date: "9/9/2020",
-            )),
-      ),
+      body: transactionsProvider.loadingStatus == LoadingStatus.loading
+          ? CircularProgressIndicator()
+          : ListView.builder(
+              itemCount: transactionsProvider.soldItems!.length,
+              itemBuilder: (context, index) {
+                Transaction transaction =
+                    transactionsProvider.soldItems![index];
+                return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DetailedItemCard(
+                      amount: transaction.amount.toString(),
+                      itemName: transaction.itemName,
+                      price: transaction.price,
+                      type: "SOLD",
+                      name: transaction.buyerStoreName,
+                      date: DateFormat('dd-MM-yyyy').format(transaction.date),
+                    ));
+              },
+            ),
     );
   }
 }
