@@ -1,5 +1,6 @@
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/table_row.dart';
+import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
@@ -35,9 +36,9 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    InventoryItem item = Provider.of<InventoriesProvider>(context)
-        .items!
-        .firstWhere((it) => it.id == widget.item.id);
+    var inventoriesProvider = Provider.of<InventoriesProvider>(context);
+    InventoryItem item = inventoriesProvider.items!
+        .firstWhere((it) => it.id == widget.item.id, orElse: () => widget.item);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Item Details"),
@@ -78,13 +79,18 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                         ),
                       ),
                       const SizedBox(width: 15),
-                      Container(
-                        color: Colors.red,
-                        child: IconButton(
-                          onPressed: submitDelete,
-                          icon: const Icon(Icons.delete, color: Colors.white),
+                      if (inventoriesProvider.loadingStatus ==
+                          LoadingStatus.loading)
+                        CircularProgressIndicator(color: Colors.red),
+                      if (inventoriesProvider.loadingStatus !=
+                          LoadingStatus.loading)
+                        Container(
+                          color: Colors.red,
+                          child: IconButton(
+                            onPressed: submitDelete,
+                            icon: const Icon(Icons.delete, color: Colors.white),
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
