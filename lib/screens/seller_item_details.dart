@@ -80,30 +80,33 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                   kLogo,
                   height: 100,
                 ),
-                Expanded(
+                  Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Container(
-                        color: Colors.grey,
-                        child: IconButton(
-                          onPressed: () => {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => EditItemDetails(
-                                  inventoryItem: widget.inventoryItem,
-                                  storeItem: widget.storeItem,
-                                  onSubmit: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  submitButtonText: "Edit",
+                        if (inventoryItem != null ||
+                          (storeItem != null &&
+                              storeItem.state == StoreItemState.owned))
+                        Container(
+                          color: Colors.grey,
+                          child: IconButton(
+                            onPressed: () => {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => EditItemDetails(
+                                    inventoryItem: widget.inventoryItem,
+                                    storeItem: widget.storeItem,
+                                    onSubmit: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    submitButtonText: "Edit",
+                                  ),
                                 ),
-                              ),
-                            )
-                          },
-                          icon: const Icon(Icons.edit),
+                              )
+                            },
+                            icon: const Icon(Icons.edit),
+                          ),
                         ),
-                      ),
                       const SizedBox(width: 15),
                       if (inventoriesProvider.loadingStatus ==
                               LoadingStatus.loading ||
@@ -111,14 +114,14 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                               LoadingStatus.loading)
                         CircularProgressIndicator(color: Colors.red),
                       if (inventoriesProvider.loadingStatus !=
-                              LoadingStatus.loading ||
+                              LoadingStatus.loading &&
                           storesProveider.loadingStatus !=
                               LoadingStatus.loading)
                         Container(
                           color: Colors.red,
                           child: IconButton(
                             onPressed: submitDelete,
-                            icon: const Icon(Icons.delete, color: Colors.white),
+                              icon: const Icon(Icons.delete, color: Colors.white),
                           ),
                         ),
                     ],

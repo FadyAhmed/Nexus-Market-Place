@@ -30,7 +30,7 @@ class TestingButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () async {
         print(await Provider.of<TransactionsProvider>(context, listen: false)
-            .getSoldItems());
+            .getPurchasedItems());
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),

@@ -9,8 +9,8 @@ class Transaction {
   int amount;
   String imageLink;
   DateTime date;
-  String buyerStoreId;
-  String buyerStoreName;
+  String storeId;
+  String storeName;
 
   Transaction({
     required this.itemName,
@@ -18,9 +18,25 @@ class Transaction {
     required this.amount,
     required this.imageLink,
     required this.date,
-    required this.buyerStoreId,
-    required this.buyerStoreName,
+    required this.storeId,
+    required this.storeName,
   });
+
+  // removing 'buyer' and 'seller' words before storeName and storeId
+  static Map<String, dynamic> normalizeJson(Map<String, dynamic> json) {
+    Map<String, dynamic> newJson = {...json};
+    newJson['storeId'] = json['buyerStoreId'] ?? json['sellerStoreId'];
+    newJson['storeName'] = json['buyerStoreName'] ?? json['sellerStoreName'];
+    newJson.removeWhere(
+      (key, value) => [
+        'buyerStoreId',
+        'sellerStoreId',
+        'buyerStoreName',
+        'sellerStoreName',
+      ].contains(key),
+    );
+    return newJson;
+  }
 
   factory Transaction.fromJson(Map<String, dynamic> json) =>
       _$TransactionFromJson(json);

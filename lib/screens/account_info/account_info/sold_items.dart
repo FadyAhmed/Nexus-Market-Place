@@ -16,38 +16,47 @@ class SoldItemsScreen extends StatefulWidget {
 }
 
 class _SoldItemsScreenState extends State<SoldItemsScreen> {
-  void fetchSoldItems() async {
+  Future<void> fetchSoldItems() async {
     try {
       await Provider.of<TransactionsProvider>(context, listen: false)
-          .getSoldItems();
+          .getSoldItems(notifyWhenLoading: false);
     } on ServerException catch (e) {
       showMessageDialogue(context, e.message);
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchSoldItems();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var transactionsProvider = Provider.of<TransactionsProvider>(context);
-    return Scaffold(
-      body: transactionsProvider.loadingStatus == LoadingStatus.loading
-          ? CircularProgressIndicator()
-          : ListView.builder(
-              itemCount: transactionsProvider.soldItems!.length,
-              itemBuilder: (context, index) {
-                Transaction transaction =
-                    transactionsProvider.soldItems![index];
-                return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DetailedItemCard(
-                      amount: transaction.amount.toString(),
-                      itemName: transaction.itemName,
-                      price: transaction.price,
-                      type: "SOLD",
-                      name: transaction.buyerStoreName,
-                      date: DateFormat('dd-MM-yyyy').format(transaction.date),
-                    ));
-              },
-            ),
+    return RefreshIndicator(
+      onRefresh: fetchSoldItems,
+      child: Scaffold(
+        body: transactionsProvider.loadingStatus == LoadingStatus.loading
+            ? Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                itemCount: transactionsProvider.soldItems!.length,
+                itemBuilder: (context, index) {
+                  Transaction transaction =
+                      transactionsProvider.soldItems![index];
+                  return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DetailedItemCard(
+                        amount: transaction.amount.toString(),
+                        itemName: transaction.itemName,
+                        price: transaction.price,
+                        type: "SOLD",
+                        name: transaction.storeName,
+                        date: DateFormat('dd-MM-yyyy').format(transaction.date),
+                      ));
+                },
+              ),
+      ),
     );
   }
 }

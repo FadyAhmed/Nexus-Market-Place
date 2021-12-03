@@ -9,14 +9,30 @@ class TransactionsProvider with ChangeNotifier {
   LoadingStatus loadingStatus = LoadingStatus.done;
 
   List<Transaction>? soldItems;
+  List<Transaction>? purchasedItems;
 
-  Future<List<Transaction>> getSoldItems() async {
+  Future<List<Transaction>> getSoldItems(
+      {bool notifyWhenLoading = true}) async {
     loadingStatus = LoadingStatus.loading;
-    notifyListeners();
+    if (notifyWhenLoading) notifyListeners();
 
     try {
       soldItems = await transactionsWebService.getSoldItems();
       return soldItems!;
+    } finally {
+      loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
+  Future<List<Transaction>> getPurchasedItems(
+      {bool notifyWhenLoading = true}) async {
+    loadingStatus = LoadingStatus.loading;
+    if (notifyWhenLoading) notifyListeners();
+
+    try {
+      purchasedItems = await transactionsWebService.getPurchasedItems();
+      return purchasedItems!;
     } finally {
       loadingStatus = LoadingStatus.done;
       notifyListeners();
