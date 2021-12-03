@@ -19,13 +19,14 @@ class EditItemDetails extends StatefulWidget {
   final InventoryItem? inventoryItem;
   final StoreItem? storeItem;
 
-  const EditItemDetails({
+  EditItemDetails({
     Key? key,
     required this.onSubmit,
     required this.submitButtonText,
     this.inventoryItem,
     this.storeItem,
-  })  : assert(inventoryItem != null || storeItem != null),
+  })  : assert((inventoryItem != null && inventoryItem.id != null) ||
+            (storeItem != null && storeItem.id != null)),
         super(key: key);
   @override
   _EditItemDetailsState createState() => _EditItemDetailsState();

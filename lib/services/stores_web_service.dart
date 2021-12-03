@@ -126,4 +126,18 @@ class StoresWebService {
         .map((json) => StoreItem.fromJson(json))
         .toList();
   }
+
+  Future<String> purchaseItem(String id, int amount) async {
+    var response = await http.put(
+      Uri.parse(RoutesConstants.purchaseItem(id)),
+      body: jsonEncode({'amount': amount}),
+      headers: {
+        'Authorization': 'Bearer ${globals.token}',
+        'Content-Type': 'application/json',
+      },
+    );
+    checkResponse(response);
+    var body = jsonDecode(response.body);
+    return body['id'];
+  }
 }

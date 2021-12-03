@@ -68,7 +68,7 @@ class _SellScreenState extends State<SellScreen> {
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              OnSaleItemDetailsScreen(item.toInventoryItem())));
+                              OnSaleItemDetailsScreen(storeItem: item)));
                     },
                     onSelectMenuItem: (choice) {
                       if (choice == "Edit") {

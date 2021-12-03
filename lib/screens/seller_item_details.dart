@@ -4,7 +4,9 @@ import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
+import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,9 +14,14 @@ import '../constants.dart';
 import 'edit_item_details.dart';
 
 class OnSaleItemDetailsScreen extends StatefulWidget {
-  final InventoryItem item;
-  OnSaleItemDetailsScreen(this.item, {Key? key})
-      : assert(item.id != null),
+  final InventoryItem? inventoryItem;
+  final StoreItem? storeItem;
+  OnSaleItemDetailsScreen({
+    Key? key,
+    this.inventoryItem,
+    this.storeItem,
+  })  : assert((inventoryItem != null && inventoryItem.id != null) ||
+            (storeItem != null && storeItem.id != null)),
         super(key: key);
 
   @override
@@ -25,8 +32,13 @@ class OnSaleItemDetailsScreen extends StatefulWidget {
 class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
   void submitDelete() async {
     try {
-      await Provider.of<InventoriesProvider>(context, listen: false)
-          .removeItem(widget.item.id!);
+      if (widget.inventoryItem != null) {
+        await Provider.of<InventoriesProvider>(context, listen: false)
+            .removeItem(widget.inventoryItem!.id!);
+      } else {
+        await Provider.of<StoresProvider>(context, listen: false)
+            .removeItemFromMyStore(widget.storeItem!.id!);
+      }
       showSnackbar(context, Text('Item is deleted'));
       Navigator.of(context).pop();
     } on ServerException catch (e) {
@@ -37,11 +49,24 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     var inventoriesProvider = Provider.of<InventoriesProvider>(context);
-    InventoryItem item = inventoriesProvider.items!
-        .firstWhere((it) => it.id == widget.item.id, orElse: () => widget.item);
+    var storesProveider = Provider.of<StoresProvider>(context);
+    InventoryItem? inventoryItem;
+    StoreItem? storeItem;
+    if (widget.inventoryItem != null) {
+      inventoryItem = inventoriesProvider.items!.firstWhere(
+        (it) => it.id == widget.inventoryItem!.id,
+        orElse: () => widget.inventoryItem!,
+      );
+    } else {
+      storeItem = storesProveider.items!.firstWhere(
+        (it) => it.id == widget.storeItem!.id,
+        orElse: () => widget.storeItem!,
+      );
+    }
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Item Details"),
+        title: Text(
+            "${widget.inventoryItem != null ? 'Inventory' : 'Store'} Item Details"),
         centerTitle: true,
       ),
       body: Column(
@@ -66,7 +91,8 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => EditItemDetails(
-                                  inventoryItem: widget.item,
+                                  inventoryItem: widget.inventoryItem,
+                                  storeItem: widget.storeItem,
                                   onSubmit: () {
                                     Navigator.of(context).pop();
                                   },
@@ -80,10 +106,14 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                       ),
                       const SizedBox(width: 15),
                       if (inventoriesProvider.loadingStatus ==
-                          LoadingStatus.loading)
+                              LoadingStatus.loading ||
+                          storesProveider.loadingStatus ==
+                              LoadingStatus.loading)
                         CircularProgressIndicator(color: Colors.red),
                       if (inventoriesProvider.loadingStatus !=
-                          LoadingStatus.loading)
+                              LoadingStatus.loading ||
+                          storesProveider.loadingStatus !=
+                              LoadingStatus.loading)
                         Container(
                           color: Colors.red,
                           child: IconButton(
@@ -101,14 +131,26 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
           Table(
             //border: TableBorder.all(),
             children: [
-              tableRow("Name: ", item.name, context),
-              tableRow("", "", context),
-              tableRow("Description: ", item.description, context),
-              tableRow("", "", context),
-              tableRow("Available amount: ", item.amount.toString(), context),
+              tableRow(
+                  "Name: ", inventoryItem?.name ?? storeItem!.name, context),
               tableRow("", "", context),
               tableRow(
-                  "Price: ", "\$${item.price.toStringAsFixed(2)}", context),
+                "Description: ",
+                inventoryItem?.description ?? storeItem!.description,
+                context,
+              ),
+              tableRow("", "", context),
+              tableRow(
+                "Available amount: ",
+                (inventoryItem?.amount ?? storeItem!.amount).toString(),
+                context,
+              ),
+              tableRow("", "", context),
+              tableRow(
+                "Price: ",
+                "\$${(inventoryItem?.price ?? storeItem!.price).toStringAsFixed(2)}",
+                context,
+              ),
             ],
           ),
           const SizedBox(height: 50),

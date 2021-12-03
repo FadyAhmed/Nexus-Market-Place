@@ -80,8 +80,8 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           price: items[index].price,
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    OnSaleItemDetailsScreen(items[index])));
+                                builder: (context) => OnSaleItemDetailsScreen(
+                                    inventoryItem: items[index])));
                           }));
                 },
               ));

@@ -7,6 +7,8 @@ class StoresProvider with ChangeNotifier {
   StoresWebService storesWebService = StoresWebService();
 
   LoadingStatus loadingStatus = LoadingStatus.done;
+  LoadingStatus purchaseLoadingStatus = LoadingStatus.done;
+  LoadingStatus addToMyStoreLoadingStatus = LoadingStatus.done;
 
   List<StoreItem>? items;
   List<StoreItem>? allItems;
@@ -73,7 +75,7 @@ class StoresProvider with ChangeNotifier {
   }
 
   Future<StoreItem> addAnotherStoreItemToMyStore(String id) async {
-    loadingStatus = LoadingStatus.loading;
+    addToMyStoreLoadingStatus = LoadingStatus.loading;
     notifyListeners();
 
     try {
@@ -83,7 +85,7 @@ class StoresProvider with ChangeNotifier {
     } catch (e) {
       throw e;
     } finally {
-      loadingStatus = LoadingStatus.done;
+      addToMyStoreLoadingStatus = LoadingStatus.done;
       notifyListeners();
     }
   }
@@ -171,6 +173,19 @@ class StoresProvider with ChangeNotifier {
       throw e;
     } finally {
       loadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
+  Future<String> purchaseItem(String id, int amount) async {
+    purchaseLoadingStatus = LoadingStatus.loading;
+    notifyListeners();
+
+    try {
+      String itemId = await storesWebService.purchaseItem(id, amount);
+      return itemId;
+    } finally {
+      purchaseLoadingStatus = LoadingStatus.done;
       notifyListeners();
     }
   }

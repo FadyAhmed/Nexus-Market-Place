@@ -42,6 +42,8 @@ String generateErrorMessage(Map<String, dynamic> badRequest) {
       return 'Store name already exists.';
     case 'token verification failed':
       return 'Token verification failed. Couldn\'t establish a session.';
+    case "you can’t buy this item":
+      return 'You can\'t buy this item. Insufficient balance';
     default:
       return badRequest['status'] as String;
   }

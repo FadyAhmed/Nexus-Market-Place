@@ -42,4 +42,6 @@ class RoutesConstants {
       RoutesConstants.storesBaseUrl + '/' + id;
   static String searchAllStores(String searchTerm) =>
       RoutesConstants.storesBaseUrl + '/search/items?name=' + searchTerm;
+  static String purchaseItem(String id) =>
+      RoutesConstants.storesBaseUrl + '/purchase/' + id;
 }

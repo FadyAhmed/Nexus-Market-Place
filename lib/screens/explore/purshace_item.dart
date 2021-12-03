@@ -45,6 +45,17 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
     }
   }
 
+  void submitPurchase() async {
+    try {
+      await Provider.of<StoresProvider>(context, listen: false)
+          .purchaseItem(widget.item.id!, amount);
+      showSnackbar(context, Text("Item is purchased succesfully"));
+      Navigator.of(context).pop();
+    } on ServerException catch (e) {
+      showMessageDialogue(context, e.message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var storesProvider = Provider.of<StoresProvider>(context);
@@ -131,23 +142,27 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
               ),
               const SizedBox(height: 15),
               Container(
-                  width: MediaQuery.of(context).size.width - 120,
-                  height: 45,
-                  child: RoundedButton(
-                      title: "Purchase",
-                      onPressed: () {
-                        showSnackbar(
-                            context, Text("Item purchased succesfully"));
-                        Navigator.of(context).pop();
-                      })),
+                width: MediaQuery.of(context).size.width - 120,
+                height: 45,
+                child: storesProvider.purchaseLoadingStatus ==
+                        LoadingStatus.loading
+                    ? Center(child: CircularProgressIndicator())
+                    : RoundedButton(
+                        title: "Purchase",
+                        onPressed: submitPurchase,
+                      ),
+              ),
               const SizedBox(height: 20),
               Container(
                   width: MediaQuery.of(context).size.width - 120,
                   height: 45,
-                  child: storesProvider.loadingStatus == LoadingStatus.loading
+                  child: storesProvider.addToMyStoreLoadingStatus ==
+                          LoadingStatus.loading
                       ? Center(
-                          child:
-                              CircularProgressIndicator(color: Colors.orange))
+                          child: CircularProgressIndicator(
+                            color: Colors.orange,
+                          ),
+                        )
                       : RoundedButton(
                           color: Colors.orange,
                           title: "Add To My Store",
