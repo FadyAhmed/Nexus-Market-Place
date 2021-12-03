@@ -1,5 +1,6 @@
 import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
+import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
 import 'package:ds_market_place/constants/enums.dart';
@@ -48,6 +49,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
         await Provider.of<AuthenticationProvider>(context, listen: false)
             .signUp(signupData);
+        showSnackbar(
+          context,
+          Text('You have been registered successfully, Log in to your account'),
+          4,
+        );
         Navigator.of(context).pop();
       } on ServerException catch (e) {
         showMessageDialogue(context, e.message);

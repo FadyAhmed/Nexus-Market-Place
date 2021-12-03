@@ -1,5 +1,6 @@
 import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
+import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/constants/enums.dart';
@@ -28,6 +29,7 @@ class _SignInScreenState extends State<SignInScreen> {
           Login(username: _username.text, password: _password.text);
       await Provider.of<AuthenticationProvider>(context, listen: false)
           .signIn(loginData);
+      showSnackbar(context, Text('Logged in successfully'));
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => MarketHomePage()),
           (Route<dynamic> route) => false);
@@ -100,10 +102,10 @@ class _SignInScreenState extends State<SignInScreen> {
                           children: [
                             if (authProvider.loadingStatus !=
                                 LoadingStatus.loading)
-                            RoundedButton(
-                              onPressed: submitForm,
-                              title: 'Log in',
-                            ),
+                              RoundedButton(
+                                onPressed: submitForm,
+                                title: 'Log in',
+                              ),
                             if (authProvider.loadingStatus ==
                                 LoadingStatus.loading)
                               Center(child: CircularProgressIndicator()),

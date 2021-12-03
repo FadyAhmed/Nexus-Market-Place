@@ -84,9 +84,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   builder: (context) => SignUpScreen()),
                             );
                           }),
-                      LoginAsUser1Button(),
-                      TestingButton(),
-                      GoToMarketPlace(),
+                      if (false)
+                        // ignore: dead_code
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            LoginAsUser1Button(),
+                            TestingButton(),
+                            GoToMarketPlace(),
+                          ],
+                        )
                     ],
                   ),
                 ),

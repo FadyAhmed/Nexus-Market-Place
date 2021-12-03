@@ -21,8 +21,7 @@ class AuthenticationProvider with ChangeNotifier {
     if (notifyWhenLoading) notifyListeners();
 
     try {
-      String token = await authenticationWebService.signIn(loginData);
-      globals.token = token;
+      await authenticationWebService.signIn(loginData);
     } catch (e) {
       throw e;
     } finally {

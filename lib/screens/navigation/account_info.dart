@@ -124,15 +124,16 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                       .push(MaterialPageRoute(builder: (ctx) => WalletScreen()))
                 },
               ),
-              itemTile(
-                context,
-                title: "Reports",
-                icon: Icons.description,
-                handler: () => {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (ctx) => ReportScreenContainer()))
-                },
-              ),
+              if (globals.admin)
+                itemTile(
+                  context,
+                  title: "Reports",
+                  icon: Icons.description,
+                  handler: () => {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (ctx) => ReportScreenContainer()))
+                  },
+                ),
               itemTile(
                 context,
                 title: "Log Out",

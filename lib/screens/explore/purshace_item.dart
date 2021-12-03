@@ -3,6 +3,7 @@ import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/table_row.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/store_item.dart';
@@ -120,57 +121,58 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
             ],
           ),
           const SizedBox(height: 50),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Center(
-                  child: Text("Amount",
-                      style: TextStyle(
-                          color: Colors.grey.shade700, fontSize: 20))),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RoundedButton(title: "-", onPressed: _decreaseAmount),
-                  const SizedBox(width: 20),
-                  Text(
-                    amount.toString(),
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(width: 20),
-                  RoundedButton(title: "+", onPressed: _increaseAmount),
-                ],
-              ),
-              const SizedBox(height: 15),
-              Container(
-                width: MediaQuery.of(context).size.width - 120,
-                height: 45,
-                child: storesProvider.purchaseLoadingStatus ==
-                        LoadingStatus.loading
-                    ? Center(child: CircularProgressIndicator())
-                    : RoundedButton(
-                        title: "Purchase",
-                        onPressed: submitPurchase,
-                      ),
-              ),
-              const SizedBox(height: 20),
-              Container(
+          if (widget.item.storeName != globals.storeName)
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Center(
+                    child: Text("Amount",
+                        style: TextStyle(
+                            color: Colors.grey.shade700, fontSize: 20))),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RoundedButton(title: "-", onPressed: _decreaseAmount),
+                    const SizedBox(width: 20),
+                    Text(
+                      amount.toString(),
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                    const SizedBox(width: 20),
+                    RoundedButton(title: "+", onPressed: _increaseAmount),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Container(
                   width: MediaQuery.of(context).size.width - 120,
                   height: 45,
-                  child: storesProvider.addToMyStoreLoadingStatus ==
+                  child: storesProvider.purchaseLoadingStatus ==
                           LoadingStatus.loading
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.orange,
-                          ),
-                        )
+                      ? Center(child: CircularProgressIndicator())
                       : RoundedButton(
-                          color: Colors.orange,
-                          title: "Add To My Store",
-                          onPressed: () =>
-                              submitAddToMyStore(widget.item.id!))),
-              const SizedBox(height: 20),
-            ],
-          )
+                          title: "Purchase",
+                          onPressed: submitPurchase,
+                        ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                    width: MediaQuery.of(context).size.width - 120,
+                    height: 45,
+                    child: storesProvider.addToMyStoreLoadingStatus ==
+                            LoadingStatus.loading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.orange,
+                            ),
+                          )
+                        : RoundedButton(
+                            color: Colors.orange,
+                            title: "Add To My Store",
+                            onPressed: () =>
+                                submitAddToMyStore(widget.item.id!))),
+                const SizedBox(height: 20),
+              ],
+            )
         ],
       ),
     );

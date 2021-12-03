@@ -74,7 +74,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     color: Colors.black,
                   ),
                 ),
-                hintText: 'Search Here',
+                hintText: 'Search for items in all stores here',
               ),
             ),
             Container(
@@ -84,14 +84,36 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Center(child: CircularProgressIndicator()),
                     )
                   : storesProvider.searchItems == null
-                      ? const Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text('Enter a search term'),
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                          color: Colors.grey,
+                          child: Center(
+                            child: Text(
+                              "You can search by item name",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6!
+                                  .copyWith(color: Theme.of(context).hintColor),
+                            ),
+                          ),
                         )
                       : storesProvider.searchItems!.length == 0
-                          ? const Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: const Text('No Items Found!'),
+                          ? Container(
+                              width: MediaQuery.of(context).size.width,
+                              padding:
+                                  const EdgeInsets.only(top: 8.0, bottom: 8),
+                              color: Colors.grey,
+                              child: Center(
+                                child: Text(
+                                  "No items found",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline6!
+                                      .copyWith(
+                                          color: Theme.of(context).hintColor),
+                                ),
+                              ),
                             )
                           : ListView.builder(
                               shrinkWrap: true,

@@ -46,6 +46,33 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
     }
   }
 
+  void pushEditItemDetailsPage(
+    InventoriesProvider inventoriesProvider,
+    StoresProvider storesProvider,
+  ) {
+    InventoryItem? inventoryItem = null;
+    if (widget.inventoryItem != null)
+      inventoryItem = inventoriesProvider.items!
+          .firstWhere((item) => item.id == widget.inventoryItem!.id);
+    StoreItem? storeItem = null;
+    if (widget.storeItem != null)
+      storeItem = storesProvider.items!
+          .firstWhere((item) => item.id == widget.storeItem!.id);
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditItemDetails(
+          inventoryItem: inventoryItem,
+          storeItem: storeItem,
+          onSubmit: () {
+            Navigator.of(context).pop();
+          },
+          submitButtonText: "Edit",
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var inventoriesProvider = Provider.of<InventoriesProvider>(context);
@@ -80,30 +107,20 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                   kLogo,
                   height: 100,
                 ),
-                  Expanded(
+                Expanded(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                        if (inventoryItem != null ||
+                      if (inventoryItem != null ||
                           (storeItem != null &&
                               storeItem.state == StoreItemState.owned))
                         Container(
                           color: Colors.grey,
                           child: IconButton(
-                            onPressed: () => {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => EditItemDetails(
-                                    inventoryItem: widget.inventoryItem,
-                                    storeItem: widget.storeItem,
-                                    onSubmit: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    submitButtonText: "Edit",
-                                  ),
-                                ),
-                              )
-                            },
+                            onPressed: () => pushEditItemDetailsPage(
+                              inventoriesProvider,
+                              storesProveider,
+                            ),
                             icon: const Icon(Icons.edit),
                           ),
                         ),
@@ -121,7 +138,7 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                           color: Colors.red,
                           child: IconButton(
                             onPressed: submitDelete,
-                              icon: const Icon(Icons.delete, color: Colors.white),
+                            icon: const Icon(Icons.delete, color: Colors.white),
                           ),
                         ),
                     ],

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/models/login.dart';
+import 'package:ds_market_place/models/store_item.dart';
+import 'package:ds_market_place/services/stores_web_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -39,6 +41,16 @@ void setAdminStatus(http.Response response, Login loginData) {
     'user1',
   ];
   globals.admin = adminUsernames.contains(loginData.username);
+}
+
+void setStore(http.Response response, StoresWebService storesWebService) async {
+  var body = jsonDecode(response.body);
+  if (body['storeName'] != null) {
+    globals.storeName = body['storeName'];
+    return;
+  }
+  List<StoreItem> items = await storesWebService.getAllItemsFromMyStore();
+  globals.storeName = items.first.storeName;
 }
 
 String generateErrorMessage(Map<String, dynamic> badRequest) {
