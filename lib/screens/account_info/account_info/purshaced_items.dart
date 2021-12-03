@@ -51,7 +51,7 @@ class _PurchasedItemsScreenState extends State<PurchasedItemsScreen> {
                       itemName: transaction.itemName,
                       price: transaction.price,
                       type: "PURSHACED",
-                      name: transaction.storeName,
+                      name: transaction.sellerStoreName!,
                       date: DateFormat('dd-MM-yyyy').format(transaction.date),
                     ),
                   );

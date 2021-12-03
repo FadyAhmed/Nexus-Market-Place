@@ -9,8 +9,10 @@ class Transaction {
   int amount;
   String imageLink;
   DateTime date;
-  String storeId;
-  String storeName;
+  String? sellerStoreId;
+  String? sellerStoreName;
+  String? buyerStoreId;
+  String? buyerStoreName;
 
   Transaction({
     required this.itemName,
@@ -18,8 +20,10 @@ class Transaction {
     required this.amount,
     required this.imageLink,
     required this.date,
-    required this.storeId,
-    required this.storeName,
+    required this.sellerStoreId,
+    required this.sellerStoreName,
+    required this.buyerStoreId,
+    required this.buyerStoreName,
   });
 
   // removing 'buyer' and 'seller' words before storeName and storeId

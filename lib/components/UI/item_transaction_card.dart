@@ -11,7 +11,7 @@ class ItemTransactioinCard extends StatelessWidget {
   final String buyerName;
   final String type;
   final String reason;
-  final int price;
+  final double price;
   const ItemTransactioinCard({
     Key? key,
     required this.itemName,

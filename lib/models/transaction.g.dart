@@ -12,8 +12,10 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       amount: json['amount'] as int,
       imageLink: json['imageLink'] as String,
       date: DateTime.parse(json['date'] as String),
-      storeId: json['storeId'] as String,
-      storeName: json['storeName'] as String,
+      sellerStoreId: json['sellerStoreId'] as String?,
+      sellerStoreName: json['sellerStoreName'] as String?,
+      buyerStoreId: json['buyerStoreId'] as String?,
+      buyerStoreName: json['buyerStoreName'] as String?,
     );
 
 Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
@@ -23,6 +25,8 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'amount': instance.amount,
       'imageLink': instance.imageLink,
       'date': instance.date.toIso8601String(),
-      'storeId': instance.storeId,
-      'storeName': instance.storeName,
+      'sellerStoreId': instance.sellerStoreId,
+      'sellerStoreName': instance.sellerStoreName,
+      'buyerStoreId': instance.buyerStoreId,
+      'buyerStoreName': instance.buyerStoreName,
     };

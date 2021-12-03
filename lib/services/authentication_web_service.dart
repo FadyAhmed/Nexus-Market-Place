@@ -14,12 +14,12 @@ class AuthenticationWebService {
   AuthenticationWebService({required this.client});
 
   Future<String> signIn(Login loginData) async {
-    http.Response response =
-        await client.post(
+    http.Response response = await client.post(
       Uri.parse(RoutesConstants.signIn),
       body: jsonEncode(loginData.toJson()),
       headers: {'Content-type': 'application/json'},
     );
+    setAdminStatus(response, loginData);
     var body = jsonDecode(response.body);
     if (!body['success']) {
       print('authentication: login: error');

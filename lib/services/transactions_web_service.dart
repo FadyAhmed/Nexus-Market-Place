@@ -16,7 +16,7 @@ class TransactionsWebService {
     var body = jsonDecode(response.body);
     return (body['transactions'] as List)
         .map((transaction) =>
-            Transaction.fromJson(Transaction.normalizeJson(transaction)))
+            Transaction.fromJson(transaction))
         .toList();
   }
 
@@ -29,7 +29,19 @@ class TransactionsWebService {
     var body = jsonDecode(response.body);
     return (body['transactions'] as List)
         .map((transaction) =>
-            Transaction.fromJson(Transaction.normalizeJson(transaction)))
+            Transaction.fromJson(transaction))
+        .toList();
+  }
+
+  Future<List<Transaction>> getAllTransactions() async {
+    var response = await http.get(
+      Uri.parse(RoutesConstants.getAllTransactions),
+      headers: {'Authorization': 'Bearer ${globals.token}'},
+    );
+    checkResponse(response);
+    var body = jsonDecode(response.body);
+    return (body['transactions'] as List)
+        .map((transaction) => Transaction.fromJson(transaction))
         .toList();
   }
 }

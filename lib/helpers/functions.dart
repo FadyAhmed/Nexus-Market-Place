@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/helpers/exceptions.dart';
+import 'package:ds_market_place/models/login.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,6 +27,18 @@ Future<void> showMessageDialogue(BuildContext context, String message) {
 void checkResponse(http.Response response) {
   Map<String, dynamic> body = jsonDecode(response.body);
   if (!body['success']) throw ServerException(generateErrorMessage(body));
+}
+
+void setAdminStatus(http.Response response, Login loginData) {
+  var body = jsonDecode(response.body);
+  if (body['admin'] != null) {
+    globals.admin = body['admin'];
+    return;
+  }
+  List<String> adminUsernames = [
+    'user1',
+  ];
+  globals.admin = adminUsernames.contains(loginData.username);
 }
 
 String generateErrorMessage(Map<String, dynamic> badRequest) {

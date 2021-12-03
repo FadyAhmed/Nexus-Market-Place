@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/add_balance_request.dart';
@@ -30,7 +31,7 @@ class TestingButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: () async {
         print(await Provider.of<TransactionsProvider>(context, listen: false)
-            .getPurchasedItems());
+            .getAllTransactions());
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),

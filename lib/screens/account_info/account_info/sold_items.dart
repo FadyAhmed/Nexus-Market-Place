@@ -51,7 +51,7 @@ class _SoldItemsScreenState extends State<SoldItemsScreen> {
                         itemName: transaction.itemName,
                         price: transaction.price,
                         type: "SOLD",
-                        name: transaction.storeName,
+                        name: transaction.buyerStoreName!,
                         date: DateFormat('dd-MM-yyyy').format(transaction.date),
                       ));
                 },
