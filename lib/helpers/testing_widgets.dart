@@ -20,6 +20,7 @@ import 'package:ds_market_place/services/stores_web_service.dart';
 import 'package:ds_market_place/services/transactions_web_service.dart';
 import 'package:ds_market_place/services/users_web_service.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
@@ -30,7 +31,9 @@ class TestingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        print(globals.storeName);
+        var response = await http.get(Uri.parse(
+            'https://images.unspasdadasdlash.com/photo-1453728013993-6d66e9c9123a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmlld3xlbnwwfHwwfHw%3D&w=1000&q=80'));
+        print(response.statusCode);
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),

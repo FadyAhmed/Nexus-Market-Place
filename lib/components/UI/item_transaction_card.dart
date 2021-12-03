@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/data_text.dart';
 import 'package:flutter/material.dart';
 
@@ -12,11 +13,13 @@ class ItemTransactioinCard extends StatelessWidget {
   final String type;
   final String reason;
   final double price;
+  final String imageLink;
   const ItemTransactioinCard({
     Key? key,
     required this.itemName,
     required this.amount,
     required this.price,
+    required this.imageLink,
     required this.date,
     required this.sellerName,
     required this.buyerName,
@@ -33,8 +36,12 @@ class ItemTransactioinCard extends StatelessWidget {
         ListTile(
           tileColor: Theme.of(context).cardColor,
           contentPadding: const EdgeInsets.all(8),
-          leading: Image.asset(
-            kLogo,
+          leading: CachedNetworkImage(
+            imageUrl: imageLink,
+            errorWidget: (context, _, __) => Image.asset(
+              kLogo,
+              fit: BoxFit.scaleDown,
+            ),
             fit: BoxFit.scaleDown,
             width: 100,
             height: 150,

@@ -65,6 +65,7 @@ class _SellScreenState extends State<SellScreen> {
                     itemName: item.name,
                     amount: item.amount.toString(),
                     price: item.price,
+                    imageLink: item.imageLink,
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>

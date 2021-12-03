@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/data_text.dart';
+import 'package:ds_market_place/helpers/functions.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -8,6 +10,7 @@ class ItemCard extends StatelessWidget {
   final String amount;
   final String sellerName;
   final double price;
+  final String imageLink;
   final onPressed;
   final onSelectMenuItem;
   final List<String>? menuItems;
@@ -17,6 +20,7 @@ class ItemCard extends StatelessWidget {
       required this.itemName,
       required this.amount,
       required this.price,
+      required this.imageLink,
       required this.onPressed,
       this.showActions = true,
       this.onSelectMenuItem,
@@ -32,10 +36,28 @@ class ItemCard extends StatelessWidget {
           onTap: onPressed,
           tileColor: Theme.of(context).cardColor,
           contentPadding: const EdgeInsets.all(16),
-          leading: Image.asset(
-            kLogo,
+          leading: CachedNetworkImage(
+            imageUrl: imageLink,
+            errorWidget: (context, _, __) => Image.asset(
+              kLogo,
+              fit: BoxFit.scaleDown,
+            ),
             fit: BoxFit.scaleDown,
+            width: 100,
+            height: 100,
           ),
+          // FutureBuilder(
+          //   future: isValidImage(imageLink),
+          //   builder: (context, snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.waiting)
+          //       return Center(child: CircularProgressIndicator());
+          //     bool isValid = snapshot.data as bool;
+          //     if (isValid)
+          //       return Image.network(imageLink, fit: BoxFit.scaleDown);
+          //     else
+          //       return Image.asset(kLogo, fit: BoxFit.scaleDown);
+          //   },
+          // ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

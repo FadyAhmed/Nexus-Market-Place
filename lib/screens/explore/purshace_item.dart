@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/table_row.dart';
@@ -72,10 +73,16 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  kLogo,
+                CachedNetworkImage(
+                  imageUrl: widget.item.imageLink,
+                  errorWidget: (context, _, __) => Image.asset(
+                    kLogo,
+                    fit: BoxFit.scaleDown,
+                  ),
+                  fit: BoxFit.scaleDown,
                   width: MediaQuery.of(context).size.width / 3,
-                ),
+                  height: 100,
+                )
               ],
             ),
           ),

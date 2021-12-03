@@ -66,6 +66,7 @@ class _OnSaleItemsScreenState extends State<OnSaleItemsScreen> {
                     itemName: item.name,
                     amount: item.amount.toString(),
                     price: item.price,
+                    imageLink: item.imageLink,
                     onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(

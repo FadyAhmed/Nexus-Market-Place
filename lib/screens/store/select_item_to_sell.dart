@@ -78,6 +78,7 @@ class _SelectItemToInvenSellnState extends State<SelectItemToSellScreen> {
                               itemName: item.name,
                               amount: item.amount.toString(),
                               price: item.price,
+                              imageLink: item.imageLink,
                               showActions: false,
                               onPressed: () async {
                                 await Navigator.of(context).push(

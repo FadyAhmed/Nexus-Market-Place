@@ -3,6 +3,7 @@ import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,11 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
 
   void submitForm() async {
     if (_formKey.currentState!.validate()) {
+      bool isImageValid = await isValidImage(_imageUrlController.text);
+      if (!isImageValid) {
+        showMessageDialogue(context, 'Entered image url is not a valid image');
+        return;
+      }
       InventoryItem item = InventoryItem(
         name: _nameController.text,
         amount: int.parse(_amountController.text),

@@ -50,6 +50,7 @@ class _SoldItemsScreenState extends State<SoldItemsScreen> {
                         amount: transaction.amount.toString(),
                         itemName: transaction.itemName,
                         price: transaction.price,
+                        imageLink: transaction.imageLink,
                         type: "SOLD",
                         name: transaction.buyerStoreName!,
                         date: DateFormat('dd-MM-yyyy').format(transaction.date),

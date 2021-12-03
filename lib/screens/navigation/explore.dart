@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/functions.dart';
@@ -74,10 +75,15 @@ class _ExploreScreenState extends State<ExploreScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const SizedBox(height: 8),
-                                Image.asset(
-                                  kLogo,
-                                  height:
-                                      (MediaQuery.of(context).size.height / 7),
+                                CachedNetworkImage(
+                                  imageUrl: item.imageLink,
+                                  errorWidget: (context, _, __) => Image.asset(
+                                    kLogo,
+                                    fit: BoxFit.scaleDown,
+                                  ),
+                                  fit: BoxFit.scaleDown,
+                                  width: 100,
+                                  height: 100,
                                 ),
                                 const SizedBox(height: 10),
                               ],

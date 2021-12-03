@@ -51,6 +51,7 @@ class _SystemTransactionsScreenState extends State<SystemTransactionsScreen> {
                       amount: transaction.amount.toString(),
                       itemName: transaction.itemName,
                       price: transaction.price,
+                      imageLink: transaction.imageLink,
                       type: "Succesful",
                       sellerName: transaction.sellerStoreName!,
                       buyerName: transaction.buyerStoreName!,

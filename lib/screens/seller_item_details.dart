@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/table_row.dart';
 import 'package:ds_market_place/constants/enums.dart';
@@ -103,8 +104,15 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset(
-                  kLogo,
+                CachedNetworkImage(
+                  imageUrl: widget.inventoryItem?.imageLink ??
+                      widget.storeItem!.imageLink,
+                  errorWidget: (context, _, __) => Image.asset(
+                    kLogo,
+                    fit: BoxFit.scaleDown,
+                  ),
+                  fit: BoxFit.scaleDown,
+                  width: 100,
                   height: 100,
                 ),
                 Expanded(

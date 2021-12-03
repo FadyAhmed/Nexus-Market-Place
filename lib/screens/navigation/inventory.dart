@@ -78,6 +78,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           itemName: items[index].name,
                           amount: items[index].amount.toString(),
                           price: items[index].price,
+                          imageLink: items[index].imageLink,
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => OnSaleItemDetailsScreen(

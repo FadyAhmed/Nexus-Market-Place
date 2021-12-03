@@ -134,6 +134,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                         itemName: item.name,
                                         amount: item.amount.toString(),
                                         price: item.price,
+                                        imageLink: item.imageLink,
                                         onPressed: () {
                                           Navigator.of(context).push(
                                             MaterialPageRoute(

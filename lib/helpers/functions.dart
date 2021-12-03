@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/helpers/exceptions.dart';
@@ -51,6 +52,21 @@ void setStore(http.Response response, StoresWebService storesWebService) async {
   }
   List<StoreItem> items = await storesWebService.getAllItemsFromMyStore();
   globals.storeName = items.first.storeName;
+}
+
+Future<bool> isValidImage(String url) async {
+  try {
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200)
+      return true;
+    else
+      return false;
+  } on SocketException catch (e) {
+    print(e.message);
+    return false;
+  } catch (e) {
+    return false;
+  }
 }
 
 String generateErrorMessage(Map<String, dynamic> badRequest) {

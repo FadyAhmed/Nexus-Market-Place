@@ -50,6 +50,7 @@ class _PurchasedItemsScreenState extends State<PurchasedItemsScreen> {
                       amount: transaction.amount.toString(),
                       itemName: transaction.itemName,
                       price: transaction.price,
+                      imageLink: transaction.imageLink,
                       type: "PURSHACED",
                       name: transaction.sellerStoreName!,
                       date: DateFormat('dd-MM-yyyy').format(transaction.date),
