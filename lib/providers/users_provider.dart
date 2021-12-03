@@ -1,4 +1,5 @@
 import 'package:ds_market_place/models/add_balance_request.dart';
+import 'package:ds_market_place/models/user.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/profile.dart';
@@ -8,9 +9,11 @@ class UsersProvider with ChangeNotifier {
   UsersWebService usersWebService = UsersWebService();
 
   LoadingStatus profileLoadingStatus = LoadingStatus.initial;
+  LoadingStatus usersLoadingStatus = LoadingStatus.initial;
   LoadingStatus balanceLoadingStatus = LoadingStatus.initial;
 
   Profile? profile;
+  List<User>? users;
 
   Future<Profile> getMyProfile({notifyWhenLoaded = true}) async {
     profileLoadingStatus = LoadingStatus.loading;
@@ -24,6 +27,21 @@ class UsersProvider with ChangeNotifier {
       throw e;
     } finally {
       profileLoadingStatus = LoadingStatus.done;
+      notifyListeners();
+    }
+  }
+
+  Future<List<User>> getAllUsers({notifyWhenLoaded = true}) async {
+    usersLoadingStatus = LoadingStatus.loading;
+    if (notifyWhenLoaded) notifyListeners();
+
+    try {
+      users = await usersWebService.getAllUsers();
+      return users!;
+    } catch (e) {
+      throw e;
+    } finally {
+      usersLoadingStatus = LoadingStatus.done;
       notifyListeners();
     }
   }

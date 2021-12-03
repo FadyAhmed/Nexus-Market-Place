@@ -1,9 +1,10 @@
 import 'package:ds_market_place/components/UI/table_row.dart';
+import 'package:ds_market_place/models/user.dart';
 import 'package:flutter/material.dart';
 
 class UserDetailsScreen extends StatefulWidget {
-  const UserDetailsScreen({Key? key, required this.userName}) : super(key: key);
-  final String userName;
+  const UserDetailsScreen({Key? key, required this.user}) : super(key: key);
+  final User user;
   @override
   _UserDetailsScreenState createState() => _UserDetailsScreenState();
 }
@@ -11,24 +12,25 @@ class UserDetailsScreen extends StatefulWidget {
 class _UserDetailsScreenState extends State<UserDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    User user = widget.user;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(widget.userName),
+        title: Text(user.firstName + ' ' + user.lastName),
       ),
       body: Container(
         margin: EdgeInsets.only(top: 50),
         child: Table(
           children: [
-            tableRow("Name:", widget.userName, context),
+            tableRow("Name:", user.firstName + ' ' + user.lastName, context),
             tableRow("", "", context),
-            tableRow("Store Name:", "Meg", context),
+            tableRow("Store Name:", user.storeName, context),
             tableRow("", "", context),
-            tableRow("Email:", "ziad@ziad.com", context),
+            tableRow("Email:", user.email, context),
             tableRow("", "", context),
-            tableRow("Phone Number:", "0101556230", context),
+            tableRow("Phone Number:", user.phoneNumber, context),
             tableRow("", "", context),
-            tableRow("Balance:", "\$10000", context)
+            tableRow("Balance:", "\$${user.balance}", context)
           ],
         ),
       ),

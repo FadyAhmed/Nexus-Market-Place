@@ -30,8 +30,8 @@ class TestingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        print(await Provider.of<TransactionsProvider>(context, listen: false)
-            .getAllTransactions());
+        print(await Provider.of<UsersProvider>(context, listen: false)
+            .getAllUsers());
       },
       child: Text('Testing Button'),
       style: ElevatedButton.styleFrom(primary: Colors.purple),
