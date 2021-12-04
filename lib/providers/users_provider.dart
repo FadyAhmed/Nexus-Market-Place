@@ -36,7 +36,7 @@ class UsersProvider with ChangeNotifier {
     if (notifyWhenLoaded) notifyListeners();
 
     try {
-      users = await usersWebService.getAllUsers();
+      users = (await usersWebService.getAllUsers()).reversed.toList();
       return users!;
     } catch (e) {
       throw e;

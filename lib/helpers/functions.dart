@@ -86,6 +86,8 @@ String generateErrorMessage(Map<String, dynamic> badRequest) {
       return 'Token verification failed. Couldn\'t establish a session.';
     case "you can’t buy this item":
       return 'You can\'t buy this item. Insufficient balance';
+    case "invalid query":
+      return 'Invalid search term. Please use a suitable term.';
     default:
       return badRequest['status'] as String;
   }

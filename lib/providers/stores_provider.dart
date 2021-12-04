@@ -177,6 +177,8 @@ class StoresProvider with ChangeNotifier {
     }
   }
 
+  void clearSearchItems() => searchItems = null;
+
   Future<String> purchaseItem(String id, int amount) async {
     purchaseLoadingStatus = LoadingStatus.loading;
     notifyListeners();

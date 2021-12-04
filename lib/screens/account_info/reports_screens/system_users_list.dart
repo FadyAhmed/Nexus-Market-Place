@@ -44,35 +44,35 @@ class _UsersListScreenState extends State<UsersListScreen> {
           ? Center(child: CircularProgressIndicator())
           : usersProvider.users!.length == 0
               ? GreyBar('No users are found in the whole system')
-                : ListView.builder(
-              itemCount: usersProvider.users!.length,
-              itemBuilder: (context, index) {
-                User user = usersProvider.users![index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 24.0, vertical: 12),
-                  child: InkWell(
-                    onTap: () => {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (ctx) => UserDetailsScreen(user: user)))
-                    },
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 24),
-                        child: Center(
-                          child: Text(
-                            user.firstName + ' ' + user.lastName,
-                            textAlign: TextAlign.center,
-                            style: headingStyle,
+              : ListView.builder(
+                  itemCount: usersProvider.users!.length,
+                  itemBuilder: (context, index) {
+                    User user = usersProvider.users![index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24.0, vertical: 12),
+                      child: InkWell(
+                        onTap: () => {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => UserDetailsScreen(user: user)))
+                        },
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 24),
+                            child: Center(
+                              child: Text(
+                                user.firstName + ' ' + user.lastName,
+                                textAlign: TextAlign.center,
+                                style: headingStyle,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
     );
   }
 }

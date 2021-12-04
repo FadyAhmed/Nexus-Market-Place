@@ -18,7 +18,8 @@ class TransactionsProvider with ChangeNotifier {
     if (notifyWhenLoading) notifyListeners();
 
     try {
-      soldItems = await transactionsWebService.getSoldItems();
+      soldItems =
+          (await transactionsWebService.getSoldItems()).reversed.toList();
       return soldItems!;
     } finally {
       loadingStatus = LoadingStatus.done;
@@ -32,7 +33,8 @@ class TransactionsProvider with ChangeNotifier {
     if (notifyWhenLoading) notifyListeners();
 
     try {
-      purchasedItems = await transactionsWebService.getPurchasedItems();
+      purchasedItems =
+          (await transactionsWebService.getPurchasedItems()).reversed.toList();
       return purchasedItems!;
     } finally {
       loadingStatus = LoadingStatus.done;
@@ -46,7 +48,8 @@ class TransactionsProvider with ChangeNotifier {
     if (notifyWhenLoading) notifyListeners();
 
     try {
-      allTransactions = await transactionsWebService.getAllTransactions();
+      allTransactions =
+          (await transactionsWebService.getAllTransactions()).reversed.toList();
       return allTransactions!;
     } finally {
       loadingStatus = LoadingStatus.done;

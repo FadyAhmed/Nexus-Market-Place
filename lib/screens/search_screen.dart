@@ -19,16 +19,40 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  @override
   TextEditingController _query = TextEditingController();
+  String? _errorText;
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   print('hello world');
+  //   print(Provider.of<StoresProvider>(context, listen: false).searchItems);
+  //   // Provider.of<StoresProvider>(context, listen: false).clearSearchItems();
+  // }
 
   void submitSearch(String val) async {
     try {
-      await Provider.of<StoresProvider>(context, listen: false)
-          .searchAllStores(val);
+      if (_validator(val)) {
+        Provider.of<StoresProvider>(context, listen: false).clearSearchItems();
+        await Provider.of<StoresProvider>(context, listen: false)
+            .searchAllStores(val);
+      }
     } on ServerException catch (e) {
       showMessageDialogue(context, e.message);
     }
+  }
+
+  bool _validator(String searchTerm) {
+    if (searchTerm.isEmpty) {
+      setState(() => _errorText = 'Enter an item name');
+      return false;
+    }
+    if (searchTerm.contains('.') || searchTerm.contains('\$')) {
+      setState(() => _errorText = '\'\$\' and \'.\' symbols are not allowed');
+      return false;
+    }
+    setState(() => _errorText = null);
+    return true;
   }
 
   Widget build(BuildContext context) {
@@ -44,6 +68,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             TextField(
               cursorColor: Colors.black,
+              onChanged: (value) => _validator(value),
               onSubmitted: submitSearch,
               textInputAction: TextInputAction.search,
               controller: _query,
@@ -54,6 +79,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.transparent, width: 2.0),
                 ),
+                errorStyle: TextStyle(fontSize: 16),
                 prefixIcon: InkWell(
                   child: const Icon(
                     Icons.arrow_back,
@@ -76,6 +102,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
                 hintText: 'Search for items in all stores here',
+                errorText: _errorText,
               ),
             ),
             Container(
@@ -89,6 +116,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       : storesProvider.searchItems!.length == 0
                           ? GreyBar("No items found")
                           : ListView.builder(
+                              padding: const EdgeInsets.all(5.0),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: storesProvider.searchItems!.length,

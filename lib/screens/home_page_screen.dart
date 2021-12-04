@@ -1,11 +1,13 @@
 import 'package:ds_market_place/components/UI/bottom_nav_bar.dart';
 import 'package:ds_market_place/constants.dart';
+import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/navigation/account_info.dart';
 import 'package:ds_market_place/screens/navigation/explore.dart';
 import 'package:ds_market_place/screens/navigation/inventory.dart';
 import 'package:ds_market_place/screens/navigation/store.dart';
 import 'package:ds_market_place/screens/search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MarketHomePage extends StatefulWidget {
   const MarketHomePage({Key? key}) : super(key: key);
@@ -59,10 +61,12 @@ class _MarketHomePageState extends State<MarketHomePage> {
                   "${selectedIndex == 0 ? "Marketplace" : selectedIndex == 1 ? "On Sale Items" : selectedIndex == 2 ? "Inventory" : selectedIndex == 3 ? "Account info" : ""}"),
               actions: [
                 IconButton(
-                    onPressed: () => {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (ctx) => SearchScreen()))
-                        },
+                    onPressed: () async {
+                      await Navigator.of(context).push(
+                          MaterialPageRoute(builder: (ctx) => SearchScreen()));
+                      Provider.of<StoresProvider>(context, listen: false)
+                          .clearSearchItems();
+                    },
                     icon: const Icon(Icons.search))
               ],
             ),

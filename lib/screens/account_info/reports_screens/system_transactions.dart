@@ -44,24 +44,25 @@ class _SystemTransactionsScreenState extends State<SystemTransactionsScreen> {
           : transactionsProvider.allTransactions!.length == 0
               ? GreyBar('No transactions are found in the whole system.')
               : ListView.builder(
-              itemCount: transactionsProvider.allTransactions!.length,
-              itemBuilder: (context, index) {
-                Transaction transaction =
-                    transactionsProvider.allTransactions![index];
-                return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ItemTransactioinCard(
-                      amount: transaction.amount.toString(),
-                      itemName: transaction.itemName,
-                      price: transaction.price,
-                      imageLink: transaction.imageLink,
-                      type: "Succesful",
-                      sellerName: transaction.sellerStoreName!,
-                      buyerName: transaction.buyerStoreName!,
-                      date: DateFormat('dd-MM-yyyy').format(transaction.date),
-                    ));
-              },
-            ),
+                  itemCount: transactionsProvider.allTransactions!.length,
+                  itemBuilder: (context, index) {
+                    Transaction transaction =
+                        transactionsProvider.allTransactions![index];
+                    return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ItemTransactioinCard(
+                          amount: transaction.amount.toString(),
+                          itemName: transaction.itemName,
+                          price: transaction.price,
+                          imageLink: transaction.imageLink,
+                          type: "Succesful",
+                          sellerName: transaction.sellerStoreName!,
+                          buyerName: transaction.buyerStoreName!,
+                          date:
+                              DateFormat('dd-MM-yyyy').format(transaction.date),
+                        ));
+                  },
+                ),
     );
   }
 }

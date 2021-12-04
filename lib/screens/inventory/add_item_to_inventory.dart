@@ -27,7 +27,8 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
     if (_formKey.currentState!.validate()) {
       bool isImageValid = await isValidImage(_imageUrlController.text);
       if (!isImageValid) {
-        showMessageDialogue(context, 'Entered image url is not a valid image');
+        showMessageDialogue(context,
+            'Entered image URL is not a valid image\n\nURLs should begin with http:// or https://');
         return;
       }
       InventoryItem item = InventoryItem(
