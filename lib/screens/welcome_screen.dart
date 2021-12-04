@@ -84,7 +84,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   builder: (context) => SignUpScreen()),
                             );
                           }),
-                      if (true)
+                      if (false)
                         // ignore: dead_code
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
