@@ -47,10 +47,10 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
     }
   }
 
-  void submitPurchase() async {
+  void submitPurchase(String id) async {
     try {
       await Provider.of<StoresProvider>(context, listen: false)
-          .purchaseItem(widget.item.id!, amount);
+          .purchaseItem(id, amount);
       showSnackbar(context, Text("Item is purchased succesfully"));
       Navigator.of(context).pop();
     } on ServerException catch (e) {
@@ -61,9 +61,12 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
   @override
   Widget build(BuildContext context) {
     var storesProvider = Provider.of<StoresProvider>(context);
+    // we are sure that by this page is loaded, there are some storeItems in allItems in storesProvider
+    StoreItem item = storesProvider.allItems!
+        .firstWhere((item) => item.id == widget.item.id);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.item.name),
+        title: Text(item.name),
         centerTitle: true,
       ),
       body: ListView(
@@ -74,7 +77,7 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CachedNetworkImage(
-                  imageUrl: widget.item.imageLink,
+                  imageUrl: item.imageLink,
                   errorWidget: (context, _, __) => Image.asset(
                     kLogo,
                     fit: BoxFit.scaleDown,
@@ -89,9 +92,9 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
           const SizedBox(height: 40),
           Table(
             children: [
-              tableRow("Name: ", widget.item.name, context),
+              tableRow("Name: ", item.name, context),
               tableRow("", "", context),
-              tableRow("Description: ", widget.item.description, context),
+              tableRow("Description: ", item.description, context),
               tableRow("", "", context),
               TableRow(children: [
                 Padding(
@@ -107,11 +110,11 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (ctx) => StoreDetailsScreen(
-                                storeName: widget.item.storeName,
-                                storeId: widget.item.storeId,
+                                storeName: item.storeName,
+                                storeId: item.storeId,
                               )));
                     },
-                    child: Text(widget.item.storeName,
+                    child: Text(item.storeName,
                         style: TextStyle(
                             fontSize: 18,
                             color: Color(0xFF487E89),
@@ -121,14 +124,15 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
               ]),
               tableRow("", "", context),
               tableRow(
-                  "Available amount: ", widget.item.amount.toString(), context),
+                  "Available amount: ", item.amount.toString(), context),
               tableRow("", "", context),
-              tableRow("Price: ", "\$${widget.item.price.toStringAsFixed(2)}",
+              tableRow(
+                  "Price: ", "\$${item.price.toStringAsFixed(2)}",
                   context),
             ],
           ),
           const SizedBox(height: 50),
-          if (widget.item.storeName != globals.storeName)
+          if (item.storeName != globals.storeName)
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -158,7 +162,7 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                       ? Center(child: CircularProgressIndicator())
                       : RoundedButton(
                           title: "Purchase",
-                          onPressed: submitPurchase,
+                          onPressed: () => submitPurchase(item.id!),
                         ),
                 ),
                 const SizedBox(height: 20),
@@ -176,7 +180,7 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                             color: Colors.orange,
                             title: "Add To My Store",
                             onPressed: () =>
-                                submitAddToMyStore(widget.item.id!))),
+                                submitAddToMyStore(item.id!))),
                 const SizedBox(height: 20),
               ],
             )

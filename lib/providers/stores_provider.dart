@@ -183,6 +183,13 @@ class StoresProvider with ChangeNotifier {
 
     try {
       String itemId = await storesWebService.purchaseItem(id, amount);
+      // update stored storeItem (alternatively we could receive the new store item from the back end)
+      if (allItems != null && allItems!.any((item) => item.id == id))
+        allItems!.firstWhere((item) => item.id == id).amount -= amount;
+      if (storeItems != null && storeItems!.any((item) => item.id == id))
+        storeItems!.firstWhere((item) => item.id == id).amount -= amount;
+      if (searchItems != null && searchItems!.any((item) => item.id == id))
+        searchItems!.firstWhere((item) => item.id == id).amount -= amount;
       return itemId;
     } finally {
       purchaseLoadingStatus = LoadingStatus.done;
