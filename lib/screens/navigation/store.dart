@@ -1,3 +1,4 @@
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/constants/enums.dart';
@@ -43,6 +44,7 @@ class _SellScreenState extends State<SellScreen> {
   @override
   Widget build(BuildContext context) {
     var storesProvider = Provider.of<StoresProvider>(context);
+    if (storesProvider.items != null) print(storesProvider.items!.length);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.of(context).push(
@@ -51,46 +53,49 @@ class _SellScreenState extends State<SellScreen> {
       ),
       body: storesProvider.loadingStatus == LoadingStatus.loading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: storesProvider.items!.length,
-              itemBuilder: (context, index) {
-                StoreItem item = storesProvider.items![index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ItemCard(
-                    // put another value to get it in menu
-                    menuItems: item.state == StoreItemState.imported
-                        ? ["Remove"]
-                        : ["Edit", "Remove"],
-                    itemName: item.name,
-                    amount: item.amount.toString(),
-                    price: item.price,
-                    imageLink: item.imageLink,
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              OnSaleItemDetailsScreen(storeItem: item)));
-                    },
-                    onSelectMenuItem: (choice) {
-                      if (choice == "Edit") {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => EditItemDetails(
-                            storeItem: item,
-                            submitButtonText: "Edit",
-                            onSubmit: () => {
-                              //TODO: add edit habdler
-                              Navigator.of(context).pop()
-                            },
-                          ),
-                        ));
-                      } else {
-                        submitRemove(item.id!);
-                      }
-                    },
-                  ),
-                );
-              },
-            ),
+          : storesProvider.items!.length == 0
+              ? GreyBar(
+                  'No items are found in your store.\nPress \'+\' to add one.')
+              : ListView.builder(
+                  itemCount: storesProvider.items!.length,
+                  itemBuilder: (context, index) {
+                    StoreItem item = storesProvider.items![index];
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ItemCard(
+                        // put another value to get it in menu
+                        menuItems: item.state == StoreItemState.imported
+                            ? ["Remove"]
+                            : ["Edit", "Remove"],
+                        itemName: item.name,
+                        amount: item.amount.toString(),
+                        price: item.price,
+                        imageLink: item.imageLink,
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  OnSaleItemDetailsScreen(storeItem: item)));
+                        },
+                        onSelectMenuItem: (choice) {
+                          if (choice == "Edit") {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => EditItemDetails(
+                                storeItem: item,
+                                submitButtonText: "Edit",
+                                onSubmit: () => {
+                                  //TODO: add edit habdler
+                                  Navigator.of(context).pop()
+                                },
+                              ),
+                            ));
+                          } else {
+                            submitRemove(item.id!);
+                          }
+                        },
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/functions.dart';
@@ -44,83 +45,90 @@ class _ExploreScreenState extends State<ExploreScreen> {
         padding: const EdgeInsets.only(left: 8, right: 8, top: 16, bottom: 0),
         child: storesProvider.loadingStatus == LoadingStatus.loading
             ? Center(child: CircularProgressIndicator())
-            : GridView.builder(
-                itemCount: storesProvider.allItems!.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  childAspectRatio: (MediaQuery.of(context).size.width / 2) /
-                      (MediaQuery.of(context).size.height / 3),
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16.0,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  StoreItem item = storesProvider.allItems![index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => PurchaseItemScreen(item),
+            : storesProvider.allItems!.length == 0
+                ? GreyBar('No items found in your store')
+                : GridView.builder(
+                    itemCount: storesProvider.allItems!.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio:
+                          (MediaQuery.of(context).size.width / 2) /
+                              (MediaQuery.of(context).size.height / 3),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16.0,
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      StoreItem item = storesProvider.allItems![index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => PurchaseItemScreen(item),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    CachedNetworkImage(
+                                      imageUrl: item.imageLink,
+                                      errorWidget: (context, _, __) =>
+                                          Image.asset(
+                                        kLogo,
+                                        fit: BoxFit.scaleDown,
+                                      ),
+                                      fit: BoxFit.scaleDown,
+                                      width: 100,
+                                      height: 100,
+                                    ),
+                                    const SizedBox(height: 10),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(item.storeName,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .caption!
+                                            .copyWith(fontSize: 14)),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      item.name,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(item.price.toStringAsFixed(2),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1),
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       );
                     },
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const SizedBox(height: 8),
-                                CachedNetworkImage(
-                                  imageUrl: item.imageLink,
-                                  errorWidget: (context, _, __) => Image.asset(
-                                    kLogo,
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                  fit: BoxFit.scaleDown,
-                                  width: 100,
-                                  height: 100,
-                                ),
-                                const SizedBox(height: 10),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(item.storeName,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .caption!
-                                        .copyWith(fontSize: 14)),
-                                const SizedBox(height: 5),
-                                Text(
-                                  item.name,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 5),
-                                Text(item.price.toStringAsFixed(2),
-                                    overflow: TextOverflow.ellipsis,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+                  ),
       ),
     ));
   }

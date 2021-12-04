@@ -1,4 +1,5 @@
 import 'package:ds_market_place/components/UI/detailed_item_card.dart';
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
@@ -39,7 +40,9 @@ class _SoldItemsScreenState extends State<SoldItemsScreen> {
       child: Scaffold(
         body: transactionsProvider.loadingStatus == LoadingStatus.loading
             ? Center(child: CircularProgressIndicator())
-            : ListView.builder(
+            : transactionsProvider.soldItems!.length == 0
+                ? GreyBar('You haven\'t sold any item yet.')
+                : ListView.builder(
                 itemCount: transactionsProvider.soldItems!.length,
                 itemBuilder: (context, index) {
                   Transaction transaction =

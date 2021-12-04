@@ -1,4 +1,5 @@
 import 'package:ds_market_place/components/UI/detailed_item_card.dart';
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_transaction_card.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
@@ -41,7 +42,9 @@ class _UsersListScreenState extends State<UsersListScreen> {
       appBar: AppBar(title: Text("System Users List"), centerTitle: true),
       body: usersProvider.usersLoadingStatus == LoadingStatus.loading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
+          : usersProvider.users!.length == 0
+              ? GreyBar('No users are found in the whole system')
+                : ListView.builder(
               itemCount: usersProvider.users!.length,
               itemBuilder: (context, index) {
                 User user = usersProvider.users![index];

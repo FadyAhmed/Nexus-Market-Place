@@ -1,4 +1,5 @@
 import 'package:ds_market_place/components/UI/circular-loading.dart';
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
@@ -84,37 +85,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Center(child: CircularProgressIndicator()),
                     )
                   : storesProvider.searchItems == null
-                      ? Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                          color: Colors.grey,
-                          child: Center(
-                            child: Text(
-                              "You can search by item name",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6!
-                                  .copyWith(color: Theme.of(context).hintColor),
-                            ),
-                          ),
-                        )
+                      ? GreyBar('You can search by item name')
                       : storesProvider.searchItems!.length == 0
-                          ? Container(
-                              width: MediaQuery.of(context).size.width,
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, bottom: 8),
-                              color: Colors.grey,
-                              child: Center(
-                                child: Text(
-                                  "No items found",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline6!
-                                      .copyWith(
-                                          color: Theme.of(context).hintColor),
-                                ),
-                              ),
-                            )
+                          ? GreyBar("No items found")
                           : ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),

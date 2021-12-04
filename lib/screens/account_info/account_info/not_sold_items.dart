@@ -1,3 +1,4 @@
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/constants/enums.dart';
@@ -55,8 +56,10 @@ class _OnSaleItemsScreenState extends State<OnSaleItemsScreen> {
     return Scaffold(
       body: storeProvider.loadingStatus == LoadingStatus.loading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: ownedItems!.length,
+          : ownedItems!.length == 0
+              ? GreyBar('You have no owned items exisiting in your store')
+              : ListView.builder(
+                  itemCount: ownedItems.length,
               itemBuilder: (context, index) {
                 StoreItem item = ownedItems![index];
                 return Padding(

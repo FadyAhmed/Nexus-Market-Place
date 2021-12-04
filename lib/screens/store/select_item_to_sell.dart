@@ -1,3 +1,4 @@
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/constants/enums.dart';
@@ -50,20 +51,7 @@ class _SelectItemToInvenSellnState extends State<SelectItemToSellScreen> {
       ),
       body: Column(
         children: [
-          Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-            color: Colors.grey,
-            child: Center(
-              child: Text(
-                "Items on your inventory",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6!
-                    .copyWith(color: Theme.of(context).hintColor),
-              ),
-            ),
-          ),
+          GreyBar('Items on your inventory'),
           Expanded(
             child: inventoriesProvider.loadingStatus == LoadingStatus.loading
                 ? Center(child: CircularProgressIndicator())

@@ -1,4 +1,5 @@
 import 'package:ds_market_place/components/UI/detailed_item_card.dart';
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_transaction_card.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
@@ -40,7 +41,9 @@ class _SystemTransactionsScreenState extends State<SystemTransactionsScreen> {
       appBar: AppBar(title: Text("System Transactions"), centerTitle: true),
       body: transactionsProvider.loadingStatus == LoadingStatus.loading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
+          : transactionsProvider.allTransactions!.length == 0
+              ? GreyBar('No transactions are found in the whole system.')
+              : ListView.builder(
               itemCount: transactionsProvider.allTransactions!.length,
               itemBuilder: (context, index) {
                 Transaction transaction =

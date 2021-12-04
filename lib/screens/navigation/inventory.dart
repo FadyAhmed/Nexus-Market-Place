@@ -1,3 +1,4 @@
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/constants/enums.dart';
@@ -50,41 +51,45 @@ class _InventoryScreenState extends State<InventoryScreen> {
         ),
         body: inventoryProvider.loadingStatus == LoadingStatus.loading
             ? Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: inventoryProvider.items!.length,
-                itemBuilder: (context, index) {
-                  List<InventoryItem> items = inventoryProvider.items!;
-                  return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ItemCard(
-                          menuItems: ["Edit", "Remove"],
-                          onSelectMenuItem: (choice) {
-                            if (choice == "Edit") {
-                              print(choice);
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => EditItemDetails(
-                                  inventoryItem: items[index],
-                                  submitButtonText: "Edit",
-                                  onSubmit: () => {
-                                    //TODO: add edit habdler
-                                    Navigator.of(context).pop()
-                                  },
-                                ),
-                              ));
-                            } else {
-                              submitDelete(items[index]);
-                            }
-                          },
-                          itemName: items[index].name,
-                          amount: items[index].amount.toString(),
-                          price: items[index].price,
-                          imageLink: items[index].imageLink,
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => OnSaleItemDetailsScreen(
-                                    inventoryItem: items[index])));
-                          }));
-                },
-              ));
+            : inventoryProvider.items!.length == 0
+                ? GreyBar(
+                    'No items are found in your inventory.\nPress \'+\' to add one.')
+                : ListView.builder(
+                    itemCount: inventoryProvider.items!.length,
+                    itemBuilder: (context, index) {
+                      List<InventoryItem> items = inventoryProvider.items!;
+                      return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ItemCard(
+                              menuItems: ["Edit", "Remove"],
+                              onSelectMenuItem: (choice) {
+                                if (choice == "Edit") {
+                                  print(choice);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => EditItemDetails(
+                                      inventoryItem: items[index],
+                                      submitButtonText: "Edit",
+                                      onSubmit: () => {
+                                        //TODO: add edit habdler
+                                        Navigator.of(context).pop()
+                                      },
+                                    ),
+                                  ));
+                                } else {
+                                  submitDelete(items[index]);
+                                }
+                              },
+                              itemName: items[index].name,
+                              amount: items[index].amount.toString(),
+                              price: items[index].price,
+                              imageLink: items[index].imageLink,
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        OnSaleItemDetailsScreen(
+                                            inventoryItem: items[index])));
+                              }));
+                    },
+                  ));
   }
 }
