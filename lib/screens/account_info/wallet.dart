@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
@@ -106,9 +108,11 @@ class _WalletScreenState extends State<WalletScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text("Wallet"), centerTitle: true),
       body: InkWell(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
+        onTap: Platform.isWindows
+            ? null
+            : () {
+                FocusScope.of(context).unfocus();
+              },
         child: ListView(
           children: [
             const SizedBox(height: 30),

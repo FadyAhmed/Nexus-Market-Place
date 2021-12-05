@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
@@ -116,7 +118,9 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
       appBar:
           AppBar(title: const Text("Add item to inventory"), centerTitle: true),
       body: InkWell(
-        onTap: () {
+        onTap: Platform.isWindows
+                  ? null
+                  : () {
           FocusScope.of(context).unfocus();
         },
         child: ListView(

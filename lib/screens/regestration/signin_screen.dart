@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
@@ -45,9 +47,11 @@ class _SignInScreenState extends State<SignInScreen> {
       body: _bigLoading
           ? loading()
           : InkWell(
-              onTap: () {
-                FocusScope.of(context).unfocus();
-              },
+              onTap: Platform.isWindows
+                  ? null
+                  : () {
+                      FocusScope.of(context).unfocus();
+                    },
               child: ListView(
                 children: [
                   Hero(
