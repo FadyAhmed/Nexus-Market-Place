@@ -119,10 +119,10 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
           AppBar(title: const Text("Add item to inventory"), centerTitle: true),
       body: InkWell(
         onTap: Platform.isWindows
-                  ? null
-                  : () {
-          FocusScope.of(context).unfocus();
-        },
+            ? null
+            : () {
+                FocusScope.of(context).unfocus();
+              },
         child: ListView(
           children: [
             Column(

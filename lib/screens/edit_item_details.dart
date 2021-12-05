@@ -111,6 +111,7 @@ class _EditItemDetailsState extends State<EditItemDetails> {
     var storesProvider = Provider.of<StoresProvider>(context);
     List<KFormField> fields = [
       KFormField(
+          key: 'name',
           controller: _name,
           hint: 'Item Name',
           label: "Name",
@@ -119,6 +120,7 @@ class _EditItemDetailsState extends State<EditItemDetails> {
             if (text == null || text.isEmpty) return 'Empty';
           }),
       KFormField(
+          key: 'amount',
           controller: _amount,
           hint: 'Enter amount ',
           label: "Amount",
@@ -131,6 +133,7 @@ class _EditItemDetailsState extends State<EditItemDetails> {
                       ? 'Only positive numbers are allowed'
                       : null),
       KFormField(
+          key: 'price',
           controller: _price,
           hint: 'Enter price',
           label: "Price",
@@ -143,6 +146,7 @@ class _EditItemDetailsState extends State<EditItemDetails> {
                       ? 'Only positive numbers are allowed'
                       : null),
       KFormField(
+          key: 'description',
           controller: _description,
           hint: 'Enter description',
           label: "Description",
@@ -151,6 +155,7 @@ class _EditItemDetailsState extends State<EditItemDetails> {
             return (text!.isEmpty) ? 'Empty' : null;
           }),
       KFormField(
+          key: 'link',
           controller: _imageLink,
           hint: 'Image Link',
           label: "Image Link",
@@ -193,6 +198,7 @@ class _EditItemDetailsState extends State<EditItemDetails> {
                         return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12.0),
                             child: myTextFormField(
+                                key: e.key,
                                 context: context,
                                 textInputType: e.textInputType,
                                 obsecure: false,
