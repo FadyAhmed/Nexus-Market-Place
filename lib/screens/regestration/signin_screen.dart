@@ -52,7 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   : () {
                       FocusScope.of(context).unfocus();
                     },
-              child: Column(
+              child: ListView(
                 children: [
                   Hero(
                     tag: 'logo',
