@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../constants.dart';
 
 TextFormField myTextFormField({
+  String? key,
   BuildContext? context,
   required String hint,
   required String label,
@@ -11,6 +12,7 @@ TextFormField myTextFormField({
   bool obsecure = false,
 }) {
   return TextFormField(
+    key: Key(key ?? 'myKey'),
     cursorColor: Colors.black,
     obscureText: obsecure,
     validator: validator,

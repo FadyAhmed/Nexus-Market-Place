@@ -53,6 +53,7 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
     var inventoriesProvider = Provider.of<InventoriesProvider>(context);
     List<KFormField> fields = [
       KFormField(
+          key: 'name',
           controller: _nameController,
           hint: 'Item Name',
           label: "Name",
@@ -61,6 +62,7 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
             if (text == null || text.isEmpty) return 'Empty';
           }),
       KFormField(
+          key: 'amount',
           controller: _amountController,
           hint: 'Enter amount ',
           label: "Amount",
@@ -77,6 +79,7 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
             }
           }),
       KFormField(
+          key: 'price',
           controller: _priceController,
           hint: 'Enter price',
           label: "Price",
@@ -93,6 +96,7 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
             }
           }),
       KFormField(
+          key: 'description',
           controller: _descController,
           hint: 'Enter description',
           label: "Description",
@@ -101,6 +105,7 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
             return (text!.isEmpty) ? 'Empty' : null;
           }),
       KFormField(
+          key: 'link',
           controller: _imageUrlController,
           hint: 'Image Link',
           label: "Image Link",
@@ -136,6 +141,7 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
                                 (field) => Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: myTextFormField(
+                                      key: field.key,
                                       context: context,
                                       validator: field.validator,
                                       textInputType: field.textInputType,

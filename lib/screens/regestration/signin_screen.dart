@@ -75,6 +75,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: myTextFormField(
+                                    key: 'username',
                                       context: context,
                                       textInputType: TextInputType.name,
                                       controller: _username,
@@ -84,6 +85,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: myTextFormField(
+                                    key: 'password',
                                     textInputType:
                                         TextInputType.visiblePassword,
                                     context: context,

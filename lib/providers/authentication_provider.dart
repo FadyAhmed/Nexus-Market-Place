@@ -22,8 +22,6 @@ class AuthenticationProvider with ChangeNotifier {
 
     try {
       await authenticationWebService.signIn(loginData);
-    } catch (e) {
-      throw e;
     } finally {
       loadingStatus = LoadingStatus.done;
       notifyListeners();

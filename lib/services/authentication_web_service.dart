@@ -42,11 +42,9 @@ class AuthenticationWebService {
     );
     var body = jsonDecode(response.body);
     if (!body['success']) {
-      print('authentication: signup: error');
       throw ServerException(generateErrorMessage(body));
     }
 
-    print('authentication: signup: user signed up successfully');
     return true;
   }
 }

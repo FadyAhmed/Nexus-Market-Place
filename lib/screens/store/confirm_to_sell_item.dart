@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
@@ -117,16 +118,7 @@ class _ConfirmItemToSellScreenState extends State<ConfirmItemToSellScreen> {
                   Container(
                       width: 150,
                       height: 150,
-                      child: CachedNetworkImage(
-                        imageUrl: widget.item.imageLink,
-                        errorWidget: (context, _, __) => Image.asset(
-                          kLogo,
-                          fit: BoxFit.scaleDown,
-                        ),
-                        fit: BoxFit.scaleDown,
-                        width: 100,
-                        height: 100,
-                      )),
+                      child: MyCachedImg(widget.item.imageLink, 100, 100)),
                   Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: fields.map((e) {

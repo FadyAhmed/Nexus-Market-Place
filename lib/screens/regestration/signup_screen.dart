@@ -68,6 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final authProvider = Provider.of<AuthenticationProvider>(context);
     List<KFormField> _fields = [
       KFormField(
+          key: 'firstName',
           controller: _firstName,
           hint: 'Enter first name',
           label: "First name*",
@@ -75,6 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (text != null && text.isEmpty) return 'Empty';
           }),
       KFormField(
+          key: 'lastName',
           controller: _lastName,
           hint: 'Enter Last Name',
           label: "Last Name*",
@@ -82,6 +84,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (text != null && text.isEmpty) return 'Empty';
           }),
       KFormField(
+          key: 'storeName',
           controller: _storeName,
           hint: 'Enter Store Name',
           label: "Store Name*",
@@ -89,6 +92,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (text != null && text.isEmpty) return 'Empty';
           }),
       KFormField(
+          key: 'username',
           controller: _userName,
           hint: 'Enter user name',
           label: "Username*",
@@ -96,6 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             if (text != null && text.isEmpty) return 'Empty';
           }),
       KFormField(
+          key: 'email',
           textInputType: TextInputType.emailAddress,
           controller: _email,
           hint: 'Enter email',
@@ -106,6 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ? null
                   : 'Emails not matching'),
       KFormField(
+          key: 'confirmEmail',
           controller: _confirmEmail,
           textInputType: TextInputType.emailAddress,
           hint: 'Confirm your email',
@@ -116,6 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ? null
                   : 'Emails not matching'),
       KFormField(
+        key: 'phoneNumber',
         textInputType: TextInputType.number,
         controller: _phoneNum,
         hint: 'Enter your phone number',
@@ -129,6 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     : 'Invalid Number',
       ),
       KFormField(
+          key: 'password',
           controller: _password,
           obsecure: true,
           hint: 'Enter Password',
@@ -139,6 +147,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ? null
                   : 'Passwords not matching'),
       KFormField(
+          key: 'confirmPassword',
           controller: _confirmPassword,
           obsecure: true,
           hint: 'Confirm password',
@@ -183,6 +192,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               return Padding(
                                 padding: const EdgeInsets.all(8),
                                 child: myTextFormField(
+                                    key: e.key,
                                     context: context,
                                     controller: e.controller,
                                     hint: e.hint,
@@ -205,9 +215,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     children: [
                                       if (authProvider.loadingStatus !=
                                           LoadingStatus.loading)
-                                        RoundedButton(
-                                          onPressed: submitForm,
-                                          title: 'Sign up',
+                                        Semantics(
+                                          label: 'send signup request',
+                                          child: RoundedButton(
+                                            myKey: 'signupBtn',
+                                            onPressed: submitForm,
+                                            title: 'Sign up',
+                                          ),
                                         ),
                                       if (authProvider.loadingStatus ==
                                           LoadingStatus.loading)
