@@ -112,7 +112,7 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
     return Scaffold(
       appBar:
           AppBar(title: const Text("Add item to inventory"), centerTitle: true),
-      body: InkWell(
+      body: GestureDetector(
         onTap: Platform.isWindows
                   ? null
                   : () {
