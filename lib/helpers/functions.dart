@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:ansicolor/ansicolor.dart';
 import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/models/login.dart';
@@ -67,6 +68,13 @@ Future<bool> isValidImage(String url) async {
   } catch (e) {
     return false;
   }
+}
+
+void ansiPrint(dynamic text) {
+  AnsiPen pen = AnsiPen()
+    ..black()
+    ..xterm(13, bg: true);
+  print(pen(text.toString()));
 }
 
 String generateErrorMessage(Map<String, dynamic> badRequest) {

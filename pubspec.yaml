@@ -37,20 +37,23 @@ dependencies:
   json_annotation: ^4.3.0
   intl: ^0.17.0
   cached_network_image: ^3.2.0
+  ansicolor: ^2.0.1
 
 dev_dependencies:
+  integration_test:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
   build_runner: ^2.1.5
   json_serializable: ^6.0.0
   flutter_launcher_icons: "^0.9.2"
+  flutter_lints: ^1.0.0
 
 flutter_icons:
   android: "logo"
   image_path: "assets/images/logo.png"
 
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^1.0.0
-  build_runner: ^2.1.4
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

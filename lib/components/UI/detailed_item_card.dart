@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/data_text.dart';
+import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants.dart';
@@ -30,16 +31,7 @@ class DetailedItemCard extends StatelessWidget {
         ListTile(
           tileColor: Theme.of(context).cardColor,
           contentPadding: const EdgeInsets.all(16),
-          leading: CachedNetworkImage(
-            imageUrl: imageLink,
-            errorWidget: (context, _, __) => Image.asset(
-              kLogo,
-              fit: BoxFit.scaleDown,
-            ),
-            fit: BoxFit.scaleDown,
-            width: 100,
-            height: 150,
-          ),
+          leading: MyCachedImg(imageLink, 100, 150),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
@@ -177,19 +178,15 @@ class _EditItemDetailsState extends State<EditItemDetails> {
                 children: [
                   const SizedBox(height: 5),
                   Container(
-                      width: 150,
-                      height: 150,
-                      child: CachedNetworkImage(
-                        imageUrl: widget.inventoryItem?.imageLink ??
-                            widget.storeItem!.imageLink,
-                        errorWidget: (context, _, __) => Image.asset(
-                          kLogo,
-                          fit: BoxFit.scaleDown,
-                        ),
-                        fit: BoxFit.scaleDown,
-                        width: 150,
-                        height: 150,
-                      )),
+                    width: 150,
+                    height: 150,
+                    child: MyCachedImg(
+                      widget.inventoryItem?.imageLink ??
+                          widget.storeItem!.imageLink,
+                      150,
+                      150,
+                    ),
+                  ),
                   Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: fields.map((e) {

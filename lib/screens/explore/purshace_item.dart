@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/table_row.dart';
@@ -76,15 +77,10 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CachedNetworkImage(
-                  imageUrl: item.imageLink,
-                  errorWidget: (context, _, __) => Image.asset(
-                    kLogo,
-                    fit: BoxFit.scaleDown,
-                  ),
-                  fit: BoxFit.scaleDown,
-                  width: MediaQuery.of(context).size.width / 3,
-                  height: 100,
+                MyCachedImg(
+                  item.imageLink,
+                  MediaQuery.of(context).size.width / 3,
+                  100,
                 )
               ],
             ),
@@ -123,12 +119,10 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                 ),
               ]),
               tableRow("", "", context),
-              tableRow(
-                  "Available amount: ", item.amount.toString(), context),
+              tableRow("Available amount: ", item.amount.toString(), context),
               tableRow("", "", context),
               tableRow(
-                  "Price: ", "\$${item.price.toStringAsFixed(2)}",
-                  context),
+                  "Price: ", "\$${item.price.toStringAsFixed(2)}", context),
             ],
           ),
           const SizedBox(height: 50),
@@ -179,8 +173,7 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                         : RoundedButton(
                             color: Colors.orange,
                             title: "Add To My Store",
-                            onPressed: () =>
-                                submitAddToMyStore(item.id!))),
+                            onPressed: () => submitAddToMyStore(item.id!))),
                 const SizedBox(height: 20),
               ],
             )

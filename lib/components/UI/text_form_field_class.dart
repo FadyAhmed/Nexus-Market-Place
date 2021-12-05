@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class KFormField {
+  String? key;
   String label;
   String hint;
   String? Function(String?)? validator;
@@ -8,7 +9,8 @@ class KFormField {
   TextInputType textInputType;
   bool obsecure;
   KFormField(
-      {this.label = "",
+      {this.key,
+      this.label = "",
       this.hint = "",
       required this.validator,
       required this.controller,
