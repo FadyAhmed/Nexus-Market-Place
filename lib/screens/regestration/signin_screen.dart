@@ -46,7 +46,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       body: _bigLoading
           ? loading()
-          : InkWell(
+          : GestureDetector(
               onTap: Platform.isWindows
                   ? null
                   : () {

@@ -162,7 +162,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       body: _bigLoading
           ? loading()
-          : InkWell(
+          : GestureDetector(
               onTap: Platform.isWindows
                   ? null
                   : () {

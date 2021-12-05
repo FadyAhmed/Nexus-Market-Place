@@ -107,7 +107,7 @@ class _WalletScreenState extends State<WalletScreen> {
     ];
     return Scaffold(
       appBar: AppBar(title: const Text("Wallet"), centerTitle: true),
-      body: InkWell(
+      body: GestureDetector(
         onTap: Platform.isWindows
             ? null
             : () {
