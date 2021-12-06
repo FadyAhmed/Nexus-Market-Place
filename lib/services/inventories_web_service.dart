@@ -7,8 +7,12 @@ import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:http/http.dart' as http;
 
 class InventoriesWebService {
+  http.Client client;
+
+  InventoriesWebService(this.client);
+
   Future<String> addItem(InventoryItem item) async {
-    var response = await http.post(
+    var response = await client.post(
       Uri.parse(RoutesConstants.addItemToInventory),
       body: jsonEncode(item.toJson()),
       headers: {
@@ -22,7 +26,7 @@ class InventoriesWebService {
   }
 
   Future<List<InventoryItem>> getAllItems() async {
-    var response = await http.get(
+    var response = await client.get(
       Uri.parse(RoutesConstants.getAllInventoryItems),
       headers: {
         'Authorization': 'Bearer ${globals.token}',
@@ -37,7 +41,7 @@ class InventoriesWebService {
   }
 
   Future<InventoryItem> getItemById(String id) async {
-    var response = await http.get(
+    var response = await client.get(
       Uri.parse(RoutesConstants.getInventoryItemById(id)),
       headers: {'Authorization': 'Bearer ${globals.token}'},
     );
@@ -49,7 +53,7 @@ class InventoriesWebService {
 
   Future<void> editItem(InventoryItem item) async {
     assert(item.id != null);
-    var response = await http.put(
+    var response = await client.put(
       Uri.parse(RoutesConstants.editInventoryItem(item.id!)),
       body: jsonEncode(item.toJson()),
       headers: {
@@ -61,7 +65,7 @@ class InventoriesWebService {
   }
 
   Future<void> removeItem(String id) async {
-    var response = await http.delete(
+    var response = await client.delete(
       Uri.parse(RoutesConstants.editInventoryItem(id)),
       headers: {
         'Authorization': 'Bearer ${globals.token}',

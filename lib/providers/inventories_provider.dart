@@ -2,9 +2,10 @@ import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/services/inventories_web_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 class InventoriesProvider with ChangeNotifier {
-  var inventoriesWebService = InventoriesWebService();
+  var inventoriesWebService = InventoriesWebService(http.Client());
 
   LoadingStatus loadingStatus = LoadingStatus.done;
 
