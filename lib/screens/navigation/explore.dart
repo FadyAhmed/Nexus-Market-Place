@@ -106,7 +106,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(height: 5),
-                                    Text(item.price.toStringAsFixed(2),
+                                    Text('\$ ' + item.price.toStringAsFixed(2),
                                         overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context)
                                             .textTheme

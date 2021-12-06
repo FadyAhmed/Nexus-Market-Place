@@ -62,9 +62,26 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
   @override
   Widget build(BuildContext context) {
     var storesProvider = Provider.of<StoresProvider>(context);
-    // we are sure that by this page is loaded, there are some storeItems in allItems in storesProvider
-    StoreItem item = storesProvider.allItems!
-        .firstWhere((item) => item.id == widget.item.id);
+    late StoreItem item;
+    if (storesProvider.allItems!.any((it) => it.id == widget.item.id)) {
+      item = storesProvider.allItems!.firstWhere(
+        (item) => item.id == widget.item.id,
+      );
+    } else if (storesProvider.storeItems!
+        .any((it) => it.id == widget.item.id)) {
+      item = storesProvider.storeItems!.firstWhere(
+        (item) => item.id == widget.item.id,
+      );
+    } else if (storesProvider.searchItems!
+        .any((it) => it.id == widget.item.id)) {
+      item = storesProvider.searchItems!.firstWhere(
+        (item) => item.id == widget.item.id,
+      );
+    } else {
+      // for the case if the item was deleted from all lists
+      // this happens when purchased amount == existing amount
+      item = widget.item;
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(item.name),

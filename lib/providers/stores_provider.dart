@@ -186,12 +186,27 @@ class StoresProvider with ChangeNotifier {
     try {
       String itemId = await storesWebService.purchaseItem(id, amount);
       // update stored storeItem (alternatively we could receive the new store item from the back end)
-      if (allItems != null && allItems!.any((item) => item.id == id))
-        allItems!.firstWhere((item) => item.id == id).amount -= amount;
-      if (storeItems != null && storeItems!.any((item) => item.id == id))
-        storeItems!.firstWhere((item) => item.id == id).amount -= amount;
-      if (searchItems != null && searchItems!.any((item) => item.id == id))
-        searchItems!.firstWhere((item) => item.id == id).amount -= amount;
+      if (allItems != null && allItems!.any((item) => item.id == id)) {
+        int index = allItems!.indexWhere((item) => item.id == id);
+        allItems![index].amount -= amount;
+        if (allItems![index].amount == 0) {
+          allItems!.removeAt(index);
+        }
+      }
+      if (storeItems != null && storeItems!.any((item) => item.id == id)) {
+        int index = storeItems!.indexWhere((item) => item.id == id);
+        storeItems![index].amount -= amount;
+        if (storeItems![index].amount == 0) {
+          storeItems!.removeAt(index);
+        }
+      }
+      if (searchItems != null && searchItems!.any((item) => item.id == id)) {
+        int index = searchItems!.indexWhere((item) => item.id == id);
+        searchItems![index].amount -= amount;
+        if (searchItems![index].amount == 0) {
+          searchItems!.removeAt(index);
+        }
+      }
       return itemId;
     } finally {
       purchaseLoadingStatus = LoadingStatus.done;

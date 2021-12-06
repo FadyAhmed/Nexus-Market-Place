@@ -10,6 +10,7 @@ import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
@@ -106,8 +107,7 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 MyCachedImg(
-                  widget.inventoryItem?.imageLink ??
-                      widget.storeItem!.imageLink,
+                  inventoryItem?.imageLink ?? storeItem!.imageLink,
                   100,
                   100,
                 ),

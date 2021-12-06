@@ -23,11 +23,16 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<InventoriesProvider>(context, listen: false)
-        .getAllItems(notifyWhenLoading: false)
-        .catchError((e) {
+    fetchAllInventoryItems();
+  }
+
+  Future<void> fetchAllInventoryItems({bool notifyWhenLoading = true}) async {
+    try {
+      await Provider.of<InventoriesProvider>(context, listen: false)
+          .getAllItems(notifyWhenLoading: false);
+    } on ServerException catch (e) {
       showMessageDialogue(context, e.message);
-    });
+    }
   }
 
   void submitDelete(InventoryItem item) async {
@@ -43,53 +48,57 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   Widget build(BuildContext context) {
     var inventoryProvider = Provider.of<InventoriesProvider>(context);
-    return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (ctx) => AddItemToInventory())),
-          child: const Icon(Icons.add),
-        ),
-        body: inventoryProvider.loadingStatus == LoadingStatus.loading
-            ? Center(child: CircularProgressIndicator())
-            : inventoryProvider.items!.length == 0
-                ? GreyBar(
-                    'No items are found in your inventory.\nPress \'+\' to add one.')
-                : ListView.builder(
-                    itemCount: inventoryProvider.items!.length,
-                    itemBuilder: (context, index) {
-                      List<InventoryItem> items = inventoryProvider.items!;
-                      return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ItemCard(
-                              menuItems: ["Edit", "Remove"],
-                              onSelectMenuItem: (choice) {
-                                if (choice == "Edit") {
-                                  print(choice);
+    return RefreshIndicator(
+      onRefresh: fetchAllInventoryItems,
+      child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (ctx) => AddItemToInventory())),
+            child: const Icon(Icons.add),
+          ),
+          body: inventoryProvider.loadingStatus == LoadingStatus.loading
+              ? Center(child: CircularProgressIndicator())
+              : inventoryProvider.items!.length == 0
+                  ? GreyBar(
+                      'No items are found in your inventory.\nPress \'+\' to add one.')
+                  : ListView.builder(
+                      itemCount: inventoryProvider.items!.length,
+                      itemBuilder: (context, index) {
+                        List<InventoryItem> items = inventoryProvider.items!;
+                        return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ItemCard(
+                                menuItems: ["Edit", "Remove"],
+                                onSelectMenuItem: (choice) {
+                                  if (choice == "Edit") {
+                                    print(choice);
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => EditItemDetails(
+                                        inventoryItem: items[index],
+                                        submitButtonText: "Edit",
+                                        onSubmit: () => {
+                                          //TODO: add edit habdler
+                                          Navigator.of(context).pop()
+                                        },
+                                      ),
+                                    ));
+                                  } else {
+                                    submitDelete(items[index]);
+                                  }
+                                },
+                                itemName: items[index].name,
+                                amount: items[index].amount.toString(),
+                                price: items[index].price,
+                                imageLink: items[index].imageLink,
+                                onPressed: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => EditItemDetails(
-                                      inventoryItem: items[index],
-                                      submitButtonText: "Edit",
-                                      onSubmit: () => {
-                                        //TODO: add edit habdler
-                                        Navigator.of(context).pop()
-                                      },
-                                    ),
-                                  ));
-                                } else {
-                                  submitDelete(items[index]);
-                                }
-                              },
-                              itemName: items[index].name,
-                              amount: items[index].amount.toString(),
-                              price: items[index].price,
-                              imageLink: items[index].imageLink,
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        OnSaleItemDetailsScreen(
-                                            inventoryItem: items[index])));
-                              }));
-                    },
-                  ));
+                                      builder: (context) =>
+                                          OnSaleItemDetailsScreen(
+                                              inventoryItem: items[index])));
+                                }));
+                      },
+                    )),
+    );
   }
 }

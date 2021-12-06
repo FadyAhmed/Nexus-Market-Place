@@ -51,6 +51,15 @@ class _SearchScreenState extends State<SearchScreen> {
       setState(() => _errorText = '\'\$\' and \'.\' symbols are not allowed');
       return false;
     }
+    List<String> prohibitedSymbols = ['()', '(', ')', '*', '['];
+    for (var symbol in prohibitedSymbols) {
+      if (searchTerm == symbol) {
+        setState(() {
+          _errorText = "Can't use any of these symbols: () * ) [ (";
+        });
+        return false;
+      }
+    }
     setState(() => _errorText = null);
     return true;
   }

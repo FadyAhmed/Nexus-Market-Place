@@ -21,13 +21,15 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  TextEditingController _username = TextEditingController();
-  TextEditingController _password = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _username = TextEditingController();
+  final TextEditingController _password = TextEditingController();
   bool _bigLoading = false;
 
   Future<void> submitForm() async {
     try {
-      Login loginData =
+      if (_formKey.currentState!.validate()) {
+        Login loginData =
           Login(username: _username.text, password: _password.text);
       await Provider.of<AuthenticationProvider>(context, listen: false)
           .signIn(loginData);
@@ -35,6 +37,7 @@ class _SignInScreenState extends State<SignInScreen> {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => MarketHomePage()),
           (Route<dynamic> route) => false);
+      }
     } on ServerException catch (e) {
       showMessageDialogue(context, e.message);
     }
@@ -69,6 +72,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Form(
+                            key: _formKey,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(children: [
@@ -76,11 +80,16 @@ class _SignInScreenState extends State<SignInScreen> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: myTextFormField(
                                     key: 'username',
-                                      context: context,
-                                      textInputType: TextInputType.name,
-                                      controller: _username,
-                                      hint: "Enter user name",
-                                      label: "Username"),
+                                    context: context,
+                                    textInputType: TextInputType.name,
+                                    controller: _username,
+                                    hint: "Enter user name",
+                                    label: "Username",
+                                    validator: (val) =>
+                                        val == null || val.isEmpty
+                                            ? 'Field cannot be empty'
+                                            : null,
+                                  ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -93,6 +102,10 @@ class _SignInScreenState extends State<SignInScreen> {
                                     label: "Passowrd",
                                     obsecure: true,
                                     controller: _password,
+                                    validator: (val) =>
+                                        val == null || val.isEmpty
+                                            ? 'Field cannot be empty'
+                                            : null,
                                   ),
                                 ),
                               ]),
