@@ -29,7 +29,7 @@ class _AccountInfoContainerState extends State<AccountInfoContainer> {
                   Tab(child: Text("Sold Items", textAlign: TextAlign.center)),
                   Tab(
                       child:
-                          Text("Purshced Items", textAlign: TextAlign.center)),
+                          Text("Purchased Items", textAlign: TextAlign.center)),
                   Tab(
                       child:
                           Text("Items Not Sold", textAlign: TextAlign.center))
