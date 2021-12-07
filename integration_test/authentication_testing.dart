@@ -16,7 +16,7 @@ void main() {
   });
 
   testWidgets('login as user1 with correct credentials', (tester) async {
-    await loginAsUser1(tester);
+    await login(tester);
   });
 
   testWidgets('login as user1 with false credentials', (tester) async {

@@ -20,7 +20,7 @@ void main() {
   });
 
   testWidgets('add inventory item', (tester) async {
-    await loginAsUser1(tester);
+    await login(tester);
     await tester.tap(find.text('Inventory'));
     await tester.pumpAndSettle();
     while (tester.any(find.byType(SnackBar))) {
@@ -56,7 +56,7 @@ void main() {
   });
 
   testWidgets('edit inventory item', (tester) async {
-    await loginAsUser1(tester);
+    await login(tester);
     await tester.tap(find.text('Inventory'));
     await tester.pumpAndSettle();
     await tester.dragUntilVisible(
@@ -104,7 +104,7 @@ void main() {
   });
 
   testWidgets('delete inventory item', (tester) async {
-    await loginAsUser1(tester);
+    await login(tester);
     await tester.tap(find.text('Inventory'));
     await tester.pumpAndSettle();
     await tester.dragUntilVisible(
