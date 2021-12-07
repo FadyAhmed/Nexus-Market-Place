@@ -131,4 +131,25 @@ void main() {
           inventoriesWebService.getAllItems(), throwsA(isA<ServerException>()));
     });
   });
+
+  InventoryItem item = InventoryItem(
+    name: 'item1',
+    amount: 1,
+    price: 1.99,
+    description: 'desc1',
+    imageLink: 'link1',
+  );
+  String body = jsonEncode({
+    'success': true,
+    'item': item.toJson(),
+  });
+
+  group('getItemById method: ', () {
+    test('getItemById returns InventoryItem if successful', () async {
+      when(client.get(any, headers: anyNamed('headers')))
+          .thenAnswer((_) async => Response(body, 200));
+      InventoryItem result = await inventoriesWebService.getItemById('id');
+      expect(result.name, item.name);
+    });
+  });
 }

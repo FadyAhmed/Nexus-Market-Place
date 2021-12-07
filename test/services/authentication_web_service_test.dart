@@ -21,9 +21,9 @@ void main() {
     authenticationWebService = AuthenticationWebService(client: client);
   });
 
-  group('sign in', () {
+  group('sign in method:', () {
     Login loginData = Login(username: 'user1', password: '123');
-    test('signin method sets token, admin status and storeName', () async {
+    test('signin sets token, admin status and storeName', () async {
       String token = 'test token';
       bool adminStatus = true;
       String storeName = 'test store name';
@@ -45,7 +45,7 @@ void main() {
     });
 
     test(
-      'sign in method throws ServerException at any status code other that 200',
+      'sign in throws ServerException at any status code other that 200',
       () async {
         String body = jsonEncode({
           'success': false,
@@ -65,7 +65,7 @@ void main() {
     );
   });
 
-  group('sign up', () {
+  group('sign up method:', () {
     Signup signupData = Signup(
       firstName: 'amr',
       lastName: 'fatouh',

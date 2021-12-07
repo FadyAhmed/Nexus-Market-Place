@@ -13,9 +13,10 @@ import 'package:ds_market_place/globals.dart' as globals;
 class AuthenticationWebService {
   http.Client client;
   // dependent on stores web service just to get the store name of current logged in user
-  StoresWebService storesWebService = StoresWebService();
+  StoresWebService storesWebService;
 
-  AuthenticationWebService({required this.client});
+  AuthenticationWebService({required this.client})
+      : storesWebService = StoresWebService(client);
 
   Future<void> signIn(Login loginData) async {
     http.Response response = await client.post(
@@ -25,7 +26,6 @@ class AuthenticationWebService {
     );
     var body = jsonDecode(response.body);
     if (!body['success']) {
-      print('authentication: login: error');
       throw ServerException(generateErrorMessage(body));
     }
     globals.token = body['token'];

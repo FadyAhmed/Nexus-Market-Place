@@ -7,8 +7,12 @@ import 'package:ds_market_place/models/store_item.dart';
 import 'package:http/http.dart' as http;
 
 class StoresWebService {
+  http.Client client;
+
+  StoresWebService(this.client);
+  
   Future<List<StoreItem>> getAllItemsFromMyStore() async {
-    var response = await http.get(
+    var response = await client.get(
       Uri.parse(RoutesConstants.getAllItemsFromMyStore),
       headers: {
         'Authorization': 'Bearer ${globals.token}',
@@ -23,7 +27,7 @@ class StoresWebService {
   }
 
   Future<StoreItem> getItemFromMyStore(String id) async {
-    var response = await http.get(
+    var response = await client.get(
       Uri.parse(RoutesConstants.getItemFromMyStore(id)),
       headers: {'Authorization': 'Bearer ${globals.token}'},
     );
@@ -38,7 +42,7 @@ class StoresWebService {
     required double price,
     required int amount,
   }) async {
-    var response = await http.post(
+    var response = await client.post(
       Uri.parse(RoutesConstants.addInventoryItemToMyStore(id)),
       body: jsonEncode({'amount': amount, 'price': price}),
       headers: {
@@ -52,7 +56,7 @@ class StoresWebService {
   }
 
   Future<StoreItem> addAnotherStoreItemToMyStore(String id) async {
-    var response = await http.put(
+    var response = await client.put(
       Uri.parse(RoutesConstants.addAnotherStoreItemToMyStore(id)),
       headers: {
         'Authorization': 'Bearer ${globals.token}',
@@ -65,7 +69,7 @@ class StoresWebService {
   }
 
   Future<void> removeItemFromMyStore(String id) async {
-    var response = await http.delete(
+    var response = await client.delete(
       Uri.parse(RoutesConstants.removeItemFromMyStore(id)),
       headers: {
         'Authorization': 'Bearer ${globals.token}',
@@ -77,7 +81,7 @@ class StoresWebService {
 
   Future<void> editItemInMyStore(StoreItem item) async {
     assert(item.id != null);
-    var response = await http.put(
+    var response = await client.put(
       Uri.parse(RoutesConstants.editItemInMyStore(item.id!)),
       body: jsonEncode(item.toJson()),
       headers: {
@@ -89,7 +93,7 @@ class StoresWebService {
   }
 
   Future<List<StoreItem>> getAllItemsFromAllStores() async {
-    var response = await http.get(
+    var response = await client.get(
       Uri.parse(RoutesConstants.getAllItemsFromAllStores),
       headers: {'Authorization': 'Bearer ${globals.token}'},
     );
@@ -102,7 +106,7 @@ class StoresWebService {
   }
 
   Future<List<StoreItem>> getAllItemsOfAParticularStore(String id) async {
-    var response = await http.get(
+    var response = await client.get(
       Uri.parse(RoutesConstants.getAllItemsOfAParticularStore(id)),
       headers: {'Authorization': 'Bearer ${globals.token}'},
     );
@@ -115,7 +119,7 @@ class StoresWebService {
   }
 
   Future<List<StoreItem>> searchAllStores(String searchTerm) async {
-    var response = await http.get(
+    var response = await client.get(
       Uri.parse(RoutesConstants.searchAllStores(searchTerm)),
       headers: {'Authorization': 'Bearer ${globals.token}'},
     );
@@ -128,7 +132,7 @@ class StoresWebService {
   }
 
   Future<String> purchaseItem(String id, int amount) async {
-    var response = await http.put(
+    var response = await client.put(
       Uri.parse(RoutesConstants.purchaseItem(id)),
       body: jsonEncode({'amount': amount}),
       headers: {

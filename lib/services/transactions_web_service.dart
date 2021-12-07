@@ -7,8 +7,12 @@ import 'package:http/http.dart' as http;
 import 'package:ds_market_place/globals.dart' as globals;
 
 class TransactionsWebService {
+  http.Client client;
+
+  TransactionsWebService(this.client);
+
   Future<List<Transaction>> getSoldItems() async {
-    var response = await http.get(
+    var response = await client.get(
       Uri.parse(RoutesConstants.getSoldItems),
       headers: {'Authorization': 'Bearer ${globals.token}'},
     );
@@ -21,7 +25,7 @@ class TransactionsWebService {
   }
 
   Future<List<Transaction>> getPurchasedItems() async {
-    var response = await http.get(
+    var response = await client.get(
       Uri.parse(RoutesConstants.getPurchasedItems),
       headers: {'Authorization': 'Bearer ${globals.token}'},
     );
@@ -34,7 +38,7 @@ class TransactionsWebService {
   }
 
   Future<List<Transaction>> getAllTransactions() async {
-    var response = await http.get(
+    var response = await client.get(
       Uri.parse(RoutesConstants.getAllTransactions),
       headers: {'Authorization': 'Bearer ${globals.token}'},
     );

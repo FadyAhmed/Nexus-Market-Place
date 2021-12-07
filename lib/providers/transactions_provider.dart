@@ -2,9 +2,11 @@ import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/transaction.dart';
 import 'package:ds_market_place/services/transactions_web_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart';
 
 class TransactionsProvider with ChangeNotifier {
-  TransactionsWebService transactionsWebService = TransactionsWebService();
+  TransactionsWebService transactionsWebService =
+      TransactionsWebService(Client());
 
   LoadingStatus loadingStatus = LoadingStatus.done;
 
