@@ -12,7 +12,7 @@ import 'package:integration_test/integration_test.dart';
 
 import 'testing_helpers.dart';
 
-void main(List<String> args) {
+void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() {

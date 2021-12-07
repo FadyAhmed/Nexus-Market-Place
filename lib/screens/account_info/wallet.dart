@@ -89,8 +89,8 @@ class _WalletScreenState extends State<WalletScreen> {
               ? 'Empty'
               : double.tryParse(s) == null
                   ? 'Not A Number!'
-                  : s.length != 12
-                      ? "card number should be 12 digits"
+                  : s.length != 16
+                      ? "card number should be 16 digits"
                       : null),
       KFormField(
           controller: _cvvNumberController,

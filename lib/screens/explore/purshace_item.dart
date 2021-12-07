@@ -63,16 +63,19 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
   Widget build(BuildContext context) {
     var storesProvider = Provider.of<StoresProvider>(context);
     late StoreItem item;
-    if (storesProvider.allItems!.any((it) => it.id == widget.item.id)) {
+    if (storesProvider.allItems != null &&
+        storesProvider.allItems!.any((it) => it.id == widget.item.id)) {
       item = storesProvider.allItems!.firstWhere(
         (item) => item.id == widget.item.id,
       );
-    } else if (storesProvider.storeItems!
+    } else if (storesProvider.storeItems != null &&
+        storesProvider.storeItems!
         .any((it) => it.id == widget.item.id)) {
       item = storesProvider.storeItems!.firstWhere(
         (item) => item.id == widget.item.id,
       );
-    } else if (storesProvider.searchItems!
+    } else if (storesProvider.searchItems != null &&
+        storesProvider.searchItems!
         .any((it) => it.id == widget.item.id)) {
       item = storesProvider.searchItems!.firstWhere(
         (item) => item.id == widget.item.id,

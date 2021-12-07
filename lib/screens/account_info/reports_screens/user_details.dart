@@ -30,7 +30,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
             tableRow("", "", context),
             tableRow("Phone Number:", user.phoneNumber, context),
             tableRow("", "", context),
-            tableRow("Balance:", "\$${user.balance}", context)
+            tableRow(
+                "Balance:", "\$${user.balance.toStringAsFixed(2)}", context)
           ],
         ),
       ),
