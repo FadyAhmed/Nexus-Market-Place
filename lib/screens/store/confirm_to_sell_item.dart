@@ -66,6 +66,7 @@ class _ConfirmItemToSellScreenState extends State<ConfirmItemToSellScreen> {
     var storesProvider = Provider.of<StoresProvider>(context);
     List<KFormField> fields = [
       KFormField(
+          key: 'amount',
           controller: _amount,
           hint: 'Enter amount ',
           label: "Amount",
@@ -85,6 +86,7 @@ class _ConfirmItemToSellScreenState extends State<ConfirmItemToSellScreen> {
             }
           }),
       KFormField(
+          key: 'price',
           controller: _price,
           hint: 'Enter price',
           label: "Price",
@@ -125,6 +127,7 @@ class _ConfirmItemToSellScreenState extends State<ConfirmItemToSellScreen> {
                         return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12.0),
                             child: myTextFormField(
+                                key: e.key,
                                 context: context,
                                 textInputType: e.textInputType,
                                 obsecure: false,
