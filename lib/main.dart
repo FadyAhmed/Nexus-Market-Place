@@ -1,3 +1,9 @@
+import 'package:dio/dio.dart';
+import 'package:ds_market_place/constants/shared_preferences_keys.dart';
+import 'package:ds_market_place/data/requests.dart';
+import 'package:ds_market_place/data/rest_client.dart';
+import 'package:ds_market_place/domain/repository.dart';
+import 'package:ds_market_place/globals.dart';
 import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
@@ -17,6 +23,29 @@ void main() {
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 
   runApp(const MyApp());
+}
+
+class ExpApp extends StatelessWidget {
+  const ExpApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(),
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () async {
+              await Repository(RestClient(Dio()))
+                  .signIn(LoginRequest(username: 'user1', password: '123'));
+              print(token);
+            },
+            child: Text('CLICK'),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -40,12 +69,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => TransactionsProvider()),
       ],
       child: MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Market Place',
-      theme: ThemeData(
-          primarySwatch: Colors.yellow,
-          scaffoldBackgroundColor: const Color(0xFFD6D6D6)),
-      home: const MyHomePage(title: 'Market Place'),
+        debugShowCheckedModeBanner: false,
+        title: 'Market Place',
+        theme: ThemeData(
+            primarySwatch: Colors.yellow,
+            scaffoldBackgroundColor: const Color(0xFFD6D6D6)),
+        home: const MyHomePage(title: 'Market Place'),
       ),
     );
   }
