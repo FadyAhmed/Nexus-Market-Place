@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/data/requests.dart';
+import 'package:ds_market_place/data/responses.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
@@ -68,6 +69,11 @@ class InventoryViewModel {
 
   void removeCachedItem(String id) {
     inventoryItems!.removeWhere((item) => item.id == id);
+    inventoryItemsListController.add(inventoryItems!);
+  }
+
+  void addItemToLocalList(InventoryItem item) {
+    inventoryItems!.add(item);
     inventoryItemsListController.add(inventoryItems!);
   }
 }

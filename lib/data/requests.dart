@@ -1,3 +1,4 @@
+import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'requests.g.dart';
@@ -32,4 +33,42 @@ class EditInventoryItemRequest {
   factory EditInventoryItemRequest.fromJson(Map<String, Object?> json) =>
       _$EditInventoryItemRequestFromJson(json);
   Map<String, dynamic> toJson() => _$EditInventoryItemRequestToJson(this);
+}
+
+@JsonSerializable()
+class AddInventoryItemRequest {
+  String name;
+  double price;
+  int amount;
+  String imageLink;
+  String description;
+  AddInventoryItemRequest({
+    required this.name,
+    required this.price,
+    required this.amount,
+    required this.imageLink,
+    required this.description,
+  });
+
+  factory AddInventoryItemRequest.fromJson(Map<String, Object?> json) =>
+      _$AddInventoryItemRequestFromJson(json);
+  Map<String, dynamic> toJson() => _$AddInventoryItemRequestToJson(this);
+
+  InventoryItem get inventoryItem => InventoryItem(
+        name: name,
+        amount: amount,
+        price: price,
+        description: description,
+        imageLink: imageLink,
+      );
+
+  factory AddInventoryItemRequest.fromItem(InventoryItem item) {
+    return AddInventoryItemRequest(
+      name: item.name,
+      price: item.price,
+      amount: item.amount,
+      imageLink: item.imageLink,
+      description: item.description,
+    );
+  }
 }

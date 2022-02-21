@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:ds_market_place/components/UI/rounded_button.dart';
@@ -5,13 +6,18 @@ import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
+import 'package:ds_market_place/view_models/add_inventory_item_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class AddItemToInventory extends StatefulWidget {
+  const AddItemToInventory({Key? key}) : super(key: key);
+
   @override
   _AddItemToInventoryState createState() => _AddItemToInventoryState();
 }
@@ -19,11 +25,16 @@ class AddItemToInventory extends StatefulWidget {
 final _formKey = GlobalKey<FormState>();
 
 class _AddItemToInventoryState extends State<AddItemToInventory> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _descController = TextEditingController();
-  TextEditingController _amountController = TextEditingController();
-  TextEditingController _priceController = TextEditingController();
-  TextEditingController _imageUrlController = TextEditingController();
+  AddInventoryItemViewModel addInventoryItemViewModel = GetIt.I();
+
+  late StreamSubscription isAddedSub;
+  late StreamSubscription failureSub;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _imageUrlController = TextEditingController();
 
   void submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -40,12 +51,29 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
         description: _descController.text,
         imageLink: _imageUrlController.text,
       );
-      await Provider.of<InventoriesProvider>(context, listen: false)
-          .addItem(item);
+
+      final request = AddInventoryItemRequest.fromItem(item);
+      addInventoryItemViewModel.addInventoryItem(request);
 
       showSnackbar(context, Text("Item added to inventory"));
-      Navigator.of(context).pop();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    isAddedSub =
+        addInventoryItemViewModel.isAddedController.stream.listen((isAdded) {
+      if (isAdded) {
+        Navigator.pop(context);
+      }
+    });
+
+    failureSub =
+        addInventoryItemViewModel.failureController.stream.listen((failure) {
+      showMessageDialogue(context, failure.message);
+    });
   }
 
   @override
@@ -162,13 +190,19 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: inventoriesProvider.loadingStatus ==
-                              LoadingStatus.loading
-                          ? Center(child: CircularProgressIndicator())
-                          : RoundedButton(
-                              onPressed: submitForm,
-                              title: 'Add Item',
-                            ),
+                      child: StreamBuilder<bool>(
+                        stream: addInventoryItemViewModel
+                            .addingLoadingController.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.data ?? false) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                          return RoundedButton(
+                            onPressed: submitForm,
+                            title: 'Add Item',
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),

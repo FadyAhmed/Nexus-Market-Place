@@ -21,4 +21,8 @@ abstract class RestClient {
   @PUT('/api/myinventory/{id}')
   Future<EditInventoryItemResponse> editInventoryItem(
       @Path() String id, @Body() EditInventoryItemRequest request);
+
+  @POST('/api/myinventory')
+  Future<AddInventoryItemResponse> addInventoryItem(
+      @Body() AddInventoryItemRequest request);
 }

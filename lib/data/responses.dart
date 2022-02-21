@@ -102,3 +102,19 @@ class EditInventoryItemResponse {
       _$EditInventoryItemResponseFromJson(json);
   Map<String, dynamic> toJson() => _$EditInventoryItemResponseToJson(this);
 }
+
+@JsonSerializable()
+class AddInventoryItemResponse {
+  bool success;
+  String status;
+  String id;
+  AddInventoryItemResponse({
+    required this.success,
+    required this.status,
+    required this.id,
+  });
+
+  factory AddInventoryItemResponse.fromJson(Map<String, Object?> json) =>
+      _$AddInventoryItemResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$AddInventoryItemResponseToJson(this);
+}

@@ -44,3 +44,23 @@ Map<String, dynamic> _$EditInventoryItemRequestToJson(
   writeNotNull('description', instance.description);
   return val;
 }
+
+AddInventoryItemRequest _$AddInventoryItemRequestFromJson(
+        Map<String, dynamic> json) =>
+    AddInventoryItemRequest(
+      name: json['name'] as String,
+      price: (json['price'] as num).toDouble(),
+      amount: json['amount'] as int,
+      imageLink: json['imageLink'] as String,
+      description: json['description'] as String,
+    );
+
+Map<String, dynamic> _$AddInventoryItemRequestToJson(
+        AddInventoryItemRequest instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'price': instance.price,
+      'amount': instance.amount,
+      'imageLink': instance.imageLink,
+      'description': instance.description,
+    };

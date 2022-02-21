@@ -86,3 +86,19 @@ Map<String, dynamic> _$EditInventoryItemResponseToJson(
       'success': instance.success,
       'status': instance.status,
     };
+
+AddInventoryItemResponse _$AddInventoryItemResponseFromJson(
+        Map<String, dynamic> json) =>
+    AddInventoryItemResponse(
+      success: json['success'] as bool,
+      status: json['status'] as String,
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$AddInventoryItemResponseToJson(
+        AddInventoryItemResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+      'id': instance.id,
+    };

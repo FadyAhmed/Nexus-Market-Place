@@ -57,4 +57,17 @@ class Repository {
       return Left(e.failure);
     }
   }
+
+  Future<Either<Failure, InventoryItem>> addInventoryItem(
+      AddInventoryItemRequest request) async {
+    try {
+      AddInventoryItemResponse response =
+          await restClient.addInventoryItem(request);
+      InventoryItem item = request.inventoryItem;
+      item.id = response.id;
+      return Right(item);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
 }
