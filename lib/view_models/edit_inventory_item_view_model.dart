@@ -4,6 +4,7 @@ import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
+import 'package:ds_market_place/view_models/item_details_view_model.dart';
 import 'package:get_it/get_it.dart';
 
 class EditInventoryItemViewModel {
@@ -27,6 +28,7 @@ class EditInventoryItemViewModel {
   Future<void> edit(String id, EditInventoryItemRequest request) async {
     isLoadingController.add(true);
     await inventoryViewModel.edit(id, request);
+    GetIt.I<ItemDetailsViewModel>().updateItem(request);
     isLoadingController.add(false);
   }
 }

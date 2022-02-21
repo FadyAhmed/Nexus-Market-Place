@@ -6,28 +6,30 @@ import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:get_it/get_it.dart';
+import 'package:rxdart/rxdart.dart';
 
 class InventoryViewModel {
   Repository repository = GetIt.instance();
 
-  StreamController<bool> isLoadingController =
-      StreamController<bool>.broadcast();
-  StreamController<Failure> failureStreamController =
-      StreamController<Failure>.broadcast();
-  StreamController<List<InventoryItem>> inventoryItemsListController =
-      StreamController<List<InventoryItem>>.broadcast();
+  BehaviorSubject<bool> isLoadingController = BehaviorSubject<bool>();
+  BehaviorSubject<Failure> failureStreamController = BehaviorSubject<Failure>();
+  BehaviorSubject<List<InventoryItem>> inventoryItemsListController =
+      BehaviorSubject<List<InventoryItem>>();
 
   List<InventoryItem>? inventoryItems;
 
-  void start() async {
+  Future<void> start() async {
+    isLoadingController.add(true);
     final response = await repository.getAllInventoryItems();
     response.fold(
       (failure) {
+        isLoadingController.add(false);
         failureStreamController.add(failure);
       },
       (List<InventoryItem> items) {
         inventoryItems = items;
         inventoryItemsListController.add(items);
+        isLoadingController.add(false);
       },
     );
   }
@@ -46,15 +48,12 @@ class InventoryViewModel {
   }
 
   Future<void> edit(String id, EditInventoryItemRequest request) async {
-    // isLoadingController.add(true);
     final response = await repository.editInventoryItem(id, request);
     response.fold((failure) {
-      // isLoadingController.add(false);
       failureStreamController.add(failure);
     }, (_) {
       updateItem(id, request);
       inventoryItemsListController.add(inventoryItems!);
-      // isLoadingController.add(false);
     });
   }
 
@@ -65,5 +64,10 @@ class InventoryViewModel {
     item.price = request.price ?? item.price;
     item.description = request.description ?? item.description;
     item.imageLink = request.imageLink ?? item.imageLink;
+  }
+
+  void removeCachedItem(String id) {
+    inventoryItems!.removeWhere((item) => item.id == id);
+    inventoryItemsListController.add(inventoryItems!);
   }
 }
