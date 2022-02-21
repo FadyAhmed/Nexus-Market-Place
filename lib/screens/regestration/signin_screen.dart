@@ -20,6 +20,7 @@ import 'package:ds_market_place/screens/home_page_screen.dart';
 import 'package:ds_market_place/screens/regestration/signup_screen.dart';
 import 'package:ds_market_place/view_models/login_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -28,7 +29,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  LoginViewModel loginViewModel = LoginViewModel(Repository(RestClient(Dio())));
+  LoginViewModel loginViewModel = GetIt.I<LoginViewModel>();
 
   late StreamSubscription screenStateSub;
   late StreamSubscription failureSub;

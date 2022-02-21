@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ds_market_place/app/dependency_injection.dart';
 import 'package:ds_market_place/constants/shared_preferences_keys.dart';
 import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/data/rest_client.dart';
@@ -21,7 +22,7 @@ import 'components/UI/dialog.dart';
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-
+  injectDependencies();
   runApp(const MyApp());
 }
 

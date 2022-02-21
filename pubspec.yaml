@@ -34,13 +34,15 @@ dependencies:
   mockito: ^5.0.16
   equatable: ^2.0.3
   provider: ^6.0.1
-  json_annotation: ^4.3.0
+  json_annotation: ^4.4.0
   intl: ^0.17.0
   cached_network_image: ^3.2.0
   ansicolor: ^2.0.1
   retrofit: ^3.0.1+1
   dartz: ^0.10.1
   dio: ^4.0.4
+  pretty_dio_logger: ^1.1.1
+  get_it: ^7.2.0
 
 dev_dependencies:
   integration_test:

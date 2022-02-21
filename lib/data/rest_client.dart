@@ -11,4 +11,14 @@ abstract class RestClient {
 
   @POST('/api/users/login')
   Future<LoginResponse> signIn(@Body() LoginRequest loginRequest);
+
+  @GET('/api/myinventory')
+  Future<GetAllInventoryItemsResponse> getAllInventoryItems();
+
+  @DELETE('/api/myinventory/{id}')
+  Future<RemoveInventoryItemResponse> removeInventoryItem(@Path() String id);
+
+  @PUT('/api/myinventory/{id}')
+  Future<EditInventoryItemResponse> editInventoryItem(
+      @Path() String id, @Body() EditInventoryItemRequest request);
 }

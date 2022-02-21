@@ -16,3 +16,31 @@ Map<String, dynamic> _$LoginRequestToJson(LoginRequest instance) =>
       'username': instance.username,
       'password': instance.password,
     };
+
+EditInventoryItemRequest _$EditInventoryItemRequestFromJson(
+        Map<String, dynamic> json) =>
+    EditInventoryItemRequest(
+      name: json['name'] as String?,
+      price: (json['price'] as num?)?.toDouble(),
+      amount: json['amount'] as int?,
+      imageLink: json['imageLink'] as String?,
+      description: json['description'] as String?,
+    );
+
+Map<String, dynamic> _$EditInventoryItemRequestToJson(
+    EditInventoryItemRequest instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('name', instance.name);
+  writeNotNull('price', instance.price);
+  writeNotNull('amount', instance.amount);
+  writeNotNull('imageLink', instance.imageLink);
+  writeNotNull('description', instance.description);
+  return val;
+}

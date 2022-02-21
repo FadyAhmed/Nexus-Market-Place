@@ -18,15 +18,24 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       buyerStoreName: json['buyerStoreName'] as String?,
     );
 
-Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
-    <String, dynamic>{
-      'itemName': instance.itemName,
-      'price': instance.price,
-      'amount': instance.amount,
-      'imageLink': instance.imageLink,
-      'date': instance.date.toIso8601String(),
-      'sellerStoreId': instance.sellerStoreId,
-      'sellerStoreName': instance.sellerStoreName,
-      'buyerStoreId': instance.buyerStoreId,
-      'buyerStoreName': instance.buyerStoreName,
-    };
+Map<String, dynamic> _$TransactionToJson(Transaction instance) {
+  final val = <String, dynamic>{
+    'itemName': instance.itemName,
+    'price': instance.price,
+    'amount': instance.amount,
+    'imageLink': instance.imageLink,
+    'date': instance.date.toIso8601String(),
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('sellerStoreId', instance.sellerStoreId);
+  writeNotNull('sellerStoreName', instance.sellerStoreName);
+  writeNotNull('buyerStoreId', instance.buyerStoreId);
+  writeNotNull('buyerStoreName', instance.buyerStoreName);
+  return val;
+}

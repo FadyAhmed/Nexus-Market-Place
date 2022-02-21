@@ -6,13 +6,17 @@ import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
+import 'package:ds_market_place/view_models/edit_inventory_item_view_model.dart';
+import 'package:ds_market_place/view_models/inventory_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class EditItemDetails extends StatefulWidget {
@@ -35,6 +39,9 @@ class EditItemDetails extends StatefulWidget {
 }
 
 class _EditItemDetailsState extends State<EditItemDetails> {
+  EditInventoryItemViewModel editInventoryItemViewModel =
+      GetIt.I<EditInventoryItemViewModel>();
+
   TextEditingController _name = TextEditingController();
   TextEditingController _description = TextEditingController();
   TextEditingController _amount = TextEditingController();
@@ -44,6 +51,8 @@ class _EditItemDetailsState extends State<EditItemDetails> {
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
+    editInventoryItemViewModel.start();
+
     if (widget.inventoryItem != null) {
       var item = widget.inventoryItem;
       _name = TextEditingController(text: item!.name);
@@ -72,16 +81,15 @@ class _EditItemDetailsState extends State<EditItemDetails> {
       }
       try {
         if (widget.inventoryItem != null) {
-          InventoryItem item = InventoryItem(
-            id: widget.inventoryItem!.id,
+          EditInventoryItemRequest request = EditInventoryItemRequest(
             name: _name.text,
             amount: int.parse(_amount.text),
             price: double.parse(_price.text),
             description: _description.text,
             imageLink: _imageLink.text,
           );
-          await Provider.of<InventoriesProvider>(context, listen: false)
-              .editItem(item);
+          await editInventoryItemViewModel.edit(
+              widget.inventoryItem!.id!, request);
         } else {
           StoreItem item = StoreItem(
             id: widget.storeItem!.id,
@@ -216,10 +224,19 @@ class _EditItemDetailsState extends State<EditItemDetails> {
                             storesProvider.loadingStatus ==
                                 LoadingStatus.loading
                         ? Center(child: CircularProgressIndicator())
-                        : RoundedButton(
-                            onPressed: submitEditItem,
-                            title: widget.submitButtonText,
+                        : StreamBuilder<bool>(
+                            stream: editInventoryItemViewModel
+                                .isLoadingController.stream,
+                            builder: (context, snapshot) {
+                              return (snapshot.data ?? false)
+                                  ? Center(child: CircularProgressIndicator())
+                                  : RoundedButton(
+                                      onPressed: submitEditItem,
+                                      title: widget.submitButtonText,
+                                    );
+                            },
                           ),
+                          
                   ),
                   const SizedBox(height: 30)
                 ],

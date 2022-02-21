@@ -10,6 +10,29 @@ import 'package:ds_market_place/services/stores_web_service.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+void removeDialogIfExists(BuildContext context) {
+  if (!(ModalRoute.of(context)?.isCurrent ?? true)) {
+    Navigator.of(context).pop();
+  }
+}
+
+Future<void> showLoadingDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        child: SizedBox(
+          height: 50,
+          width: 50,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
+    },
+  );
+}
+
 Future<void> showMessageDialogue(BuildContext context, String message) {
   return showDialog(
       context: context,

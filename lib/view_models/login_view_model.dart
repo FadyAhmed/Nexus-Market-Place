@@ -1,15 +1,15 @@
 import 'dart:async';
 
+import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/domain/repository.dart';
+import 'package:get_it/get_it.dart';
 
-enum ScreenStatus { loading, error, content }
+
 
 class LoginViewModel {
-  Repository repository;
-
-  LoginViewModel(this.repository);
+  Repository repository = GetIt.instance();
 
   StreamController<ScreenStatus> screenStatusStreamController =
       StreamController<ScreenStatus>.broadcast();
