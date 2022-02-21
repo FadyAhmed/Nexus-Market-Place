@@ -8,6 +8,7 @@ import 'package:ds_market_place/domain/failure.dart';
 import 'package:dio/dio.dart';
 import 'package:ds_market_place/globals.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/models/store_item.dart';
 import 'package:get_it/get_it.dart';
 
 class Repository {
@@ -66,6 +67,26 @@ class Repository {
       InventoryItem item = request.inventoryItem;
       item.id = response.id;
       return Right(item);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, List<StoreItem>>> getAllStoreItemsFromMyStore() async {
+    try {
+      GetAllStoreItemsFromMyStoreResponse response =
+          await restClient.getAllStoreItemsFromMyStore();
+      List<StoreItem> items = response.storeItems;
+      return Right(items);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, void>> removeStoreItemFromMyStore(String id) async {
+    try {
+      await restClient.removeStoreItemFromMyStore(id);
+      return Right(null);
     } on DioError catch (e) {
       return Left(e.failure);
     }

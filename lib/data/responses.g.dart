@@ -102,3 +102,64 @@ Map<String, dynamic> _$AddInventoryItemResponseToJson(
       'status': instance.status,
       'id': instance.id,
     };
+
+GetAllStoreItemsFromMyStoreResponse
+    _$GetAllStoreItemsFromMyStoreResponseFromJson(Map<String, dynamic> json) =>
+        GetAllStoreItemsFromMyStoreResponse(
+          success: json['success'] as bool,
+          items: (json['items'] as List<dynamic>)
+              .map((e) => StoreItemResponse.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        );
+
+Map<String, dynamic> _$GetAllStoreItemsFromMyStoreResponseToJson(
+        GetAllStoreItemsFromMyStoreResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'items': instance.items,
+    };
+
+StoreItemResponse _$StoreItemResponseFromJson(Map<String, dynamic> json) =>
+    StoreItemResponse(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      price: (json['price'] as num).toDouble(),
+      amount: json['amount'] as int,
+      imageLink: json['imageLink'] as String,
+      description: json['description'] as String,
+      state: $enumDecode(_$StoreItemStateEnumMap, json['state']),
+      storeId: json['storeId'] as String,
+      storeName: json['storeName'] as String,
+    );
+
+Map<String, dynamic> _$StoreItemResponseToJson(StoreItemResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'price': instance.price,
+      'amount': instance.amount,
+      'imageLink': instance.imageLink,
+      'description': instance.description,
+      'state': _$StoreItemStateEnumMap[instance.state],
+      'storeId': instance.storeId,
+      'storeName': instance.storeName,
+    };
+
+const _$StoreItemStateEnumMap = {
+  StoreItemState.owned: 'owned',
+  StoreItemState.imported: 'imported',
+};
+
+RemoveItemFromMyStoreResponse _$RemoveItemFromMyStoreResponseFromJson(
+        Map<String, dynamic> json) =>
+    RemoveItemFromMyStoreResponse(
+      success: json['success'] as bool,
+      status: json['status'] as String,
+    );
+
+Map<String, dynamic> _$RemoveItemFromMyStoreResponseToJson(
+        RemoveItemFromMyStoreResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+    };

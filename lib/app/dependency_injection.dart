@@ -7,6 +7,7 @@ import 'package:ds_market_place/view_models/edit_inventory_item_view_model.dart'
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
 import 'package:ds_market_place/view_models/item_details_view_model.dart';
 import 'package:ds_market_place/view_models/login_view_model.dart';
+import 'package:ds_market_place/view_models/store_view_model.dart';
 import 'package:get_it/get_it.dart';
 
 Future<void> injectDependencies() async {
@@ -25,4 +26,5 @@ Future<void> injectDependencies() async {
       () => ItemDetailsViewModel());
   instance.registerLazySingleton<AddInventoryItemViewModel>(
       () => AddInventoryItemViewModel());
+  instance.registerLazySingleton<StoreViewModel>(() => StoreViewModel());
 }

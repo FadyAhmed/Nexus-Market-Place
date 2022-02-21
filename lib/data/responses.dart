@@ -1,5 +1,7 @@
+import 'package:ds_market_place/models/store_item.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 
 part 'responses.g.dart';
@@ -117,4 +119,77 @@ class AddInventoryItemResponse {
   factory AddInventoryItemResponse.fromJson(Map<String, Object?> json) =>
       _$AddInventoryItemResponseFromJson(json);
   Map<String, dynamic> toJson() => _$AddInventoryItemResponseToJson(this);
+}
+
+@JsonSerializable()
+class GetAllStoreItemsFromMyStoreResponse {
+  bool success;
+  List<StoreItemResponse> items;
+  GetAllStoreItemsFromMyStoreResponse({
+    required this.success,
+    required this.items,
+  });
+
+  factory GetAllStoreItemsFromMyStoreResponse.fromJson(
+          Map<String, Object?> json) =>
+      _$GetAllStoreItemsFromMyStoreResponseFromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$GetAllStoreItemsFromMyStoreResponseToJson(this);
+
+  List<StoreItem> get storeItems => items.map((i) => i.storeItem).toList();
+}
+
+@JsonSerializable()
+class StoreItemResponse {
+  String id;
+  String name;
+  double price;
+  int amount;
+  String imageLink;
+  String description;
+  StoreItemState state;
+  String storeId;
+  String storeName;
+
+  StoreItemResponse({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.amount,
+    required this.imageLink,
+    required this.description,
+    required this.state,
+    required this.storeId,
+    required this.storeName,
+  });
+
+  factory StoreItemResponse.fromJson(Map<String, Object?> json) =>
+      _$StoreItemResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$StoreItemResponseToJson(this);
+
+  StoreItem get storeItem => StoreItem(
+        id: id,
+        name: name,
+        price: price,
+        amount: amount,
+        imageLink: imageLink,
+        description: description,
+        state: state,
+        storeId: storeId,
+        storeName: storeName,
+      );
+}
+
+@JsonSerializable()
+class RemoveItemFromMyStoreResponse {
+  bool success;
+  String status;
+  RemoveItemFromMyStoreResponse({
+    required this.success,
+    required this.status,
+  });
+
+  factory RemoveItemFromMyStoreResponse.fromJson(Map<String, Object?> json) =>
+      _$RemoveItemFromMyStoreResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$RemoveItemFromMyStoreResponseToJson(this);
 }

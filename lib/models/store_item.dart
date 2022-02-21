@@ -1,10 +1,8 @@
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../constants/enums.dart';
 
 part 'store_item.g.dart';
-
-@JsonEnum()
-enum StoreItemState { owned, imported }
 
 @JsonSerializable()
 class StoreItem {
