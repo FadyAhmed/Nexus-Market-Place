@@ -41,8 +41,7 @@ class EditItemDetails extends StatefulWidget {
 }
 
 class _EditItemDetailsState extends State<EditItemDetails> {
-  EditInventoryItemViewModel editInventoryItemViewModel =
-      GetIt.I<EditInventoryItemViewModel>();
+  EditItemViewModel editInventoryItemViewModel = GetIt.I<EditItemViewModel>();
 
   late StreamSubscription isEditedSub;
 

@@ -22,8 +22,7 @@ Future<void> injectDependencies() async {
   instance.registerLazySingleton<LoginViewModel>(() => LoginViewModel());
   instance
       .registerLazySingleton<InventoryViewModel>(() => InventoryViewModel());
-  instance.registerLazySingleton<EditInventoryItemViewModel>(
-      () => EditInventoryItemViewModel());
+  instance.registerLazySingleton<EditItemViewModel>(() => EditItemViewModel());
   instance.registerLazySingleton<ItemDetailsViewModel>(
       () => ItemDetailsViewModel());
   instance.registerLazySingleton<AddInventoryItemViewModel>(

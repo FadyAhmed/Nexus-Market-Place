@@ -9,7 +9,7 @@ import 'package:ds_market_place/view_models/store_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
-class EditInventoryItemViewModel {
+class EditItemViewModel {
   Repository repository = GetIt.I();
   InventoryViewModel inventoryViewModel = GetIt.I();
 
