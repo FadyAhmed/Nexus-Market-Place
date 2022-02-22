@@ -122,6 +122,54 @@ class AddInventoryItemResponse {
 }
 
 @JsonSerializable()
+class GetInventoryItemResponse {
+  bool success;
+  InventoryItemResponse itemResponse;
+  GetInventoryItemResponse({
+    required this.success,
+    required this.itemResponse,
+  });
+
+  factory GetInventoryItemResponse.fromJson(Map<String, Object?> json) =>
+      _$GetInventoryItemResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$GetInventoryItemResponseToJson(this);
+
+  InventoryItem get inventoryItem => itemResponse.inventoryItem;
+}
+
+@JsonSerializable()
+class InventoryItemResponse {
+  String id;
+  String name;
+  double price;
+  int amount;
+  String imageLink;
+  String description;
+
+  InventoryItemResponse({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.amount,
+    required this.imageLink,
+    required this.description,
+  });
+
+  factory InventoryItemResponse.fromJson(Map<String, Object?> json) =>
+      _$InventoryItemResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$InventoryItemResponseToJson(this);
+
+  InventoryItem get inventoryItem => InventoryItem(
+        id: id,
+        name: name,
+        price: price,
+        amount: amount,
+        imageLink: imageLink,
+        description: description,
+      );
+}
+
+@JsonSerializable()
 class GetAllStoreItemsFromMyStoreResponse {
   bool success;
   List<StoreItemResponse> items;
@@ -240,4 +288,97 @@ class EditStoreItemResponse {
   factory EditStoreItemResponse.fromJson(Map<String, Object?> json) =>
       _$EditStoreItemResponseFromJson(json);
   Map<String, dynamic> toJson() => _$EditStoreItemResponseToJson(this);
+}
+
+@JsonSerializable()
+class AddItemInOtherStoreToMyStoreResponse {
+  bool success;
+  String status;
+  StoreItemResponse itemResponse;
+  AddItemInOtherStoreToMyStoreResponse({
+    required this.success,
+    required this.status,
+    required this.itemResponse,
+  });
+
+  factory AddItemInOtherStoreToMyStoreResponse.fromJson(
+          Map<String, Object?> json) =>
+      _$AddItemInOtherStoreToMyStoreResponseFromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$AddItemInOtherStoreToMyStoreResponseToJson(this);
+
+  StoreItem get storeItem => itemResponse.storeItem;
+}
+
+@JsonSerializable()
+class GetAllStoreItemsFromAllStoresResponse {
+  bool success;
+  String status;
+  List<StoreItemResponse> itemResponses;
+  GetAllStoreItemsFromAllStoresResponse({
+    required this.success,
+    required this.status,
+    required this.itemResponses,
+  });
+
+  factory GetAllStoreItemsFromAllStoresResponse.fromJson(
+          Map<String, Object?> json) =>
+      _$GetAllStoreItemsFromAllStoresResponseFromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$GetAllStoreItemsFromAllStoresResponseToJson(this);
+
+  List<StoreItem> get storeItems =>
+      itemResponses.map((i) => i.storeItem).toList();
+}
+
+@JsonSerializable()
+class GetAllStoreItemsFromParticularStoreResponse {
+  bool success;
+  List<StoreItemResponse> itemResponses;
+  GetAllStoreItemsFromParticularStoreResponse({
+    required this.success,
+    required this.itemResponses,
+  });
+
+  factory GetAllStoreItemsFromParticularStoreResponse.fromJson(
+          Map<String, Object?> json) =>
+      _$GetAllStoreItemsFromParticularStoreResponseFromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$GetAllStoreItemsFromParticularStoreResponseToJson(this);
+
+  List<StoreItem> get storeItems =>
+      itemResponses.map((i) => i.storeItem).toList();
+}
+
+@JsonSerializable()
+class SearchStoreItemsResponse {
+  bool success;
+  List<StoreItemResponse> itemResponses;
+  SearchStoreItemsResponse({
+    required this.success,
+    required this.itemResponses,
+  });
+
+  factory SearchStoreItemsResponse.fromJson(Map<String, Object?> json) =>
+      _$SearchStoreItemsResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$SearchStoreItemsResponseToJson(this);
+
+  List<StoreItem> get storeItems =>
+      itemResponses.map((i) => i.storeItem).toList();
+}
+
+@JsonSerializable()
+class PurchaseStoreItemResponse {
+  bool success;
+  String status;
+  String id;
+  PurchaseStoreItemResponse({
+    required this.success,
+    required this.status,
+    required this.id,
+  });
+
+  factory PurchaseStoreItemResponse.fromJson(Map<String, Object?> json) =>
+      _$PurchaseStoreItemResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$PurchaseStoreItemResponseToJson(this);
 }

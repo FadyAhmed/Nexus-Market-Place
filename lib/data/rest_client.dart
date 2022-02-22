@@ -29,11 +29,13 @@ abstract class RestClient {
   Future<AddInventoryItemResponse> addInventoryItem(
       @Body() AddInventoryItemRequest request);
 
-  @GET('/api/stores/mystore/{id}')
-  Future<GetStoreItemResponse> getStoreItem(@Path() id);
+  @GET('/api/myinventory/{id}')
+  Future<GetInventoryItemResponse> getInventoryItem(@Path() String id);
 
   // Store Items
   // ===========
+  @GET('/api/stores/mystore/{id}')
+  Future<GetStoreItemResponse> getStoreItem(@Path() String id);
 
   @GET('/api/stores/mystore')
   Future<GetAllStoreItemsFromMyStoreResponse> getAllStoreItemsFromMyStore();
@@ -44,9 +46,27 @@ abstract class RestClient {
 
   @POST('/api/stores/mystore/{id}')
   Future<AddItemInMyInventoryToMyStoreResponse> addItemInMyInventoryToMyStore(
-      @Path() id, @Body() AddItemInMyInventoryToMyStoreRequest request);
+      @Path() String id, @Body() AddItemInMyInventoryToMyStoreRequest request);
 
   @PUT('/api/stores/mystore/{id}')
   Future<EditStoreItemResponse> editStoreItem(
-      @Path() id, @Body() EditStoreItemRequest request);
+      @Path() String id, @Body() EditStoreItemRequest request);
+
+  @PUT('/api/stores/add/{id}')
+  Future<AddItemInOtherStoreToMyStoreResponse> addItemInOtherStoreToMyStore(
+      @Path() String id);
+
+  @GET('/api/stores/mystore')
+  Future<GetAllStoreItemsFromAllStoresResponse> getAllStoreItemsFromAllStores();
+
+  @GET('/api/stores/{id}')
+  Future<GetAllStoreItemsFromParticularStoreResponse>
+      getAllStoreItemsFromParticularStore(@Path() String id);
+
+  @GET('/api/stores/search/items')
+  Future<SearchStoreItemsResponse> searchStoreItems(@Query('name') String name);
+
+  @PUT('/api/stores/purchase/{id}')
+  Future<PurchaseStoreItemResponse> purchaseStoreItem(
+      @Path() String id, @Body() PurchaseStoreItemRequest request);
 }

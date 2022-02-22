@@ -103,6 +103,43 @@ Map<String, dynamic> _$AddInventoryItemResponseToJson(
       'id': instance.id,
     };
 
+GetInventoryItemResponse _$GetInventoryItemResponseFromJson(
+        Map<String, dynamic> json) =>
+    GetInventoryItemResponse(
+      success: json['success'] as bool,
+      itemResponse: InventoryItemResponse.fromJson(
+          json['itemResponse'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$GetInventoryItemResponseToJson(
+        GetInventoryItemResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'itemResponse': instance.itemResponse,
+    };
+
+InventoryItemResponse _$InventoryItemResponseFromJson(
+        Map<String, dynamic> json) =>
+    InventoryItemResponse(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      price: (json['price'] as num).toDouble(),
+      amount: json['amount'] as int,
+      imageLink: json['imageLink'] as String,
+      description: json['description'] as String,
+    );
+
+Map<String, dynamic> _$InventoryItemResponseToJson(
+        InventoryItemResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'price': instance.price,
+      'amount': instance.amount,
+      'imageLink': instance.imageLink,
+      'description': instance.description,
+    };
+
 GetAllStoreItemsFromMyStoreResponse
     _$GetAllStoreItemsFromMyStoreResponseFromJson(Map<String, dynamic> json) =>
         GetAllStoreItemsFromMyStoreResponse(
@@ -207,4 +244,89 @@ Map<String, dynamic> _$EditStoreItemResponseToJson(
     <String, dynamic>{
       'success': instance.success,
       'status': instance.status,
+    };
+
+AddItemInOtherStoreToMyStoreResponse
+    _$AddItemInOtherStoreToMyStoreResponseFromJson(Map<String, dynamic> json) =>
+        AddItemInOtherStoreToMyStoreResponse(
+          success: json['success'] as bool,
+          status: json['status'] as String,
+          itemResponse: StoreItemResponse.fromJson(
+              json['itemResponse'] as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$AddItemInOtherStoreToMyStoreResponseToJson(
+        AddItemInOtherStoreToMyStoreResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+      'itemResponse': instance.itemResponse,
+    };
+
+GetAllStoreItemsFromAllStoresResponse
+    _$GetAllStoreItemsFromAllStoresResponseFromJson(
+            Map<String, dynamic> json) =>
+        GetAllStoreItemsFromAllStoresResponse(
+          success: json['success'] as bool,
+          status: json['status'] as String,
+          itemResponses: (json['itemResponses'] as List<dynamic>)
+              .map((e) => StoreItemResponse.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        );
+
+Map<String, dynamic> _$GetAllStoreItemsFromAllStoresResponseToJson(
+        GetAllStoreItemsFromAllStoresResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+      'itemResponses': instance.itemResponses,
+    };
+
+GetAllStoreItemsFromParticularStoreResponse
+    _$GetAllStoreItemsFromParticularStoreResponseFromJson(
+            Map<String, dynamic> json) =>
+        GetAllStoreItemsFromParticularStoreResponse(
+          success: json['success'] as bool,
+          itemResponses: (json['itemResponses'] as List<dynamic>)
+              .map((e) => StoreItemResponse.fromJson(e as Map<String, dynamic>))
+              .toList(),
+        );
+
+Map<String, dynamic> _$GetAllStoreItemsFromParticularStoreResponseToJson(
+        GetAllStoreItemsFromParticularStoreResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'itemResponses': instance.itemResponses,
+    };
+
+SearchStoreItemsResponse _$SearchStoreItemsResponseFromJson(
+        Map<String, dynamic> json) =>
+    SearchStoreItemsResponse(
+      success: json['success'] as bool,
+      itemResponses: (json['itemResponses'] as List<dynamic>)
+          .map((e) => StoreItemResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$SearchStoreItemsResponseToJson(
+        SearchStoreItemsResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'itemResponses': instance.itemResponses,
+    };
+
+PurchaseStoreItemResponse _$PurchaseStoreItemResponseFromJson(
+        Map<String, dynamic> json) =>
+    PurchaseStoreItemResponse(
+      success: json['success'] as bool,
+      status: json['status'] as String,
+      id: json['id'] as String,
+    );
+
+Map<String, dynamic> _$PurchaseStoreItemResponseToJson(
+        PurchaseStoreItemResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+      'id': instance.id,
     };

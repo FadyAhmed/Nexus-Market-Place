@@ -106,3 +106,15 @@ Map<String, dynamic> _$EditStoreItemRequestToJson(
   writeNotNull('description', instance.description);
   return val;
 }
+
+PurchaseStoreItemRequest _$PurchaseStoreItemRequestFromJson(
+        Map<String, dynamic> json) =>
+    PurchaseStoreItemRequest(
+      amount: json['amount'] as int,
+    );
+
+Map<String, dynamic> _$PurchaseStoreItemRequestToJson(
+        PurchaseStoreItemRequest instance) =>
+    <String, dynamic>{
+      'amount': instance.amount,
+    };

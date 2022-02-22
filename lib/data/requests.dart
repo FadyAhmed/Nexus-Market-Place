@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 
 part 'requests.g.dart';
@@ -109,4 +108,16 @@ class EditStoreItemRequest {
   factory EditStoreItemRequest.fromJson(Map<String, Object?> json) =>
       _$EditStoreItemRequestFromJson(json);
   Map<String, dynamic> toJson() => _$EditStoreItemRequestToJson(this);
+}
+
+@JsonSerializable()
+class PurchaseStoreItemRequest {
+  int amount;
+  PurchaseStoreItemRequest({
+    required this.amount,
+  });
+
+  factory PurchaseStoreItemRequest.fromJson(Map<String, Object?> json) =>
+      _$PurchaseStoreItemRequestFromJson(json);
+  Map<String, dynamic> toJson() => _$PurchaseStoreItemRequestToJson(this);
 }

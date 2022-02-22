@@ -116,4 +116,66 @@ class Repository {
       return Left(e.failure);
     }
   }
+
+  Future<Either<Failure, StoreItem>> addItemInOtherStoreToMyStore(
+      String id) async {
+    try {
+      AddItemInOtherStoreToMyStoreResponse addItemResponse =
+          await restClient.addItemInOtherStoreToMyStore(id);
+      StoreItem item = addItemResponse.storeItem;
+      return Right(item);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, List<StoreItem>>>
+      getAllStoreItemsFromAllStores() async {
+    try {
+      GetAllStoreItemsFromAllStoresResponse response =
+          await restClient.getAllStoreItemsFromAllStores();
+      List<StoreItem> items = response.storeItems;
+      return Right(items);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, List<StoreItem>>> getAllStoreItemsFromParticularStore(
+      String id) async {
+    try {
+      GetAllStoreItemsFromParticularStoreResponse response =
+          await restClient.getAllStoreItemsFromParticularStore(id);
+      List<StoreItem> items = response.storeItems;
+      return Right(items);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, List<StoreItem>>> searchStoreItems(String name) async {
+    try {
+      SearchStoreItemsResponse response =
+          await restClient.searchStoreItems(name);
+      List<StoreItem> items = response.storeItems;
+      return Right(items);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, InventoryItem>> purchaseStoreItem(
+      String id, PurchaseStoreItemRequest request) async {
+    try {
+      PurchaseStoreItemResponse purchaseResponse =
+          await restClient.purchaseStoreItem(id, request);
+      String inventoryItemId = purchaseResponse.id;
+      GetInventoryItemResponse getItemResponse =
+          await restClient.getInventoryItem(inventoryItemId);
+      InventoryItem item = getItemResponse.inventoryItem;
+      return Right(item);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
 }

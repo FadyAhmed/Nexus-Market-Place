@@ -101,6 +101,22 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<GetInventoryItemResponse> getInventoryItem(id) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<GetInventoryItemResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/api/myinventory/${id}',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = GetInventoryItemResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<GetStoreItemResponse> getStoreItem(id) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -181,6 +197,91 @@ class _RestClient implements RestClient {
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = EditStoreItemResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<AddItemInOtherStoreToMyStoreResponse> addItemInOtherStoreToMyStore(
+      id) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<AddItemInOtherStoreToMyStoreResponse>(
+            Options(method: 'PUT', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/api/stores/add/${id}',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = AddItemInOtherStoreToMyStoreResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<GetAllStoreItemsFromAllStoresResponse>
+      getAllStoreItemsFromAllStores() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<GetAllStoreItemsFromAllStoresResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/api/stores/mystore',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = GetAllStoreItemsFromAllStoresResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<GetAllStoreItemsFromParticularStoreResponse>
+      getAllStoreItemsFromParticularStore(id) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<GetAllStoreItemsFromParticularStoreResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/api/stores/${id}',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value =
+        GetAllStoreItemsFromParticularStoreResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<SearchStoreItemsResponse> searchStoreItems(name) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'name': name};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<SearchStoreItemsResponse>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/api/stores/search/items',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = SearchStoreItemsResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<PurchaseStoreItemResponse> purchaseStoreItem(id, request) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<PurchaseStoreItemResponse>(
+            Options(method: 'PUT', headers: _headers, extra: _extra)
+                .compose(_dio.options, '/api/stores/purchase/${id}',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = PurchaseStoreItemResponse.fromJson(_result.data!);
     return value;
   }
 
