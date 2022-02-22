@@ -31,7 +31,7 @@ class EditItemViewModel {
       failureStreamController.add(failure);
       editingLoadingController.add(false);
     }, (_) {
-      GetIt.I<ItemDetailsViewModel>().updateItem(request);
+      GetIt.I<ItemDetailsViewModel>().editLocalInventoryItem(request);
       GetIt.I<InventoryViewModel>().editLocalItem(id, request);
       editingLoadingController.add(false);
       isEditedController.add(true);
@@ -46,6 +46,7 @@ class EditItemViewModel {
       failureStreamController.add(failure);
       editingLoadingController.add(false);
     }, (_) {
+      GetIt.I<ItemDetailsViewModel>().editLocalStoreItem(request);
       GetIt.I<StoreViewModel>().editLocalItem(id, request);
       editingLoadingController.add(false);
       isEditedController.add(true);

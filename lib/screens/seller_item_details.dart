@@ -43,29 +43,21 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
   late StreamSubscription failureSub;
 
   void submitDelete() async {
-    itemDetailsViewModel.removeItem(itemDetailsViewModel.inventoryItem!.id!);
+    if (widget.inventoryItem != null) {
+      itemDetailsViewModel
+          .removeInventoryItem(itemDetailsViewModel.inventoryItem!.id!);
+    } else {
+      itemDetailsViewModel
+          .removeStoreItemFromMyStore(itemDetailsViewModel.storeItem!.id!);
+    }
   }
 
-  void pushEditItemDetailsPage(
-      // InventoriesProvider inventoriesProvider,
-      // StoresProvider storesProvider,
-      ) {
-    // InventoryItem? inventoryItem;
-    // if (widget.inventoryItem != null) {
-    //   inventoryItem = inventoriesProvider.items!
-    //       .firstWhere((item) => item.id == widget.inventoryItem!.id);
-    // }
-    // StoreItem? storeItem;
-    // if (widget.storeItem != null) {
-    //   storeItem = storesProvider.items!
-    //       .firstWhere((item) => item.id == widget.storeItem!.id);
-    // }
-
+  void pushEditItemDetailsPage() {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditItemDetails(
           inventoryItem: itemDetailsViewModel.inventoryItem,
-          // storeItem: storeItem,
+          storeItem: itemDetailsViewModel.storeItem,
           onSubmit: () {
             Navigator.of(context).pop();
           },
@@ -78,13 +70,16 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    // TODO: handle the case of storeItem
-    itemDetailsViewModel.start(widget.inventoryItem!);
+    itemDetailsViewModel.start(
+      inventoryItem: widget.inventoryItem,
+      storeItem: widget.storeItem,
+    );
 
     isDeletedSub =
         itemDetailsViewModel.isDeletedController.stream.listen((isDeleted) {
       if (isDeleted) {
         Navigator.pop(context);
+        showSnackbar(context, Text('item deleted successfully'));
       }
     });
 
@@ -98,38 +93,28 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
   void dispose() {
     failureSub.cancel();
     isDeletedSub.cancel();
-    itemDetailsViewModel.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // var inventoriesProvider = Provider.of<InventoriesProvider>(context);
-    // var storesProveider = Provider.of<StoresProvider>(context);
-    // InventoryItem? inventoryItem;
-    // StoreItem? storeItem;
-    // if (widget.inventoryItem != null) {
-    //   inventoryItem = inventoriesProvider.items!.firstWhere(
-    //     (it) => it.id == widget.inventoryItem!.id,
-    //     orElse: () => widget.inventoryItem!,
-    //   );
-    // } else {
-    //   storeItem = storesProveider.items!.firstWhere(
-    //     (it) => it.id == widget.storeItem!.id,
-    //     orElse: () => widget.storeItem!,
-    //   );
-    // }
     return Scaffold(
       appBar: AppBar(
         title: Text(
             "${widget.inventoryItem != null ? 'Inventory' : 'Store'} Item Details"),
         centerTitle: true,
       ),
-      body: StreamBuilder<InventoryItem>(
-        stream: itemDetailsViewModel.inventoryItemController.stream,
+      body: StreamBuilder<Object>(
+        stream: itemDetailsViewModel.itemController.stream,
         builder: ((context, snapshot) {
           if (!snapshot.hasData) return Container();
-          InventoryItem inventoryItem = snapshot.data!;
+          InventoryItem? inventoryItem;
+          StoreItem? storeItem;
+          if (widget.inventoryItem != null) {
+            inventoryItem = snapshot.data as InventoryItem;
+          } else {
+            storeItem = snapshot.data as StoreItem;
+          }
           return Column(
             children: [
               Padding(
@@ -138,8 +123,7 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     MyCachedImg(
-                      inventoryItem.imageLink,
-                      //  ?? storeItem!.imageLink,
+                      inventoryItem?.imageLink ?? storeItem!.imageLink,
                       100,
                       100,
                     ),
@@ -147,34 +131,21 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          // if (inventoryItem != null ||
-                          //     (storeItem != null &&
-                          //         storeItem.state == StoreItemState.owned))
-                          Container(
-                            color: Colors.grey,
-                            child: IconButton(
-                              onPressed: () => pushEditItemDetailsPage(
-                                  // inventoriesProvider,
-                                  // storesProveider,
-                                  ),
-                              icon: const Icon(Icons.edit),
+                          if (inventoryItem != null ||
+                              (storeItem != null &&
+                                  storeItem.state == StoreItemState.owned))
+                            Container(
+                              color: Colors.grey,
+                              child: IconButton(
+                                onPressed: () => pushEditItemDetailsPage(),
+                                icon: const Icon(Icons.edit),
+                              ),
                             ),
-                          ),
                           const SizedBox(width: 15),
-                          // if (inventoriesProvider.loadingStatus ==
-                          //         LoadingStatus.loading ||
-                          //     storesProveider.loadingStatus ==
-                          //         LoadingStatus.loading)
-                          //   CircularProgressIndicator(color: Colors.red),
-                          // if (inventoriesProvider.loadingStatus !=
-                          //         LoadingStatus.loading &&
-                          //     storesProveider.loadingStatus !=
-                          //         LoadingStatus.loading)
                           StreamBuilder<bool>(
                               stream: itemDetailsViewModel
-                                  .isDeleteLoadingController.stream,
+                                  .removingLoadingController.stream,
                               builder: ((context, snapshot) {
-                                print('snapshot ${snapshot.data}');
                                 if (snapshot.data ?? false) {
                                   return SizedBox(
                                     height: 30,
@@ -204,25 +175,24 @@ class _OnSaleItemDetailsScreenState extends State<OnSaleItemDetailsScreen> {
               Table(
                 //border: TableBorder.all(),
                 children: [
-                  tableRow("Name: ",
-                      inventoryItem.name /* ?? storeItem!.name */, context),
+                  tableRow("Name: ", inventoryItem?.name ?? storeItem!.name,
+                      context),
                   tableRow("", "", context),
                   tableRow(
                     "Description: ",
-                    inventoryItem.description /*  ?? storeItem!.description */,
+                    inventoryItem?.description ?? storeItem!.description,
                     context,
                   ),
                   tableRow("", "", context),
                   tableRow(
                     "Available amount: ",
-                    (inventoryItem.amount /*  ?? storeItem!.amount */)
-                        .toString(),
+                    (inventoryItem?.amount ?? storeItem!.amount).toString(),
                     context,
                   ),
                   tableRow("", "", context),
                   tableRow(
                     "Price: ",
-                    "\$${(inventoryItem.price /* ?? storeItem!.price */).toStringAsFixed(2)}",
+                    "\$${(inventoryItem?.price ?? storeItem!.price).toStringAsFixed(2)}",
                     context,
                   ),
                 ],

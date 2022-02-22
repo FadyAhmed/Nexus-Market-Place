@@ -68,7 +68,7 @@ class InventoryViewModel {
     inventoryItemsListController.add(inventoryItems!);
   }
 
-  void removeCachedItem(String id) {
+  void removeLocalItem(String id) {
     inventoryItems!.removeWhere((item) => item.id == id);
     inventoryItemsListController.add(inventoryItems!);
   }

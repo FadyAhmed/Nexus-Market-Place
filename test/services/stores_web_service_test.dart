@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/services/stores_web_service.dart';
 import 'package:flutter_test/flutter_test.dart';
