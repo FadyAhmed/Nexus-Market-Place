@@ -53,18 +53,19 @@ class InventoryViewModel {
     response.fold((failure) {
       failureStreamController.add(failure);
     }, (_) {
-      updateItem(id, request);
-      inventoryItemsListController.add(inventoryItems!);
+      editLocalItem(id, request);
     });
   }
 
-  void updateItem(String id, EditInventoryItemRequest request) {
+  void editLocalItem(String id, EditInventoryItemRequest request) {
     InventoryItem item = inventoryItems!.firstWhere((i) => i.id == id);
     item.name = request.name ?? item.name;
     item.amount = request.amount ?? item.amount;
     item.price = request.price ?? item.price;
     item.description = request.description ?? item.description;
     item.imageLink = request.imageLink ?? item.imageLink;
+
+    inventoryItemsListController.add(inventoryItems!);
   }
 
   void removeCachedItem(String id) {
@@ -73,6 +74,9 @@ class InventoryViewModel {
   }
 
   void addItemToLocalList(InventoryItem item) {
+    if (inventoryItems == null) {
+      return; // could be invoked before fetching items
+    } 
     inventoryItems!.add(item);
     inventoryItemsListController.add(inventoryItems!);
   }

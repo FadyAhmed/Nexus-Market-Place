@@ -163,3 +163,48 @@ Map<String, dynamic> _$RemoveItemFromMyStoreResponseToJson(
       'success': instance.success,
       'status': instance.status,
     };
+
+AddItemInMyInventoryToMyStoreResponse
+    _$AddItemInMyInventoryToMyStoreResponseFromJson(
+            Map<String, dynamic> json) =>
+        AddItemInMyInventoryToMyStoreResponse(
+          success: json['success'] as bool,
+          status: json['status'] as String,
+          id: json['id'] as String,
+        );
+
+Map<String, dynamic> _$AddItemInMyInventoryToMyStoreResponseToJson(
+        AddItemInMyInventoryToMyStoreResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+      'id': instance.id,
+    };
+
+GetStoreItemResponse _$GetStoreItemResponseFromJson(
+        Map<String, dynamic> json) =>
+    GetStoreItemResponse(
+      success: json['success'] as bool,
+      item: StoreItemResponse.fromJson(json['item'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$GetStoreItemResponseToJson(
+        GetStoreItemResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'item': instance.item,
+    };
+
+EditStoreItemResponse _$EditStoreItemResponseFromJson(
+        Map<String, dynamic> json) =>
+    EditStoreItemResponse(
+      success: json['success'] as bool,
+      status: json['status'] as String,
+    );
+
+Map<String, dynamic> _$EditStoreItemResponseToJson(
+        EditStoreItemResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+    };

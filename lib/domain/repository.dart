@@ -43,7 +43,7 @@ class Repository {
   Future<Either<Failure, void>> editInventoryItem(
       String id, EditInventoryItemRequest request) async {
     try {
-      restClient.editInventoryItem(id, request);
+      await restClient.editInventoryItem(id, request);
       return Right(null);
     } on DioError catch (e) {
       return Left(e.failure);
@@ -86,6 +86,31 @@ class Repository {
   Future<Either<Failure, void>> removeStoreItemFromMyStore(String id) async {
     try {
       await restClient.removeStoreItemFromMyStore(id);
+      return Right(null);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, StoreItem>> addItemInMyInventoryToMyStore(
+      String id, AddItemInMyInventoryToMyStoreRequest request) async {
+    try {
+      AddItemInMyInventoryToMyStoreResponse addItemResponse =
+          await restClient.addItemInMyInventoryToMyStore(id, request);
+      String storeItemId = addItemResponse.id;
+      GetStoreItemResponse getItemResponse =
+          await restClient.getStoreItem(storeItemId);
+      StoreItem item = getItemResponse.storeItem;
+      return Right(item);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, void>> editStoreItem(
+      String id, EditStoreItemRequest request) async {
+    try {
+      await restClient.editStoreItem(id, request);
       return Right(null);
     } on DioError catch (e) {
       return Left(e.failure);

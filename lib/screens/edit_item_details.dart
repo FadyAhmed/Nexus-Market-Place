@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
@@ -42,6 +44,8 @@ class _EditItemDetailsState extends State<EditItemDetails> {
   EditInventoryItemViewModel editInventoryItemViewModel =
       GetIt.I<EditInventoryItemViewModel>();
 
+  late StreamSubscription isEditedSub;
+
   TextEditingController _name = TextEditingController();
   TextEditingController _description = TextEditingController();
   TextEditingController _amount = TextEditingController();
@@ -51,7 +55,13 @@ class _EditItemDetailsState extends State<EditItemDetails> {
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    editInventoryItemViewModel.start();
+    isEditedSub =
+        editInventoryItemViewModel.isEditedController.stream.listen((isEdited) {
+      if (isEdited) {
+        showSnackbar(context, Text("Item edited successfully"));
+        Navigator.of(context).pop();
+      }
+    });
 
     if (widget.inventoryItem != null) {
       var item = widget.inventoryItem;
@@ -71,6 +81,12 @@ class _EditItemDetailsState extends State<EditItemDetails> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    isEditedSub.cancel();
+    super.dispose();
+  }
+
   void submitEditItem() async {
     if (_formKey.currentState!.validate()) {
       bool isImageValid = await isValidImage(_imageLink.text);
@@ -79,36 +95,26 @@ class _EditItemDetailsState extends State<EditItemDetails> {
             'Entered image URL is not a valid image\n\nURLs should begin with http:// or https://');
         return;
       }
-      try {
-        if (widget.inventoryItem != null) {
-          EditInventoryItemRequest request = EditInventoryItemRequest(
-            name: _name.text,
-            amount: int.parse(_amount.text),
-            price: double.parse(_price.text),
-            description: _description.text,
-            imageLink: _imageLink.text,
-          );
-          await editInventoryItemViewModel.edit(
-              widget.inventoryItem!.id!, request);
-        } else {
-          StoreItem item = StoreItem(
-            id: widget.storeItem!.id,
-            name: _name.text,
-            price: double.parse(_price.text),
-            amount: int.parse(_amount.text),
-            imageLink: _imageLink.text,
-            description: _description.text,
-            state: widget.storeItem!.state,
-            storeId: widget.storeItem!.storeId,
-            storeName: widget.storeItem!.storeName,
-          );
-          await Provider.of<StoresProvider>(context, listen: false)
-              .editItemInMyStore(item);
-        }
-        showSnackbar(context, Text("Item edited successfully"));
-        Navigator.of(context).pop();
-      } on ServerException catch (e) {
-        showMessageDialogue(context, e.message);
+      if (widget.inventoryItem != null) {
+        EditInventoryItemRequest request = EditInventoryItemRequest(
+          name: _name.text,
+          amount: int.parse(_amount.text),
+          price: double.parse(_price.text),
+          description: _description.text,
+          imageLink: _imageLink.text,
+        );
+        await editInventoryItemViewModel.editInventoryItem(
+            widget.inventoryItem!.id!, request);
+      } else {
+        EditStoreItemRequest request = EditStoreItemRequest(
+          name: _name.text,
+          price: double.parse(_price.text),
+          amount: int.parse(_amount.text),
+          imageLink: _imageLink.text,
+          description: _description.text,
+        );
+        await editInventoryItemViewModel.editStoreItem(
+            widget.storeItem!.id!, request);
       }
     }
   }
@@ -226,7 +232,7 @@ class _EditItemDetailsState extends State<EditItemDetails> {
                         ? Center(child: CircularProgressIndicator())
                         : StreamBuilder<bool>(
                             stream: editInventoryItemViewModel
-                                .isLoadingController.stream,
+                                .editingLoadingController.stream,
                             builder: (context, snapshot) {
                               return (snapshot.data ?? false)
                                   ? Center(child: CircularProgressIndicator())
@@ -236,7 +242,6 @@ class _EditItemDetailsState extends State<EditItemDetails> {
                                     );
                             },
                           ),
-                          
                   ),
                   const SizedBox(height: 30)
                 ],

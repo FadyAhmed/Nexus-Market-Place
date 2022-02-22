@@ -29,6 +29,9 @@ abstract class RestClient {
   Future<AddInventoryItemResponse> addInventoryItem(
       @Body() AddInventoryItemRequest request);
 
+  @GET('/api/stores/mystore/{id}')
+  Future<GetStoreItemResponse> getStoreItem(@Path() id);
+
   // Store Items
   // ===========
 
@@ -38,4 +41,12 @@ abstract class RestClient {
   @DELETE('/api/stores/mystore/{id}')
   Future<RemoveItemFromMyStoreResponse> removeStoreItemFromMyStore(
       @Path() String id);
+
+  @POST('/api/stores/mystore/{id}')
+  Future<AddItemInMyInventoryToMyStoreResponse> addItemInMyInventoryToMyStore(
+      @Path() id, @Body() AddItemInMyInventoryToMyStoreRequest request);
+
+  @PUT('/api/stores/mystore/{id}')
+  Future<EditStoreItemResponse> editStoreItem(
+      @Path() id, @Body() EditStoreItemRequest request);
 }

@@ -1,8 +1,8 @@
-import 'package:ds_market_place/models/store_item.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/models/store_item.dart';
 
 part 'responses.g.dart';
 
@@ -192,4 +192,52 @@ class RemoveItemFromMyStoreResponse {
   factory RemoveItemFromMyStoreResponse.fromJson(Map<String, Object?> json) =>
       _$RemoveItemFromMyStoreResponseFromJson(json);
   Map<String, dynamic> toJson() => _$RemoveItemFromMyStoreResponseToJson(this);
+}
+
+@JsonSerializable()
+class AddItemInMyInventoryToMyStoreResponse {
+  bool success;
+  String status;
+  String id;
+  AddItemInMyInventoryToMyStoreResponse({
+    required this.success,
+    required this.status,
+    required this.id,
+  });
+
+  factory AddItemInMyInventoryToMyStoreResponse.fromJson(
+          Map<String, Object?> json) =>
+      _$AddItemInMyInventoryToMyStoreResponseFromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$AddItemInMyInventoryToMyStoreResponseToJson(this);
+}
+
+@JsonSerializable()
+class GetStoreItemResponse {
+  bool success;
+  StoreItemResponse item;
+  GetStoreItemResponse({
+    required this.success,
+    required this.item,
+  });
+
+  factory GetStoreItemResponse.fromJson(Map<String, Object?> json) =>
+      _$GetStoreItemResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$GetStoreItemResponseToJson(this);
+
+  StoreItem get storeItem => item.storeItem;
+}
+
+@JsonSerializable()
+class EditStoreItemResponse {
+  bool success;
+  String status;
+  EditStoreItemResponse({
+    required this.success,
+    required this.status,
+  });
+
+  factory EditStoreItemResponse.fromJson(Map<String, Object?> json) =>
+      _$EditStoreItemResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$EditStoreItemResponseToJson(this);
 }

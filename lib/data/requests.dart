@@ -74,3 +74,39 @@ class AddInventoryItemRequest {
     );
   }
 }
+
+@JsonSerializable()
+class AddItemInMyInventoryToMyStoreRequest {
+  double price;
+  int amount;
+  AddItemInMyInventoryToMyStoreRequest({
+    required this.price,
+    required this.amount,
+  });
+
+  factory AddItemInMyInventoryToMyStoreRequest.fromJson(
+          Map<String, Object?> json) =>
+      _$AddItemInMyInventoryToMyStoreRequestFromJson(json);
+  Map<String, dynamic> toJson() =>
+      _$AddItemInMyInventoryToMyStoreRequestToJson(this);
+}
+
+@JsonSerializable()
+class EditStoreItemRequest {
+  String? name;
+  double? price;
+  int? amount;
+  String? imageLink;
+  String? description;
+  EditStoreItemRequest({
+    this.name,
+    this.price,
+    this.amount,
+    this.imageLink,
+    this.description,
+  });
+
+  factory EditStoreItemRequest.fromJson(Map<String, Object?> json) =>
+      _$EditStoreItemRequestFromJson(json);
+  Map<String, dynamic> toJson() => _$EditStoreItemRequestToJson(this);
+}

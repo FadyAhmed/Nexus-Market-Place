@@ -64,3 +64,45 @@ Map<String, dynamic> _$AddInventoryItemRequestToJson(
       'imageLink': instance.imageLink,
       'description': instance.description,
     };
+
+AddItemInMyInventoryToMyStoreRequest
+    _$AddItemInMyInventoryToMyStoreRequestFromJson(Map<String, dynamic> json) =>
+        AddItemInMyInventoryToMyStoreRequest(
+          price: (json['price'] as num).toDouble(),
+          amount: json['amount'] as int,
+        );
+
+Map<String, dynamic> _$AddItemInMyInventoryToMyStoreRequestToJson(
+        AddItemInMyInventoryToMyStoreRequest instance) =>
+    <String, dynamic>{
+      'price': instance.price,
+      'amount': instance.amount,
+    };
+
+EditStoreItemRequest _$EditStoreItemRequestFromJson(
+        Map<String, dynamic> json) =>
+    EditStoreItemRequest(
+      name: json['name'] as String?,
+      price: (json['price'] as num?)?.toDouble(),
+      amount: json['amount'] as int?,
+      imageLink: json['imageLink'] as String?,
+      description: json['description'] as String?,
+    );
+
+Map<String, dynamic> _$EditStoreItemRequestToJson(
+    EditStoreItemRequest instance) {
+  final val = <String, dynamic>{};
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('name', instance.name);
+  writeNotNull('price', instance.price);
+  writeNotNull('amount', instance.amount);
+  writeNotNull('imageLink', instance.imageLink);
+  writeNotNull('description', instance.description);
+  return val;
+}

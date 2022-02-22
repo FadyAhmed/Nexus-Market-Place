@@ -2,6 +2,7 @@ import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
+import 'package:ds_market_place/view_models/select_item_to_sell_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -24,6 +25,7 @@ class AddInventoryItemViewModel {
       failureController.add(failure);
     }, (item) {
       GetIt.I<InventoryViewModel>().addItemToLocalList(item);
+      GetIt.I<SelectItemToSellViewModel>().addLocalItem(item);
       addingLoadingController.add(false);
       isAddedController.add(true);
     });
