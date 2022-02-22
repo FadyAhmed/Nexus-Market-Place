@@ -56,7 +56,7 @@ abstract class RestClient {
   Future<AddItemInOtherStoreToMyStoreResponse> addItemInOtherStoreToMyStore(
       @Path() String id);
 
-  @GET('/api/stores/mystore')
+  @GET('/api/stores')
   Future<GetAllStoreItemsFromAllStoresResponse> getAllStoreItemsFromAllStores();
 
   @GET('/api/stores/{id}')

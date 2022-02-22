@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
+import 'package:ds_market_place/globals.dart' as globals;
 
 part 'responses.g.dart';
 
@@ -124,17 +125,17 @@ class AddInventoryItemResponse {
 @JsonSerializable()
 class GetInventoryItemResponse {
   bool success;
-  InventoryItemResponse itemResponse;
+  InventoryItemResponse item;
   GetInventoryItemResponse({
     required this.success,
-    required this.itemResponse,
+    required this.item,
   });
 
   factory GetInventoryItemResponse.fromJson(Map<String, Object?> json) =>
       _$GetInventoryItemResponseFromJson(json);
   Map<String, dynamic> toJson() => _$GetInventoryItemResponseToJson(this);
 
-  InventoryItem get inventoryItem => itemResponse.inventoryItem;
+  InventoryItem get inventoryItem => item.inventoryItem;
 }
 
 @JsonSerializable()
@@ -294,11 +295,11 @@ class EditStoreItemResponse {
 class AddItemInOtherStoreToMyStoreResponse {
   bool success;
   String status;
-  StoreItemResponse itemResponse;
+  StoreItemResponse item;
   AddItemInOtherStoreToMyStoreResponse({
     required this.success,
     required this.status,
-    required this.itemResponse,
+    required this.item,
   });
 
   factory AddItemInOtherStoreToMyStoreResponse.fromJson(
@@ -307,18 +308,16 @@ class AddItemInOtherStoreToMyStoreResponse {
   Map<String, dynamic> toJson() =>
       _$AddItemInOtherStoreToMyStoreResponseToJson(this);
 
-  StoreItem get storeItem => itemResponse.storeItem;
+  StoreItem get storeItem => item.storeItem;
 }
 
 @JsonSerializable()
 class GetAllStoreItemsFromAllStoresResponse {
   bool success;
-  String status;
-  List<StoreItemResponse> itemResponses;
+  List<StoreItemWithoutStateResponse> items;
   GetAllStoreItemsFromAllStoresResponse({
     required this.success,
-    required this.status,
-    required this.itemResponses,
+    required this.items,
   });
 
   factory GetAllStoreItemsFromAllStoresResponse.fromJson(
@@ -327,17 +326,57 @@ class GetAllStoreItemsFromAllStoresResponse {
   Map<String, dynamic> toJson() =>
       _$GetAllStoreItemsFromAllStoresResponseToJson(this);
 
-  List<StoreItem> get storeItems =>
-      itemResponses.map((i) => i.storeItem).toList();
+  List<StoreItem> get storeItems => items.map((i) => i.storeItem).toList();
+}
+
+@JsonSerializable()
+class StoreItemWithoutStateResponse {
+  String id;
+  String name;
+  double price;
+  int amount;
+  String imageLink;
+  String description;
+  String storeId;
+  String storeName;
+
+  StoreItemWithoutStateResponse({
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.amount,
+    required this.imageLink,
+    required this.description,
+    required this.storeId,
+    required this.storeName,
+  });
+
+  factory StoreItemWithoutStateResponse.fromJson(Map<String, Object?> json) =>
+      _$StoreItemWithoutStateResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$StoreItemWithoutStateResponseToJson(this);
+
+  StoreItem get storeItem => StoreItem(
+        id: id,
+        name: name,
+        price: price,
+        amount: amount,
+        imageLink: imageLink,
+        description: description,
+        state: storeName == globals.storeName
+            ? StoreItemState.owned
+            : StoreItemState.imported,
+        storeId: storeId,
+        storeName: storeName,
+      );
 }
 
 @JsonSerializable()
 class GetAllStoreItemsFromParticularStoreResponse {
   bool success;
-  List<StoreItemResponse> itemResponses;
+  List<StoreItemResponse> items;
   GetAllStoreItemsFromParticularStoreResponse({
     required this.success,
-    required this.itemResponses,
+    required this.items,
   });
 
   factory GetAllStoreItemsFromParticularStoreResponse.fromJson(
@@ -346,25 +385,23 @@ class GetAllStoreItemsFromParticularStoreResponse {
   Map<String, dynamic> toJson() =>
       _$GetAllStoreItemsFromParticularStoreResponseToJson(this);
 
-  List<StoreItem> get storeItems =>
-      itemResponses.map((i) => i.storeItem).toList();
+  List<StoreItem> get storeItems => items.map((i) => i.storeItem).toList();
 }
 
 @JsonSerializable()
 class SearchStoreItemsResponse {
   bool success;
-  List<StoreItemResponse> itemResponses;
+  List<StoreItemWithoutStateResponse> items;
   SearchStoreItemsResponse({
     required this.success,
-    required this.itemResponses,
+    required this.items,
   });
 
   factory SearchStoreItemsResponse.fromJson(Map<String, Object?> json) =>
       _$SearchStoreItemsResponseFromJson(json);
   Map<String, dynamic> toJson() => _$SearchStoreItemsResponseToJson(this);
 
-  List<StoreItem> get storeItems =>
-      itemResponses.map((i) => i.storeItem).toList();
+  List<StoreItem> get storeItems => items.map((i) => i.storeItem).toList();
 }
 
 @JsonSerializable()

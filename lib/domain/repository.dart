@@ -6,7 +6,7 @@ import 'package:ds_market_place/data/responses.dart';
 import 'package:ds_market_place/data/rest_client.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:dio/dio.dart';
-import 'package:ds_market_place/globals.dart';
+import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:get_it/get_it.dart';
@@ -20,7 +20,10 @@ class Repository {
     try {
       LoginResponse response = await restClient.signIn(loginRequest);
 
-      token = response.token;
+      globals.token = response.token;
+      globals.storeName = response.storeName;
+      globals.admin = response.admin;
+      
       GetIt.instance<Dio>().options.headers[HttpHeaders.authorizationHeader] =
           'Bearer ${response.token}';
 

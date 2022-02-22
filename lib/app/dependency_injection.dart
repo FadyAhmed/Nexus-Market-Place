@@ -5,6 +5,7 @@ import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/view_models/add_inventory_item_view_model.dart';
 import 'package:ds_market_place/view_models/confirm_to_sell_item_view_model.dart';
 import 'package:ds_market_place/view_models/edit_inventory_item_view_model.dart';
+import 'package:ds_market_place/view_models/explore_view_model.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
 import 'package:ds_market_place/view_models/item_details_view_model.dart';
 import 'package:ds_market_place/view_models/login_view_model.dart';
@@ -32,4 +33,5 @@ Future<void> injectDependencies() async {
       () => SelectItemToSellViewModel());
   instance.registerLazySingleton<ConfirmToSellItemViewModel>(
       () => ConfirmToSellItemViewModel());
+  instance.registerLazySingleton<ExploreViewModel>(() => ExploreViewModel());
 }
