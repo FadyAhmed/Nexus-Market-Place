@@ -12,6 +12,8 @@ import 'package:ds_market_place/view_models/item_details_view_model.dart';
 import 'package:ds_market_place/view_models/login_view_model.dart';
 import 'package:ds_market_place/view_models/menu_view_model.dart';
 import 'package:ds_market_place/view_models/purchase_view_model.dart';
+import 'package:ds_market_place/view_models/transactions_reports_view_model.dart';
+import 'package:ds_market_place/view_models/user_reports_view_model.dart';
 import 'package:ds_market_place/view_models/search_view_model.dart';
 import 'package:ds_market_place/view_models/select_item_to_sell_view_model.dart';
 import 'package:ds_market_place/view_models/signup_view_model.dart';
@@ -47,6 +49,10 @@ Future<void> injectDependencies() async {
       () => AccountInfoViewModel());
   instance.registerLazySingleton<MenuViewModel>(() => MenuViewModel());
   instance.registerLazySingleton<SignUpViewModel>(() => SignUpViewModel());
+  instance.registerLazySingleton<UsersReportsViewModel>(
+      () => UsersReportsViewModel());
+  instance.registerLazySingleton<TransactionReportsViewModel>(
+      () => TransactionReportsViewModel());
 
   
   instance.registerFactory<PurchaseViewModel>(() => PurchaseViewModel());
