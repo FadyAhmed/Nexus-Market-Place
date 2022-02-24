@@ -30,7 +30,7 @@ class LoginRequest {
 
 @JsonSerializable()
 class SignUpRequest {
-  String firsName;
+  String firstName;
   String lastName;
   String username;
   String email;
@@ -38,7 +38,7 @@ class SignUpRequest {
   String password;
   String storeName;
   SignUpRequest({
-    required this.firsName,
+    required this.firstName,
     required this.lastName,
     required this.username,
     required this.email,

@@ -19,7 +19,7 @@ Map<String, dynamic> _$LoginRequestToJson(LoginRequest instance) =>
 
 SignUpRequest _$SignUpRequestFromJson(Map<String, dynamic> json) =>
     SignUpRequest(
-      firsName: json['firsName'] as String,
+      firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       username: json['username'] as String,
       email: json['email'] as String,
@@ -30,7 +30,7 @@ SignUpRequest _$SignUpRequestFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$SignUpRequestToJson(SignUpRequest instance) =>
     <String, dynamic>{
-      'firsName': instance.firsName,
+      'firstName': instance.firstName,
       'lastName': instance.lastName,
       'username': instance.username,
       'email': instance.email,

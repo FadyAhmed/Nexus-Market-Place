@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:ds_market_place/components/UI/circular-loading.dart';
@@ -6,12 +7,15 @@ import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/signup.dart';
 import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/screens/regestration/signin_screen.dart';
+import 'package:ds_market_place/view_models/signup_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants.dart';
@@ -23,6 +27,12 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  SignUpViewModel signUpViewModel = GetIt.I();
+
+  late StreamSubscription loadingSub;
+  late StreamSubscription failureSub;
+  late StreamSubscription isSignedUpSub;
+
   TextEditingController _firstName = TextEditingController();
   TextEditingController _lastName = TextEditingController();
   TextEditingController _storeName = TextEditingController();
@@ -39,33 +49,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> submitForm() async {
     if (_formKey.currentState!.validate()) {
-      try {
-        Signup signupData = Signup(
-          firstName: _firstName.text,
-          lastName: _lastName.text,
-          username: _userName.text,
-          email: _email.text,
-          phoneNumber: _phoneNum.text,
-          password: _password.text,
-          storeName: _storeName.text,
-        );
-        await Provider.of<AuthenticationProvider>(context, listen: false)
-            .signUp(signupData);
+      SignUpRequest request = SignUpRequest(
+        firstName: _firstName.text,
+        lastName: _lastName.text,
+        username: _userName.text,
+        email: _email.text,
+        phoneNumber: _phoneNum.text,
+        password: _password.text,
+        storeName: _storeName.text,
+      );
+      signUpViewModel.signUp(request);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    loadingSub = signUpViewModel.loadingController.listen((isLoading) {
+      if (isLoading) {
+        showLoadingDialog(context);
+      } else {
+        Navigator.pop(context);
+      }
+    });
+
+    failureSub = signUpViewModel.failureController.listen((failure) {
+      if (failure != null) {
+        showMessageDialogue(context, failure.message);
+      }
+    });
+
+    isSignedUpSub = signUpViewModel.isSignedUpController.listen((isSignedUp) {
+      if (isSignedUp) {
         showSnackbar(
           context,
           Text('You have been registered successfully, Log in to your account'),
           4,
         );
         Navigator.of(context).pop();
-      } on ServerException catch (e) {
-        showMessageDialogue(context, e.message);
       }
-    }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthenticationProvider>(context);
     List<KFormField> _fields = [
       KFormField(
           key: 'firstName',
@@ -204,52 +232,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             }).toList()),
                           ),
                         ),
-                        _loading
-                            ? loading()
-                            : Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      if (authProvider.loadingStatus !=
-                                          LoadingStatus.loading)
-                                        Semantics(
-                                          label: 'send signup request',
-                                          child: RoundedButton(
-                                            myKey: 'signupBtn',
-                                            onPressed: submitForm,
-                                            title: 'Sign up',
-                                          ),
-                                        ),
-                                      if (authProvider.loadingStatus ==
-                                          LoadingStatus.loading)
-                                        Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
-                                      SizedBox(height: 15),
-                                      Center(
-                                          child: Text(
-                                        "OR",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6!
-                                            .copyWith(fontSize: 16),
-                                      )),
-                                      SizedBox(height: 15),
-                                      RoundedButton(
-                                          title: 'Log In',
-                                          onPressed: () => Navigator.of(context)
-                                                  .pushReplacement(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SignInScreen()),
-                                              )),
-                                    ],
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Semantics(
+                                  label: 'send signup request',
+                                  child: RoundedButton(
+                                    myKey: 'signupBtn',
+                                    onPressed: submitForm,
+                                    title: 'Sign up',
                                   ),
                                 ),
-                              )
+                                SizedBox(height: 15),
+                                Center(
+                                  child: Text(
+                                    "OR",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6!
+                                        .copyWith(fontSize: 16),
+                                  ),
+                                ),
+                                SizedBox(height: 15),
+                                RoundedButton(
+                                  title: 'Log In',
+                                  onPressed: () =>
+                                      Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => SignInScreen(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
                   ),
