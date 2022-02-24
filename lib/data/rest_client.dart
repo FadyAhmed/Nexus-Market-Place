@@ -9,7 +9,10 @@ part 'rest_client.g.dart';
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 
+  // ===============
+  // ===============
   // Inventory Items
+  // ===============
   // ===============
 
   @POST('/api/users/login')
@@ -32,8 +35,12 @@ abstract class RestClient {
   @GET('/api/myinventory/{id}')
   Future<GetInventoryItemResponse> getInventoryItem(@Path() String id);
 
+  // ===========
+  // ===========
   // Store Items
   // ===========
+  // ===========
+
   @GET('/api/stores/mystore/{id}')
   Future<GetStoreItemResponse> getStoreItem(@Path() String id);
 
@@ -69,4 +76,19 @@ abstract class RestClient {
   @PUT('/api/stores/purchase/{id}')
   Future<PurchaseStoreItemResponse> purchaseStoreItem(
       @Path() String id, @Body() PurchaseStoreItemRequest request);
+
+  // ===========
+  // ===========
+  // Transactions
+  // ===========
+  // ===========
+
+  @GET('/api/transactions/sold')
+  Future<GetMySoldItemsResponse> getMySoldItems();
+
+  @GET('/api/transactions/purchased')
+  Future<GetMyPurchasedItemsResponse> getMyPurchasedItems();
+
+  @GET('/api/transactions')
+  Future<GetAllTransactionsResponse> getAllTransactions();
 }

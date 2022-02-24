@@ -8,12 +8,13 @@ import 'package:rxdart/rxdart.dart';
 class StoreViewModel {
   BehaviorSubject<bool> gettingLoadingController = BehaviorSubject();
   BehaviorSubject<bool> removingLoadingController = BehaviorSubject();
-  BehaviorSubject<Failure> failureController = BehaviorSubject();
+  BehaviorSubject<Failure?> failureController = BehaviorSubject();
   BehaviorSubject<List<StoreItem>> storeItemsController = BehaviorSubject();
 
   List<StoreItem>? storeItems;
 
-  void getAllStoreItemsFromMyStore() async {
+  Future<void> getAllStoreItemsFromMyStore() async {
+    clearFailure();
     gettingLoadingController.add(true);
     final response = await GetIt.I<Repository>().getAllStoreItemsFromMyStore();
     response.fold(
@@ -66,5 +67,9 @@ class StoreViewModel {
     item.imageLink = request.imageLink ?? item.imageLink;
 
     storeItemsController.add(storeItems!);
+  }
+
+  void clearFailure() {
+    failureController.add(null);
   }
 }

@@ -2,21 +2,17 @@ import 'dart:async';
 
 import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
-import 'package:ds_market_place/components/UI/show_snackbar.dart';
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/domain/failure.dart';
-import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
-import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
-import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
 import 'package:ds_market_place/screens/store/select_item_to_sell.dart';
 import 'package:ds_market_place/view_models/store_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
 class SellScreen extends StatefulWidget {
   const SellScreen({Key? key}) : super(key: key);
@@ -45,42 +41,32 @@ class _SellScreenState extends State<SellScreen> {
     });
   }
 
-  Future<void> fetchAllItemsFromMyStore() async {
-    try {
-      await Provider.of<StoresProvider>(context, listen: false)
-          .getAllItemsFromMyStore(notifyWhenLoading: false);
-    } on ServerException catch (e) {
-      showMessageDialogue(context, e.message);
-    }
-  }
-
-  void submitRemove(String id) async {
-    try {
-      await Provider.of<StoresProvider>(context, listen: false)
-          .removeItemFromMyStore(id);
-      showSnackbar(context, Text('Item is removed'));
-    } on ServerException catch (e) {
-      showMessageDialogue(context, e.message);
-    }
+  @override
+  void dispose() {
+    storeViewModel.clearFailure();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var storesProvider = Provider.of<StoresProvider>(context);
-    if (storesProvider.items != null) print(storesProvider.items!.length);
     return RefreshIndicator(
-      onRefresh: fetchAllItemsFromMyStore,
+      onRefresh: storeViewModel.getAllStoreItemsFromMyStore,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (ctx) => SelectItemToSellScreen())),
           child: const Icon(Icons.add),
         ),
-        body: StreamBuilder<Failure>(
+        body: StreamBuilder<Failure?>(
           stream: storeViewModel.failureController.stream,
           builder: (context, snapshot) {
             if (snapshot.data != null) {
-              return Center(child: Text(snapshot.data!.message));
+              return Center(
+                child: MyErrorWidget(
+                  failure: snapshot.data!,
+                  onRetry: storeViewModel.getAllStoreItemsFromMyStore,
+                ),
+              );
             }
             return StreamBuilder<bool>(
               stream: storeViewModel.gettingLoadingController.stream,

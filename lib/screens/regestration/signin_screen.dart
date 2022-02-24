@@ -102,7 +102,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   void dispose() {
-    loginViewModel.dispose();
     screenStateSub.cancel();
     failureSub.cancel();
     logInSub.cancel();

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/domain/failure.dart';
@@ -20,7 +21,6 @@ class ExploreScreen extends StatefulWidget {
   _ExploreScreenState createState() => _ExploreScreenState();
 }
 
-
 class _ExploreScreenState extends State<ExploreScreen> {
   ExploreViewModel exploreViewModel = GetIt.I();
 
@@ -31,17 +31,28 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   @override
+  void dispose() {
+    exploreViewModel.clearFailure();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: RefreshIndicator(
       onRefresh: exploreViewModel.getAllStoreItemsFromAllStores,
       child: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8, top: 16, bottom: 0),
-        child: StreamBuilder<Failure>(
+        child: StreamBuilder<Failure?>(
           stream: exploreViewModel.failureController.stream,
           builder: (context, snapshot) {
             if (snapshot.data != null) {
-              return Center(child: Text(snapshot.data!.message));
+              return Center(
+                child: MyErrorWidget(
+                  failure: snapshot.data!,
+                  onRetry: exploreViewModel.getAllStoreItemsFromAllStores,
+                ),
+              );
             }
             return StreamBuilder<bool>(
               stream: exploreViewModel.gettingLoadingController.stream,

@@ -31,14 +31,7 @@ class _SelectItemToInvenSellnState extends State<SelectItemToSellScreen> {
   }
 
   @override
-  void dispose() {
-    selectItemToSellViewModel.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    var inventoriesProvider = Provider.of<InventoriesProvider>(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,

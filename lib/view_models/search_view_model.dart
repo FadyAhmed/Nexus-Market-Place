@@ -6,12 +6,13 @@ import 'package:rxdart/rxdart.dart';
 
 class SearchViewModel {
   BehaviorSubject<bool> gettingLoadingController = BehaviorSubject();
-  BehaviorSubject<Failure> failureController = BehaviorSubject();
+  BehaviorSubject<Failure?> failureController = BehaviorSubject();
   BehaviorSubject<List<StoreItem>> storeItemsController = BehaviorSubject();
 
   List<StoreItem>? storeItems;
 
   Future<void> searchStoreItems(String name) async {
+    clearFailure();
     gettingLoadingController.add(true);
     final response = await GetIt.I<Repository>().searchStoreItems(name);
     response.fold(
@@ -36,5 +37,9 @@ class SearchViewModel {
       storeItems!.remove(item);
     }
     storeItemsController.add(storeItems!);
+  }
+
+  void clearFailure() {
+    failureController.add(null);
   }
 }

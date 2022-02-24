@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/domain/failure.dart';
@@ -30,7 +31,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   @override
   void initState() {
     super.initState();
-    inventoryViewModel.start();
+    inventoryViewModel.getAllInventoryItems();
   }
 
   ListView buildList(List<InventoryItem> items) {
@@ -71,38 +72,50 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   Widget buildBody() {
-    return StreamBuilder<List<InventoryItem>>(
-        stream: inventoryViewModel.inventoryItemsListController.stream,
-        builder: (context, snapshot) {
-          List<InventoryItem>? items = snapshot.data;
-          return StreamBuilder<bool>(
-            stream: inventoryViewModel.isLoadingController.stream,
-            builder: (context, snapshot) {
-              if (snapshot.data ?? false) {
-                return Center(child: CircularProgressIndicator());
-              }
-              return StreamBuilder<Failure>(
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    Failure failure = snapshot.data!;
-                    return Text(failure.message);
-                  }
-                  if (items == null || items.isEmpty) {
-                    return GreyBar(
-                        'No items are found in your inventory.\nPress \'+\' to add one.');
-                  }
-                  return buildList(items);
-                },
-              );
-            },
+    return StreamBuilder<Failure?>(
+      stream: inventoryViewModel.failureController.stream,
+      builder: (context, snapshot) {
+        if (snapshot.data != null) {
+          return Center(
+            child: MyErrorWidget(
+              failure: snapshot.data!,
+              onRetry: inventoryViewModel.getAllInventoryItems,
+            ),
           );
-        });
+        }
+        return StreamBuilder<bool>(
+          stream: inventoryViewModel.isLoadingController.stream,
+          builder: (context, snapshot) {
+            if (snapshot.data ?? false) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return StreamBuilder<List<InventoryItem>>(
+              stream: inventoryViewModel.inventoryItemsListController.stream,
+              builder: (context, snapshot) {
+                List<InventoryItem>? items = snapshot.data;
+                if (items == null || items.isEmpty) {
+                  return GreyBar(
+                      'No items are found in your inventory.\nPress \'+\' to add one.');
+                }
+                return buildList(items);
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    inventoryViewModel.clearFailure();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: inventoryViewModel.start,
+      onRefresh: inventoryViewModel.getAllInventoryItems,
       child: Scaffold(
           floatingActionButton: FloatingActionButton(
             onPressed: () => Navigator.of(context).push(

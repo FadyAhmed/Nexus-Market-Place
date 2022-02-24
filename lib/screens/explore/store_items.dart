@@ -1,5 +1,6 @@
 import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/models/store_item.dart';
@@ -35,17 +36,29 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
   }
 
   @override
+  void dispose() {
+    storeDetailsViewModel.clearFailure();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(widget.storeName),
       ),
-      body: StreamBuilder<Failure>(
+      body: StreamBuilder<Failure?>(
         stream: storeDetailsViewModel.failureController.stream,
         builder: (context, snapshot) {
           if (snapshot.data != null) {
-            return Center(child: Text(snapshot.data!.message));
+            return Center(
+              child: MyErrorWidget(
+                failure: snapshot.data!,
+                onRetry: () => storeDetailsViewModel
+                    .getAllStoreItemsFromParticularStore(widget.storeId),
+              ),
+            );
           }
           return StreamBuilder<bool>(
             stream: storeDetailsViewModel.gettingLoadingController.stream,

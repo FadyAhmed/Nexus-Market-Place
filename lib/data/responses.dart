@@ -1,9 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
-import 'package:ds_market_place/globals.dart' as globals;
+import 'package:ds_market_place/models/transaction.dart';
 
 part 'responses.g.dart';
 
@@ -418,4 +419,170 @@ class PurchaseStoreItemResponse {
   factory PurchaseStoreItemResponse.fromJson(Map<String, Object?> json) =>
       _$PurchaseStoreItemResponseFromJson(json);
   Map<String, dynamic> toJson() => _$PurchaseStoreItemResponseToJson(this);
+}
+
+@JsonSerializable()
+class GetMySoldItemsResponse {
+  bool success;
+  @JsonKey(name: 'transactions')
+  List<SellTransactionResponse> transactionResponses;
+  GetMySoldItemsResponse({
+    required this.success,
+    required this.transactionResponses,
+  });
+
+  factory GetMySoldItemsResponse.fromJson(Map<String, Object?> json) =>
+      _$GetMySoldItemsResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$GetMySoldItemsResponseToJson(this);
+
+  List<Transaction> get transactions =>
+      transactionResponses.map((t) => t.transaction).toList();
+}
+
+@JsonSerializable()
+class SellTransactionResponse {
+  String itemName;
+  double price;
+  int amount;
+  String imageLink;
+  DateTime date;
+  String buyerStoreId;
+  String buyerStoreName;
+  SellTransactionResponse({
+    required this.itemName,
+    required this.price,
+    required this.amount,
+    required this.imageLink,
+    required this.date,
+    required this.buyerStoreId,
+    required this.buyerStoreName,
+  });
+
+  factory SellTransactionResponse.fromJson(Map<String, Object?> json) =>
+      _$SellTransactionResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$SellTransactionResponseToJson(this);
+
+  Transaction get transaction => Transaction(
+        itemName: itemName,
+        price: price,
+        amount: amount,
+        imageLink: imageLink,
+        date: date,
+        sellerStoreId: null,
+        sellerStoreName: null,
+        buyerStoreId: buyerStoreId,
+        buyerStoreName: buyerStoreName,
+      );
+}
+
+@JsonSerializable()
+class PurchaseTransactionResponse {
+  String itemName;
+  double price;
+  int amount;
+  String imageLink;
+  DateTime date;
+  String sellerStoreId;
+  String sellerStoreName;
+  PurchaseTransactionResponse({
+    required this.itemName,
+    required this.price,
+    required this.amount,
+    required this.imageLink,
+    required this.date,
+    required this.sellerStoreId,
+    required this.sellerStoreName,
+  });
+
+  factory PurchaseTransactionResponse.fromJson(Map<String, Object?> json) =>
+      _$PurchaseTransactionResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$PurchaseTransactionResponseToJson(this);
+
+  Transaction get transaction => Transaction(
+        itemName: itemName,
+        price: price,
+        amount: amount,
+        imageLink: imageLink,
+        date: date,
+        sellerStoreId: sellerStoreId,
+        sellerStoreName: sellerStoreName,
+        buyerStoreId: null,
+        buyerStoreName: null,
+      );
+}
+
+@JsonSerializable()
+class TransactionResponse {
+  String itemName;
+  double price;
+  int amount;
+  String imageLink;
+  DateTime date;
+  String sellerStoreId;
+  String sellerStoreName;
+  String buyerStoreId;
+  String buyerStoreName;
+  TransactionResponse({
+    required this.itemName,
+    required this.price,
+    required this.amount,
+    required this.imageLink,
+    required this.date,
+    required this.sellerStoreId,
+    required this.sellerStoreName,
+    required this.buyerStoreId,
+    required this.buyerStoreName,
+  });
+
+  factory TransactionResponse.fromJson(Map<String, Object?> json) =>
+      _$TransactionResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$TransactionResponseToJson(this);
+
+  Transaction get transaction => Transaction(
+        itemName: itemName,
+        price: price,
+        amount: amount,
+        imageLink: imageLink,
+        date: date,
+        sellerStoreId: sellerStoreId,
+        sellerStoreName: sellerStoreName,
+        buyerStoreId: buyerStoreId,
+        buyerStoreName: buyerStoreName,
+      );
+}
+
+@JsonSerializable()
+class GetMyPurchasedItemsResponse {
+  bool success;
+  @JsonKey(name: 'transactions')
+  List<PurchaseTransactionResponse> transactionResponses;
+  GetMyPurchasedItemsResponse({
+    required this.success,
+    required this.transactionResponses,
+  });
+
+  factory GetMyPurchasedItemsResponse.fromJson(Map<String, Object?> json) =>
+      _$GetMyPurchasedItemsResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$GetMyPurchasedItemsResponseToJson(this);
+
+  List<Transaction> get transactions =>
+      transactionResponses.map((t) => t.transaction).toList();
+}
+
+@JsonSerializable()
+class GetAllTransactionsResponse {
+  bool success;
+  @JsonKey(name: 'transactions')
+  List<TransactionResponse> transactionResponses;
+  GetAllTransactionsResponse({
+    required this.success,
+    required this.transactionResponses,
+  });
+
+  factory GetAllTransactionsResponse.fromJson(Map<String, Object?> json) =>
+      _$GetAllTransactionsResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$GetAllTransactionsResponseToJson(this);
+
+  List<Transaction> get transactions =>
+      transactionResponses.map((t) => t.transaction).toList();
 }

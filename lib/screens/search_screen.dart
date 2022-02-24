@@ -1,6 +1,7 @@
 import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
@@ -66,6 +67,12 @@ class _SearchScreenState extends State<SearchScreen> {
     return true;
   }
 
+  @override
+  void dispose() {
+    searchViewModel.clearFailure();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     var storesProvider = Provider.of<StoresProvider>(context);
     return Scaffold(
@@ -117,11 +124,17 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             Container(
-              child: StreamBuilder<Failure>(
+              child: StreamBuilder<Failure?>(
                 stream: searchViewModel.failureController,
                 builder: (context, snapshot) {
                   if (snapshot.data != null) {
-                    return Center(child: Text(snapshot.data!.message));
+                    return Center(
+                      child: MyErrorWidget(
+                        failure: snapshot.data!,
+                        onRetry: () =>
+                            searchViewModel.searchStoreItems(_query.text),
+                      ),
+                    );
                   }
                   return StreamBuilder<bool>(
                     stream: searchViewModel.gettingLoadingController,

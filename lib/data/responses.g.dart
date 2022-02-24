@@ -356,3 +356,128 @@ Map<String, dynamic> _$PurchaseStoreItemResponseToJson(
       'status': instance.status,
       'id': instance.id,
     };
+
+GetMySoldItemsResponse _$GetMySoldItemsResponseFromJson(
+        Map<String, dynamic> json) =>
+    GetMySoldItemsResponse(
+      success: json['success'] as bool,
+      transactionResponses: (json['transactions'] as List<dynamic>)
+          .map((e) =>
+              SellTransactionResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$GetMySoldItemsResponseToJson(
+        GetMySoldItemsResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'transactions': instance.transactionResponses,
+    };
+
+SellTransactionResponse _$SellTransactionResponseFromJson(
+        Map<String, dynamic> json) =>
+    SellTransactionResponse(
+      itemName: json['itemName'] as String,
+      price: (json['price'] as num).toDouble(),
+      amount: json['amount'] as int,
+      imageLink: json['imageLink'] as String,
+      date: DateTime.parse(json['date'] as String),
+      buyerStoreId: json['buyerStoreId'] as String,
+      buyerStoreName: json['buyerStoreName'] as String,
+    );
+
+Map<String, dynamic> _$SellTransactionResponseToJson(
+        SellTransactionResponse instance) =>
+    <String, dynamic>{
+      'itemName': instance.itemName,
+      'price': instance.price,
+      'amount': instance.amount,
+      'imageLink': instance.imageLink,
+      'date': instance.date.toIso8601String(),
+      'buyerStoreId': instance.buyerStoreId,
+      'buyerStoreName': instance.buyerStoreName,
+    };
+
+PurchaseTransactionResponse _$PurchaseTransactionResponseFromJson(
+        Map<String, dynamic> json) =>
+    PurchaseTransactionResponse(
+      itemName: json['itemName'] as String,
+      price: (json['price'] as num).toDouble(),
+      amount: json['amount'] as int,
+      imageLink: json['imageLink'] as String,
+      date: DateTime.parse(json['date'] as String),
+      sellerStoreId: json['sellerStoreId'] as String,
+      sellerStoreName: json['sellerStoreName'] as String,
+    );
+
+Map<String, dynamic> _$PurchaseTransactionResponseToJson(
+        PurchaseTransactionResponse instance) =>
+    <String, dynamic>{
+      'itemName': instance.itemName,
+      'price': instance.price,
+      'amount': instance.amount,
+      'imageLink': instance.imageLink,
+      'date': instance.date.toIso8601String(),
+      'sellerStoreId': instance.sellerStoreId,
+      'sellerStoreName': instance.sellerStoreName,
+    };
+
+TransactionResponse _$TransactionResponseFromJson(Map<String, dynamic> json) =>
+    TransactionResponse(
+      itemName: json['itemName'] as String,
+      price: (json['price'] as num).toDouble(),
+      amount: json['amount'] as int,
+      imageLink: json['imageLink'] as String,
+      date: DateTime.parse(json['date'] as String),
+      sellerStoreId: json['sellerStoreId'] as String,
+      sellerStoreName: json['sellerStoreName'] as String,
+      buyerStoreId: json['buyerStoreId'] as String,
+      buyerStoreName: json['buyerStoreName'] as String,
+    );
+
+Map<String, dynamic> _$TransactionResponseToJson(
+        TransactionResponse instance) =>
+    <String, dynamic>{
+      'itemName': instance.itemName,
+      'price': instance.price,
+      'amount': instance.amount,
+      'imageLink': instance.imageLink,
+      'date': instance.date.toIso8601String(),
+      'sellerStoreId': instance.sellerStoreId,
+      'sellerStoreName': instance.sellerStoreName,
+      'buyerStoreId': instance.buyerStoreId,
+      'buyerStoreName': instance.buyerStoreName,
+    };
+
+GetMyPurchasedItemsResponse _$GetMyPurchasedItemsResponseFromJson(
+        Map<String, dynamic> json) =>
+    GetMyPurchasedItemsResponse(
+      success: json['success'] as bool,
+      transactionResponses: (json['transactions'] as List<dynamic>)
+          .map((e) =>
+              PurchaseTransactionResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$GetMyPurchasedItemsResponseToJson(
+        GetMyPurchasedItemsResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'transactions': instance.transactionResponses,
+    };
+
+GetAllTransactionsResponse _$GetAllTransactionsResponseFromJson(
+        Map<String, dynamic> json) =>
+    GetAllTransactionsResponse(
+      success: json['success'] as bool,
+      transactionResponses: (json['transactions'] as List<dynamic>)
+          .map((e) => TransactionResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$GetAllTransactionsResponseToJson(
+        GetAllTransactionsResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'transactions': instance.transactionResponses,
+    };

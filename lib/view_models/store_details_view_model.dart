@@ -8,12 +8,13 @@ import 'package:rxdart/rxdart.dart';
 class StoreDetailsViewModel {
   BehaviorSubject<bool> gettingLoadingController = BehaviorSubject();
   // BehaviorSubject<bool> removingLoadingController = BehaviorSubject();
-  BehaviorSubject<Failure> failureController = BehaviorSubject();
+  BehaviorSubject<Failure?> failureController = BehaviorSubject();
   BehaviorSubject<List<StoreItem>> storeItemsController = BehaviorSubject();
 
   List<StoreItem>? storeItems;
 
   void getAllStoreItemsFromParticularStore(String storeId) async {
+    clearFailure();
     gettingLoadingController.add(true);
     final response = await GetIt.I<Repository>()
         .getAllStoreItemsFromParticularStore(storeId);
@@ -39,6 +40,10 @@ class StoreDetailsViewModel {
       storeItems!.remove(item);
     }
     storeItemsController.add(storeItems!);
+  }
+
+  void clearFailure() {
+    failureController.add(null);
   }
 
   // void removeStoreItemFromMyStore(String id) async {

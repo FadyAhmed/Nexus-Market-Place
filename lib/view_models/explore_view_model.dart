@@ -7,12 +7,13 @@ import 'package:rxdart/rxdart.dart';
 
 class ExploreViewModel {
   BehaviorSubject<bool> gettingLoadingController = BehaviorSubject();
-  BehaviorSubject<Failure> failureController = BehaviorSubject();
+  BehaviorSubject<Failure?> failureController = BehaviorSubject();
   BehaviorSubject<List<StoreItem>> storeItemsController = BehaviorSubject();
 
   List<StoreItem>? storeItems;
 
   Future<void> getAllStoreItemsFromAllStores() async {
+    failureController.add(null);
     gettingLoadingController.add(true);
     final response =
         await GetIt.I<Repository>().getAllStoreItemsFromAllStores();
@@ -36,5 +37,9 @@ class ExploreViewModel {
       storeItems!.remove(item);
     }
     storeItemsController.add(storeItems!);
+  }
+
+  void clearFailure() {
+    failureController.add(null);
   }
 }

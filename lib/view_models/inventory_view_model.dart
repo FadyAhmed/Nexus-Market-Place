@@ -12,20 +12,21 @@ import 'package:rxdart/rxdart.dart';
 class InventoryViewModel {
   Repository repository = GetIt.instance();
 
-  BehaviorSubject<bool> isLoadingController = BehaviorSubject<bool>();
-  BehaviorSubject<Failure> failureStreamController = BehaviorSubject<Failure>();
+  BehaviorSubject<bool> isLoadingController = BehaviorSubject();
+  BehaviorSubject<Failure?> failureController = BehaviorSubject();
   BehaviorSubject<List<InventoryItem>> inventoryItemsListController =
-      BehaviorSubject<List<InventoryItem>>();
+      BehaviorSubject();
 
   List<InventoryItem>? inventoryItems;
 
-  Future<void> start() async {
+  Future<void> getAllInventoryItems() async {
+    clearFailure();
     isLoadingController.add(true);
     final response = await repository.getAllInventoryItems();
     response.fold(
       (failure) {
         isLoadingController.add(false);
-        failureStreamController.add(failure);
+        failureController.add(failure);
       },
       (List<InventoryItem> items) {
         inventoryItems = items;
@@ -40,7 +41,7 @@ class InventoryViewModel {
     final response = await repository.removeInventoryItem(id);
     response.fold((failure) {
       isLoadingController.add(false);
-      failureStreamController.add(failure);
+      failureController.add(failure);
     }, (_) {
       inventoryItems!.removeWhere((item) => item.id == id);
       inventoryItemsListController.add(inventoryItems!);
@@ -51,7 +52,7 @@ class InventoryViewModel {
   Future<void> edit(String id, EditInventoryItemRequest request) async {
     final response = await repository.editInventoryItem(id, request);
     response.fold((failure) {
-      failureStreamController.add(failure);
+      failureController.add(failure);
     }, (_) {
       editLocalItem(id, request);
     });
@@ -76,8 +77,12 @@ class InventoryViewModel {
   void addItemToLocalList(InventoryItem item) {
     if (inventoryItems == null) {
       return; // could be invoked before fetching items
-    } 
+    }
     inventoryItems!.add(item);
     inventoryItemsListController.add(inventoryItems!);
+  }
+
+  void clearFailure() {
+    failureController.add(null);
   }
 }
