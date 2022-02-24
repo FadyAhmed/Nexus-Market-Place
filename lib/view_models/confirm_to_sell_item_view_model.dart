@@ -7,7 +7,7 @@ import 'package:rxdart/rxdart.dart';
 
 class ConfirmToSellItemViewModel {
   BehaviorSubject<bool> confirmingLoadingController = BehaviorSubject();
-  BehaviorSubject<Failure> failureController = BehaviorSubject();
+  BehaviorSubject<Failure?> failureController = BehaviorSubject();
   BehaviorSubject<bool> isConfirmedController = BehaviorSubject();
 
   void dispose() {
@@ -24,10 +24,12 @@ class ConfirmToSellItemViewModel {
     response.fold((failure) {
       confirmingLoadingController.add(false);
       failureController.add(failure);
+      failureController.add(null); //clearing the failure
     }, (item) {
       GetIt.I<StoreViewModel>().addLocalItem(item);
       confirmingLoadingController.add(false);
       isConfirmedController.add(true);
+      isConfirmedController.add(false); //clearing the flag
     });
   }
 }

@@ -61,7 +61,9 @@ class _ConfirmItemToSellScreenState extends State<ConfirmItemToSellScreen> {
 
     failureSub =
         confirmToSellItemViewModel.failureController.stream.listen((failure) {
-      showMessageDialogue(context, failure.message);
+      if (failure != null) {
+        showMessageDialogue(context, failure.message);
+      }
     });
   }
 

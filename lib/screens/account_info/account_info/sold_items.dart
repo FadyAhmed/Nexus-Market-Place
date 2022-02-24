@@ -1,11 +1,15 @@
 import 'package:ds_market_place/components/UI/detailed_item_card.dart';
 import 'package:ds_market_place/components/UI/grey_bar.dart';
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/transaction.dart';
 import 'package:ds_market_place/providers/transactions_provider.dart';
+import 'package:ds_market_place/view_models/account_info_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -17,49 +21,77 @@ class SoldItemsScreen extends StatefulWidget {
 }
 
 class _SoldItemsScreenState extends State<SoldItemsScreen> {
-  Future<void> fetchSoldItems() async {
-    try {
-      await Provider.of<TransactionsProvider>(context, listen: false)
-          .getSoldItems(notifyWhenLoading: false);
-    } on ServerException catch (e) {
-      showMessageDialogue(context, e.message);
-    }
-  }
+  AccountInfoViewModel accountInfoViewModel = GetIt.I();
 
   @override
   void initState() {
     super.initState();
-    fetchSoldItems();
+    accountInfoViewModel.getMySoldItems();
+  }
+
+  @override
+  void dispose() {
+    accountInfoViewModel.clearFailure();
+    super.dispose();
+  }
+
+  Widget buildList(List<Transaction> transactions) {
+    return ListView.builder(
+      itemCount: transactions.length,
+      itemBuilder: (context, index) {
+        Transaction transaction = transactions[index];
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: DetailedItemCard(
+            amount: transaction.amount.toString(),
+            itemName: transaction.itemName,
+            price: transaction.price,
+            imageLink: transaction.imageLink,
+            type: "SOLD",
+            name: transaction.buyerStoreName!,
+            date: DateFormat('dd-MM-yyyy').format(transaction.date),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    var transactionsProvider = Provider.of<TransactionsProvider>(context);
     return RefreshIndicator(
-      onRefresh: fetchSoldItems,
+      onRefresh: accountInfoViewModel.getMySoldItems,
       child: Scaffold(
-        body: transactionsProvider.loadingStatus == LoadingStatus.loading
-            ? Center(child: CircularProgressIndicator())
-            : transactionsProvider.soldItems!.length == 0
-                ? GreyBar('You haven\'t sold any item yet.')
-                : ListView.builder(
-                itemCount: transactionsProvider.soldItems!.length,
-                itemBuilder: (context, index) {
-                  Transaction transaction =
-                      transactionsProvider.soldItems![index];
-                  return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: DetailedItemCard(
-                        amount: transaction.amount.toString(),
-                        itemName: transaction.itemName,
-                        price: transaction.price,
-                        imageLink: transaction.imageLink,
-                        type: "SOLD",
-                        name: transaction.buyerStoreName!,
-                        date: DateFormat('dd-MM-yyyy').format(transaction.date),
-                      ));
-                },
-              ),
+        body: StreamBuilder<Failure?>(
+          stream: accountInfoViewModel.failureController.stream,
+          builder: (context, snapshot) {
+            if (snapshot.data != null) {
+              return Center(
+                child: MyErrorWidget(
+                  failure: snapshot.data!,
+                  onRetry: accountInfoViewModel.getMySoldItems,
+                ),
+              );
+            }
+            return StreamBuilder<bool>(
+              stream: accountInfoViewModel.gettingLoadingController.stream,
+              builder: (context, snapshot) {
+                if (snapshot.data ?? false) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return StreamBuilder<List<Transaction>>(
+                  stream: accountInfoViewModel.transactionsController.stream,
+                  builder: (context, snapshot) {
+                    List<Transaction>? transactions = snapshot.data;
+                    if (transactions == null || transactions.isEmpty) {
+                      return GreyBar('You haven\'t sold any item yet.');
+                    }
+                    return buildList(transactions);
+                  },
+                );
+              },
+            );
+          },
+        ),
       ),
     );
   }

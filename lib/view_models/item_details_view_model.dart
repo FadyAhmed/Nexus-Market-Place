@@ -3,6 +3,7 @@ import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
+import 'package:ds_market_place/view_models/account_info_view_model.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
 import 'package:ds_market_place/view_models/store_view_model.dart';
 import 'package:get_it/get_it.dart';
@@ -85,6 +86,7 @@ class ItemDetailsViewModel {
       isDeletedController.add(false); // clear isDeleted flag
       removingLoadingController.add(false);
       GetIt.I<StoreViewModel>().removeLocalItem(id);
+      GetIt.I<AccountInfoViewModel>().removeLocalItem(id);
     });
   }
 }

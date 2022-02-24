@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/domain/repository.dart';
+import 'package:ds_market_place/view_models/account_info_view_model.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
 import 'package:ds_market_place/view_models/item_details_view_model.dart';
 import 'package:ds_market_place/view_models/store_view_model.dart';
@@ -48,6 +49,7 @@ class EditItemViewModel {
     }, (_) {
       GetIt.I<ItemDetailsViewModel>().editLocalStoreItem(request);
       GetIt.I<StoreViewModel>().editLocalItem(id, request);
+      GetIt.I<AccountInfoViewModel>().editLocalItem(id, request);
       editingLoadingController.add(false);
       isEditedController.add(true);
       isEditedController.add(false); // clear isEdited flag

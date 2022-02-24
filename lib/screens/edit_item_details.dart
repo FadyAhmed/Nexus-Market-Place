@@ -15,7 +15,7 @@ import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
-import 'package:ds_market_place/view_models/edit_inventory_item_view_model.dart';
+import 'package:ds_market_place/view_models/edit_item_view_model.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
