@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:ds_market_place/components/UI/rounded_button.dart';
@@ -5,17 +6,21 @@ import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
-import 'package:ds_market_place/models/add_balance_request.dart';
 import 'package:ds_market_place/models/profile.dart';
 import 'package:ds_market_place/providers/users_provider.dart';
+import 'package:ds_market_place/view_models/wallet_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 enum TransactionType { withdraw, deposit }
 
 class WalletScreen extends StatefulWidget {
+  const WalletScreen({Key? key}) : super(key: key);
+
   @override
   _WalletScreenState createState() => _WalletScreenState();
 }
@@ -23,6 +28,11 @@ class WalletScreen extends StatefulWidget {
 final _formKey = GlobalKey<FormState>();
 
 class _WalletScreenState extends State<WalletScreen> {
+  WalletViewModel walletViewModel = GetIt.I();
+
+  late StreamSubscription failureSub;
+  late StreamSubscription snackBarSub;
+
   TextEditingController _amountController = TextEditingController();
   TextEditingController _cardNumberController = TextEditingController();
   TextEditingController _cvvNumberController = TextEditingController();
@@ -32,27 +42,50 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UsersProvider>(context, listen: false)
-        .getMyProfile(notifyWhenLoaded: false);
+    walletViewModel.getBalance();
+    failureSub = walletViewModel.failureController.listen((failure) {
+      if (failure != null) {
+        showMessageDialogue(context, failure.message);
+      }
+    });
+    failureSub = walletViewModel.snackBarController.listen((isDeposit) {
+      if (isDeposit != null) {
+        if (isDeposit) {
+          showSnackbar(
+              context, Text("${_amountController.text} is deposited."));
+        } else {
+          showSnackbar(
+              context, Text("${_amountController.text} is withdrawn."));
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    walletViewModel.clearFailure();
+    walletViewModel.clearSnackBar();
+    failureSub.cancel();
+    snackBarSub.cancel();
+    super.dispose();
   }
 
   void submitRequest() async {
     if (_formKey.currentState!.validate()) {
-      var userProvider = Provider.of<UsersProvider>(context, listen: false);
-      var addBalanceRequest = AddBalanceRequest(
-        cardNum: _cardNumberController.text,
-        amount: double.parse(_amountController.text),
-        cvv: _cvvNumberController.text,
-      );
-      try {
-        if (_transactionType == TransactionType.deposit)
-          await userProvider.addBalance(addBalanceRequest);
-        else
-          await userProvider.removeBalance(addBalanceRequest);
-        showSnackbar(context, Text("Transaction done"));
-      } on ServerException catch (e) {
-        showMessageDialogue(context, e.message)
-            .then((_) => Navigator.of(context).pop());
+      if (_transactionType == TransactionType.deposit) {
+        AddBalanceRequest addBalanceRequest = AddBalanceRequest(
+          cardNum: _cardNumberController.text,
+          amount: double.parse(_amountController.text),
+          cvv: _cvvNumberController.text,
+        );
+        await walletViewModel.addBalance(addBalanceRequest);
+      } else {
+        RemoveBalanceRequest removeBalanceRequest = RemoveBalanceRequest(
+          cardNum: _cardNumberController.text,
+          amount: double.parse(_amountController.text),
+          cvv: _cvvNumberController.text,
+        );
+        await walletViewModel.removeBalance(removeBalanceRequest);
       }
     }
   }
@@ -74,7 +107,7 @@ class _WalletScreenState extends State<WalletScreen> {
             } else if (double.parse(s) <= 0) {
               return 'invalid amount';
             } else if ((_transactionType == TransactionType.withdraw &&
-                userProvider.profile!.balance - double.parse(s) < 0)) {
+                walletViewModel.balance! - double.parse(s) < 0)) {
               return 'insufficient balance';
             } else {
               return null;
@@ -117,12 +150,27 @@ class _WalletScreenState extends State<WalletScreen> {
           children: [
             const SizedBox(height: 30),
             Center(
-              child: userProvider.profileLoadingStatus == LoadingStatus.loading
-                  ? CircularProgressIndicator()
-                  : Text(
-                      "Balance:   \$${userProvider.profile!.balance.toStringAsFixed(2)}",
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
+              child: StreamBuilder<bool>(
+                stream: walletViewModel.profileLoadingController,
+                builder: (context, snapshot) {
+                  if (snapshot.data ?? false) {
+                    return CircularProgressIndicator();
+                  }
+                  return StreamBuilder<double>(
+                    stream: walletViewModel.balanceController,
+                    builder: (context, snapshot) {
+                      if (snapshot.data == null) {
+                        return Container();
+                      }
+                      double balance = snapshot.data!;
+                      return Text(
+                        "Balance:   \$${balance.toStringAsFixed(2)}",
+                        style: Theme.of(context).textTheme.headline5,
+                      );
+                    },
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 30),
             Column(
@@ -196,9 +244,18 @@ class _WalletScreenState extends State<WalletScreen> {
                       child: (userProvider.balanceLoadingStatus ==
                               LoadingStatus.loading)
                           ? Center(child: CircularProgressIndicator())
-                          : RoundedButton(
-                              onPressed: submitRequest,
-                              title: 'Confirm',
+                          : StreamBuilder<bool>(
+                              stream: walletViewModel.balanceLoadingController,
+                              builder: (context, snapshot) {
+                                if (snapshot.data ?? false) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
+                                return RoundedButton(
+                                  onPressed: submitRequest,
+                                  title: 'Confirm',
+                                );
+                              },
                             ),
                     ),
                   ],
