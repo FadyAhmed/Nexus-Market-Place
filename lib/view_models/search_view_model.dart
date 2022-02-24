@@ -1,21 +1,19 @@
-import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ExploreViewModel {
+class SearchViewModel {
   BehaviorSubject<bool> gettingLoadingController = BehaviorSubject();
   BehaviorSubject<Failure> failureController = BehaviorSubject();
   BehaviorSubject<List<StoreItem>> storeItemsController = BehaviorSubject();
 
   List<StoreItem>? storeItems;
 
-  Future<void> getAllStoreItemsFromAllStores() async {
+  Future<void> searchStoreItems(String name) async {
     gettingLoadingController.add(true);
-    final response =
-        await GetIt.I<Repository>().getAllStoreItemsFromAllStores();
+    final response = await GetIt.I<Repository>().searchStoreItems(name);
     response.fold(
       (failure) {
         gettingLoadingController.add(false);
@@ -30,6 +28,8 @@ class ExploreViewModel {
   }
 
   void decreaseAmount(String id, int amount) {
+    if (storeItems == null) return;
+    if (!storeItems!.any((i) => i.id == id)) return;
     StoreItem item = storeItems!.firstWhere((i) => i.id == id);
     item.amount -= amount;
     if (item.amount == 0) {

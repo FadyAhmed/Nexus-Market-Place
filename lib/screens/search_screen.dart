@@ -2,24 +2,32 @@ import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/account_info/account_info/purshaced_items.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:ds_market_place/screens/explore/purchase_item.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
+import 'package:ds_market_place/view_models/search_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({Key? key}) : super(key: key);
+
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  TextEditingController _query = TextEditingController();
+  SearchViewModel searchViewModel = GetIt.I();
+
+  final TextEditingController _query = TextEditingController();
   String? _errorText;
 
   // @override
@@ -31,14 +39,8 @@ class _SearchScreenState extends State<SearchScreen> {
   // }
 
   void submitSearch(String val) async {
-    try {
-      if (_validator(val)) {
-        Provider.of<StoresProvider>(context, listen: false).clearSearchItems();
-        await Provider.of<StoresProvider>(context, listen: false)
-            .searchAllStores(val);
-      }
-    } on ServerException catch (e) {
-      showMessageDialogue(context, e.message);
+    if (_validator(val)) {
+      searchViewModel.searchStoreItems(val);
     }
   }
 
@@ -115,74 +117,97 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             Container(
-              child: storesProvider.loadingStatus == LoadingStatus.loading
-                  ? Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Center(child: CircularProgressIndicator()),
-                    )
-                  : storesProvider.searchItems == null
-                      ? GreyBar('You can search by item name')
-                      : storesProvider.searchItems!.length == 0
-                          ? GreyBar("No items found")
-                          : ListView.builder(
-                              padding: const EdgeInsets.all(5.0),
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: storesProvider.searchItems!.length,
-                              itemBuilder: (context, index) {
-                                var item = storesProvider.searchItems![index];
-                                return Card(
-                                  margin: const EdgeInsets.only(
-                                      bottom: 8, left: 8, right: 8),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(0.0),
-                                    child: Column(children: [
-                                      ItemCard(
-                                        // menuItems: ["Edit", "Remove"],
-                                        sellerName: item.storeName,
-                                        showActions: false,
-                                        itemName: item.name,
-                                        amount: item.amount.toString(),
-                                        price: item.price,
-                                        imageLink: item.imageLink,
-                                        onPressed: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PurchaseItemScreen(item),
-                                            ),
-                                          );
-                                        },
-                                        onSelectMenuItem: (choice) {
-                                          // if (choice == "Edit") {
-                                          //   Navigator.of(context)
-                                          //       .push(MaterialPageRoute(
-                                          //     builder: (context) =>
-                                          //         EditItemDetails(
-                                          //       inventoryItem: InventoryItem(
-                                          //         name: 'name',
-                                          //         amount: 1,
-                                          //         price: 1,
-                                          //         description: 'description',
-                                          //         imageLink: 'imageLink',
-                                          //       ),
-                                          //       submitButtonText: "Edit",
-                                          //       onSubmit: () => {
-                                          //         //TODO: add edit habdler
-                                          //         Navigator.of(context).pop()
-                                          //       },
-                                          //     ),
-                                          //   ));
-                                          // } else {
-                                          //   //TODO: remove handler
-                                          // }
-                                        },
-                                      ),
-                                    ]),
-                                  ),
-                                );
-                              },
-                            ),
+              child: StreamBuilder<Failure>(
+                stream: searchViewModel.failureController,
+                builder: (context, snapshot) {
+                  if (snapshot.data != null) {
+                    return Center(child: Text(snapshot.data!.message));
+                  }
+                  return StreamBuilder<bool>(
+                    stream: searchViewModel.gettingLoadingController,
+                    builder: (context, snapshot) {
+                      if (snapshot.data ?? false) {
+                        return Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+                      return StreamBuilder<List<StoreItem>>(
+                        stream: searchViewModel.storeItemsController,
+                        builder: (context, snapshot) {
+                          List<StoreItem>? items = snapshot.data;
+                          if (items == null) {
+                            return GreyBar('You can search by item name');
+                          }
+                          if (items.isEmpty) {
+                            return GreyBar("No items found");
+                          }
+
+                          return ListView.builder(
+                            padding: const EdgeInsets.all(5.0),
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: items.length,
+                            itemBuilder: (context, index) {
+                              var item = items[index];
+                              return Card(
+                                margin: const EdgeInsets.only(
+                                    bottom: 8, left: 8, right: 8),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(0.0),
+                                  child: Column(children: [
+                                    ItemCard(
+                                      // menuItems: ["Edit", "Remove"],
+                                      sellerName: item.storeName,
+                                      showActions: false,
+                                      itemName: item.name,
+                                      amount: item.amount.toString(),
+                                      price: item.price,
+                                      imageLink: item.imageLink,
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                PurchaseItemScreen(item),
+                                          ),
+                                        );
+                                      },
+                                      onSelectMenuItem: (choice) {
+                                        // if (choice == "Edit") {
+                                        //   Navigator.of(context)
+                                        //       .push(MaterialPageRoute(
+                                        //     builder: (context) =>
+                                        //         EditItemDetails(
+                                        //       inventoryItem: InventoryItem(
+                                        //         name: 'name',
+                                        //         amount: 1,
+                                        //         price: 1,
+                                        //         description: 'description',
+                                        //         imageLink: 'imageLink',
+                                        //       ),
+                                        //       submitButtonText: "Edit",
+                                        //       onSubmit: () => {
+                                        //         //TODO: add edit habdler
+                                        //         Navigator.of(context).pop()
+                                        //       },
+                                        //     ),
+                                        //   ));
+                                        // } else {
+                                        //   //TODO: remove handler
+                                        // }
+                                      },
+                                    ),
+                                  ]),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),

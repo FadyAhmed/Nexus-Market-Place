@@ -5,6 +5,7 @@ import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/view_models/explore_view_model.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
+import 'package:ds_market_place/view_models/search_view_model.dart';
 import 'package:ds_market_place/view_models/store_details_view_model.dart';
 import 'package:ds_market_place/view_models/store_view_model.dart';
 import 'package:get_it/get_it.dart';
@@ -44,6 +45,7 @@ class PurchaseViewModel {
       purchasingLoadingController.add(false);
 
       GetIt.I<ExploreViewModel>().decreaseAmount(id, request.amount);
+      GetIt.I<SearchViewModel>().decreaseAmount(id, request.amount);
       GetIt.I<StoreDetailsViewModel>().decreaseAmount(id, request.amount);
     });
   }
