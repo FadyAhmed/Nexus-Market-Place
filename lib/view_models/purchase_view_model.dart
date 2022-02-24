@@ -5,6 +5,7 @@ import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/view_models/explore_view_model.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
+import 'package:ds_market_place/view_models/store_details_view_model.dart';
 import 'package:ds_market_place/view_models/store_view_model.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
@@ -12,21 +13,21 @@ import 'package:rxdart/rxdart.dart';
 class PurchaseViewModel {
   StoreItem? storeItem;
 
-  BehaviorSubject<Object> storeItemController = BehaviorSubject();
+  // PurchaseViewModel mustn't hold any data as it would be generated using
+  // a factory in the GEtIt dependency injection
+  // it should depend on the data from the previous screens only
+
+  // BehaviorSubject<StoreItem> storeItemController = BehaviorSubject();
+  
   BehaviorSubject<bool> purchasingLoadingController = BehaviorSubject();
   BehaviorSubject<bool> addingLoadingController = BehaviorSubject();
   BehaviorSubject<Failure?> failureController = BehaviorSubject();
   BehaviorSubject<bool> isPurchasedController = BehaviorSubject();
   BehaviorSubject<bool> isAddedController = BehaviorSubject();
 
-  void start(StoreItem item) {
-    storeItem = item;
-    storeItemController.add(storeItem!);
-  }
 
   void dispose() {
     failureController.close();
-    storeItemController.close();
     purchasingLoadingController.close();
     isPurchasedController.close();
   }
@@ -43,6 +44,7 @@ class PurchaseViewModel {
       purchasingLoadingController.add(false);
 
       GetIt.I<ExploreViewModel>().decreaseAmount(id, request.amount);
+      GetIt.I<StoreDetailsViewModel>().decreaseAmount(id, request.amount);
     });
   }
 

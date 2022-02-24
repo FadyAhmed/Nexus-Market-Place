@@ -1,12 +1,16 @@
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:ds_market_place/screens/explore/purchase_item.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
 import 'package:ds_market_place/screens/store/select_item_to_sell.dart';
+import 'package:ds_market_place/view_models/store_details_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class StoreDetailsScreen extends StatefulWidget {
@@ -22,43 +26,70 @@ class StoreDetailsScreen extends StatefulWidget {
 }
 
 class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
+  StoreDetailsViewModel storeDetailsViewModel = GetIt.I();
+
   @override
   void initState() {
     super.initState();
-    Provider.of<StoresProvider>(context, listen: false)
-        .getAllItemsOfAParticularStore(widget.storeId,
-            notifyWhenLoading: false);
+    storeDetailsViewModel.getAllStoreItemsFromParticularStore(widget.storeId);
   }
 
   @override
   Widget build(BuildContext context) {
-    var storesProvider = Provider.of<StoresProvider>(context);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(widget.storeName),
       ),
-      body: storesProvider.loadingStatus == LoadingStatus.loading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: storesProvider.storeItems!.length,
-              itemBuilder: (context, index) {
-                StoreItem item = storesProvider.storeItems![index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ItemCard(
-                      showActions: false,
-                      itemName: item.name,
-                      amount: item.amount.toString(),
-                      price: item.price,
-                      imageLink: item.imageLink,
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => PurchaseItemScreen(item)));
-                      }),
-                );
-              },
-            ),
+      body: StreamBuilder<Failure>(
+        stream: storeDetailsViewModel.failureController.stream,
+        builder: (context, snapshot) {
+          if (snapshot.data != null) {
+            return Center(child: Text(snapshot.data!.message));
+          }
+          return StreamBuilder<bool>(
+            stream: storeDetailsViewModel.gettingLoadingController.stream,
+            builder: (context, snapshot) {
+              if (snapshot.data ?? false) {
+                return Center(child: CircularProgressIndicator());
+              }
+              return StreamBuilder<List<StoreItem>>(
+                stream: storeDetailsViewModel.storeItemsController.stream,
+                builder: (context, snapshot) {
+                  List<StoreItem>? items = snapshot.data;
+                  if (items == null || items.isEmpty) {
+                    return GreyBar(
+                        'No items are found in your store.\nPress \'+\' to add one.');
+                  }
+                  return ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      StoreItem item = items[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ItemCard(
+                          showActions: false,
+                          itemName: item.name,
+                          amount: item.amount.toString(),
+                          price: item.price,
+                          imageLink: item.imageLink,
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => PurchaseItemScreen(item),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }

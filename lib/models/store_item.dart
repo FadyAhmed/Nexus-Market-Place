@@ -1,5 +1,7 @@
-import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'package:ds_market_place/models/inventory_item.dart';
+
 import '../constants/enums.dart';
 
 part 'store_item.g.dart';
@@ -25,7 +27,7 @@ class StoreItem {
     required this.amount,
     required this.imageLink,
     required this.description,
-    required this.state,
+    this.state,
     required this.storeId,
     required this.storeName,
   });
@@ -48,5 +50,29 @@ class StoreItem {
   @override
   String toString() {
     return toJson().toString();
+  }
+
+  
+
+  StoreItem copyWith({
+    String? id,
+    String? name,
+    double? price,
+    int? amount,
+    String? imageLink,
+    String? description,
+    String? storeId,
+    String? storeName,
+  }) {
+    return StoreItem(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      price: price ?? this.price,
+      amount: amount ?? this.amount,
+      imageLink: imageLink ?? this.imageLink,
+      description: description ?? this.description,
+      storeId: storeId ?? this.storeId,
+      storeName: storeName ?? this.storeName,
+    );
   }
 }

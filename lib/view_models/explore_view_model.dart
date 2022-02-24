@@ -59,5 +59,6 @@ class ExploreViewModel {
     if (item.amount == 0) {
       storeItems!.remove(item);
     }
+    storeItemsController.add(storeItems!);
   }
 }

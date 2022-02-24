@@ -14,7 +14,9 @@ import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/explore/store_items.dart';
+import 'package:ds_market_place/view_models/explore_view_model.dart';
 import 'package:ds_market_place/view_models/purchase_view_model.dart';
+import 'package:ds_market_place/view_models/store_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -60,16 +62,15 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
   @override
   void initState() {
     super.initState();
-    purchaseViewModel.start(widget.item);
     isPurchasedSub =
         purchaseViewModel.isPurchasedController.listen((isPurchased) {
-      if (isPurchased) {
+      if (isPurchased && (ModalRoute.of(context)?.isCurrent ?? false)) {
         showSnackbar(context, Text("Item is purchased succesfully"));
         Navigator.of(context).pop();
       }
     });
-    isAddedSub = purchaseViewModel.isPurchasedController.listen((isAdded) {
-      if (isAdded) {
+    isAddedSub = purchaseViewModel.isAddedController.listen((isAdded) {
+      if (isAdded && (ModalRoute.of(context)?.isCurrent ?? false)) {
         showSnackbar(context, Text("Item added to your store succesfully"));
         Navigator.of(context).pop();
       }
@@ -90,29 +91,7 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // var storesProvider = Provider.of<StoresProvider>(context);
-    // late StoreItem item;
-    // if (storesProvider.allItems != null &&
-    //     storesProvider.allItems!.any((it) => it.id == widget.item.id)) {
-    //   item = storesProvider.allItems!.firstWhere(
-    //     (item) => item.id == widget.item.id,
-    //   );
-    // } else if (storesProvider.storeItems != null &&
-    //     storesProvider.storeItems!.any((it) => it.id == widget.item.id)) {
-    //   item = storesProvider.storeItems!.firstWhere(
-    //     (item) => item.id == widget.item.id,
-    //   );
-    // } else if (storesProvider.searchItems != null &&
-    //     storesProvider.searchItems!.any((it) => it.id == widget.item.id)) {
-    //   item = storesProvider.searchItems!.firstWhere(
-    //     (item) => item.id == widget.item.id,
-    //   );
-    // } else {
-    //   // for the case if the item was deleted from all lists
-    //   // this happens when purchased amount == existing amount
-    //   item = widget.item;
-    // }
-    StoreItem item = purchaseViewModel.storeItem!;
+    StoreItem item = widget.item;
     return Scaffold(
       appBar: AppBar(
         title: Text(item.name),
@@ -134,44 +113,52 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
             ),
           ),
           const SizedBox(height: 40),
-          Table(
-            children: [
-              tableRow("Name: ", item.name, context),
-              tableRow("", "", context),
-              tableRow("Description: ", item.description, context),
-              tableRow("", "", context),
-              TableRow(children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 35.0),
-                  child: Text("Seller: ",
-                      style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontSize: 18,
-                          )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (ctx) => StoreDetailsScreen(
-                                storeName: item.storeName,
-                                storeId: item.storeId,
-                              )));
-                    },
-                    child: Text(item.storeName,
-                        style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0xFF487E89),
-                            fontWeight: FontWeight.w700)),
-                  ),
-                ),
-              ]),
-              tableRow("", "", context),
-              tableRow("Available amount: ", item.amount.toString(), context),
-              tableRow("", "", context),
-              tableRow(
-                  "Price: ", "\$${item.price.toStringAsFixed(2)}", context),
-            ],
+          StreamBuilder<List<StoreItem>>(
+            stream: GetIt.I<ExploreViewModel>().storeItemsController,
+            builder: (context, snapshot) {
+              if (snapshot.data == null) return Container();
+              int amount =
+                  snapshot.data!.firstWhere((i) => i.id == item.id).amount;
+              return Table(
+                children: [
+                  tableRow("Name: ", item.name, context),
+                  tableRow("", "", context),
+                  tableRow("Description: ", item.description, context),
+                  tableRow("", "", context),
+                  TableRow(children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 35.0),
+                      child: Text("Seller: ",
+                          style: Theme.of(context).textTheme.caption!.copyWith(
+                                fontSize: 18,
+                              )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => StoreDetailsScreen(
+                                    storeName: item.storeName,
+                                    storeId: item.storeId,
+                                  )));
+                        },
+                        child: Text(item.storeName,
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: Color(0xFF487E89),
+                                fontWeight: FontWeight.w700)),
+                      ),
+                    ),
+                  ]),
+                  tableRow("", "", context),
+                  tableRow("Available amount: ", amount.toString(), context),
+                  tableRow("", "", context),
+                  tableRow(
+                      "Price: ", "\$${item.price.toStringAsFixed(2)}", context),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 50),
           if (item.storeName != globals.storeName)
