@@ -9,6 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
+import 'package:ds_market_place/models/transaction.dart';
 import 'package:get_it/get_it.dart';
 
 class Repository {
@@ -23,7 +24,7 @@ class Repository {
       globals.token = response.token;
       globals.storeName = response.storeName;
       globals.admin = response.admin;
-      
+
       GetIt.instance<Dio>().options.headers[HttpHeaders.authorizationHeader] =
           'Bearer ${response.token}';
 
@@ -177,6 +178,41 @@ class Repository {
           await restClient.getInventoryItem(inventoryItemId);
       InventoryItem item = getItemResponse.inventoryItem;
       return Right(item);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  // ============
+  // ============
+  // Transactions
+  // ============
+  // ============
+
+  Future<Either<Failure, List<Transaction>>> getMySoldItems() async {
+    try {
+      GetMySoldItemsResponse response = await restClient.getMySoldItems();
+      return Right(response.transactions);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, List<Transaction>>> getMyPurchasedItems() async {
+    try {
+      GetMyPurchasedItemsResponse response =
+          await restClient.getMyPurchasedItems();
+      return Right(response.transactions);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, List<Transaction>>> getAllTransactions() async {
+    try {
+      GetAllTransactionsResponse response =
+          await restClient.getAllTransactions();
+      return Right(response.transactions);
     } on DioError catch (e) {
       return Left(e.failure);
     }
