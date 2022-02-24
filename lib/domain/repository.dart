@@ -8,8 +8,10 @@ import 'package:ds_market_place/domain/failure.dart';
 import 'package:dio/dio.dart';
 import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/models/profile.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/models/transaction.dart';
+import 'package:ds_market_place/models/user.dart';
 import 'package:get_it/get_it.dart';
 
 class Repository {
@@ -17,22 +19,17 @@ class Repository {
 
   Repository(this.restClient);
 
-  Future<Either<Failure, void>> signIn(LoginRequest loginRequest) async {
-    try {
-      LoginResponse response = await restClient.signIn(loginRequest);
-
-      globals.token = response.token;
-      globals.storeName = response.storeName;
-      globals.admin = response.admin;
-
-      GetIt.instance<Dio>().options.headers[HttpHeaders.authorizationHeader] =
-          'Bearer ${response.token}';
-
-      return Right(null);
-    } on DioError catch (e) {
-      return Left(e.failure);
-    }
-  }
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// Inventory Items
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
 
   Future<Either<Failure, List<InventoryItem>>> getAllInventoryItems() async {
     try {
@@ -75,6 +72,18 @@ class Repository {
       return Left(e.failure);
     }
   }
+
+  // ===========================
+  // ===========================
+  // ===========================
+  // ===========================
+  // ===========================
+  // Store Items
+  // ===========================
+  // ===========================
+  // ===========================
+  // ===========================
+  // ===========================
 
   Future<Either<Failure, List<StoreItem>>> getAllStoreItemsFromMyStore() async {
     try {
@@ -183,11 +192,17 @@ class Repository {
     }
   }
 
-  // ============
-  // ============
-  // Transactions
-  // ============
-  // ============
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// Transactions
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
 
   Future<Either<Failure, List<Transaction>>> getMySoldItems() async {
     try {
@@ -213,6 +228,81 @@ class Repository {
       GetAllTransactionsResponse response =
           await restClient.getAllTransactions();
       return Right(response.transactions);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// Users
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+
+  Future<Either<Failure, void>> signIn(LoginRequest loginRequest) async {
+    try {
+      LoginResponse response = await restClient.signIn(loginRequest);
+
+      globals.token = response.token;
+      globals.storeName = response.storeName;
+      globals.admin = response.admin;
+
+      GetIt.instance<Dio>().options.headers[HttpHeaders.authorizationHeader] =
+          'Bearer ${response.token}';
+
+      return Right(null);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, void>> signUp(SignUpRequest request) async {
+    try {
+      await restClient.signUp(request);
+      return Right(null);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, Profile>> getProfile() async {
+    try {
+      ProfileResponse response = await restClient.getProfile();
+      return Right(response.profile);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, List<User>>> getAllUsers() async {
+    try {
+      GetAllUsersResponse response = await restClient.getAllUsers();
+      return Right(response.users);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, void>> addBalance(AddBalanceRequest request) async {
+    try {
+      await restClient.addBalance(request);
+      return Right(null);
+    } on DioError catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  Future<Either<Failure, void>> removeBalance(
+      RemoveBalanceRequest request) async {
+    try {
+      await restClient.removeBalance(request);
+      return Right(null);
     } on DioError catch (e) {
       return Left(e.failure);
     }
