@@ -7,7 +7,7 @@ import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
-import 'package:ds_market_place/screens/explore/purshace_item.dart';
+import 'package:ds_market_place/screens/explore/purchase_item.dart';
 import 'package:ds_market_place/view_models/explore_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';

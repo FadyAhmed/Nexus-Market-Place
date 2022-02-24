@@ -3,7 +3,7 @@ import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
-import 'package:ds_market_place/screens/explore/purshace_item.dart';
+import 'package:ds_market_place/screens/explore/purchase_item.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
 import 'package:ds_market_place/screens/store/select_item_to_sell.dart';
 import 'package:flutter/material.dart';

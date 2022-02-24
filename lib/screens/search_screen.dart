@@ -8,7 +8,7 @@ import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/account_info/account_info/purshaced_items.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
-import 'package:ds_market_place/screens/explore/purshace_item.dart';
+import 'package:ds_market_place/screens/explore/purchase_item.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

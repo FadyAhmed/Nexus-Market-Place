@@ -1,6 +1,13 @@
 import 'package:dio/dio.dart';
 
 class Failure {
+  static List<String> serverErrorMessages = [
+    'item already exists in your store',
+    'invalid amount',
+    'amount is larger than the available',
+    "item doesn't exist",
+  ];
+
   String message;
 
   Failure(this.message);
@@ -20,7 +27,13 @@ extension GetFailure on DioError {
       case DioErrorType.other:
         return Failure('unknown error');
       case DioErrorType.response:
+        String errorMessage = response?.data['status'];
+        if (Failure.serverErrorMessages.contains(errorMessage)) {
+          return Failure(errorMessage);
+        }
         switch (response?.statusCode) {
+          case 400:
+            return Failure('unknown error');
           case 401:
             return Failure('unauthenticated');
           case 403:

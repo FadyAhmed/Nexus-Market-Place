@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
@@ -5,13 +7,16 @@ import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/table_row.dart';
 import 'package:ds_market_place/constants.dart';
 import 'package:ds_market_place/constants/enums.dart';
+import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/explore/store_items.dart';
+import 'package:ds_market_place/view_models/purchase_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class PurchaseItemScreen extends StatefulWidget {
@@ -23,6 +28,12 @@ class PurchaseItemScreen extends StatefulWidget {
 }
 
 class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
+  PurchaseViewModel purchaseViewModel = GetIt.I();
+
+  late StreamSubscription isPurchasedSub;
+  late StreamSubscription isAddedSub;
+  late StreamSubscription failureSub;
+
   // this is dummy
   int amount = 1;
   void _increaseAmount() {
@@ -38,53 +49,70 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
   }
 
   void submitAddToMyStore(String id) async {
-    try {
-      await Provider.of<StoresProvider>(context, listen: false)
-          .addAnotherStoreItemToMyStore(id);
-      showSnackbar(context, Text("Item added to your store succesfully"));
-      Navigator.of(context).pop();
-    } on ServerException catch (e) {
-      showMessageDialogue(context, e.message);
-    }
+    purchaseViewModel.addItemInOtherStoreToMyStore(id);
   }
 
   void submitPurchase(String id) async {
-    try {
-      await Provider.of<StoresProvider>(context, listen: false)
-          .purchaseItem(id, amount);
-      showSnackbar(context, Text("Item is purchased succesfully"));
-      Navigator.of(context).pop();
-    } on ServerException catch (e) {
-      showMessageDialogue(context, e.message);
-    }
+    PurchaseStoreItemRequest request = PurchaseStoreItemRequest(amount: amount);
+    purchaseViewModel.purchaseStoreItem(id, request);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    purchaseViewModel.start(widget.item);
+    isPurchasedSub =
+        purchaseViewModel.isPurchasedController.listen((isPurchased) {
+      if (isPurchased) {
+        showSnackbar(context, Text("Item is purchased succesfully"));
+        Navigator.of(context).pop();
+      }
+    });
+    isAddedSub = purchaseViewModel.isPurchasedController.listen((isAdded) {
+      if (isAdded) {
+        showSnackbar(context, Text("Item added to your store succesfully"));
+        Navigator.of(context).pop();
+      }
+    });
+    failureSub = purchaseViewModel.failureController.listen((failure) {
+      if (failure != null) {
+        showMessageDialogue(context, failure.message);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    isAddedSub.cancel();
+    isPurchasedSub.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    var storesProvider = Provider.of<StoresProvider>(context);
-    late StoreItem item;
-    if (storesProvider.allItems != null &&
-        storesProvider.allItems!.any((it) => it.id == widget.item.id)) {
-      item = storesProvider.allItems!.firstWhere(
-        (item) => item.id == widget.item.id,
-      );
-    } else if (storesProvider.storeItems != null &&
-        storesProvider.storeItems!
-        .any((it) => it.id == widget.item.id)) {
-      item = storesProvider.storeItems!.firstWhere(
-        (item) => item.id == widget.item.id,
-      );
-    } else if (storesProvider.searchItems != null &&
-        storesProvider.searchItems!
-        .any((it) => it.id == widget.item.id)) {
-      item = storesProvider.searchItems!.firstWhere(
-        (item) => item.id == widget.item.id,
-      );
-    } else {
-      // for the case if the item was deleted from all lists
-      // this happens when purchased amount == existing amount
-      item = widget.item;
-    }
+    // var storesProvider = Provider.of<StoresProvider>(context);
+    // late StoreItem item;
+    // if (storesProvider.allItems != null &&
+    //     storesProvider.allItems!.any((it) => it.id == widget.item.id)) {
+    //   item = storesProvider.allItems!.firstWhere(
+    //     (item) => item.id == widget.item.id,
+    //   );
+    // } else if (storesProvider.storeItems != null &&
+    //     storesProvider.storeItems!.any((it) => it.id == widget.item.id)) {
+    //   item = storesProvider.storeItems!.firstWhere(
+    //     (item) => item.id == widget.item.id,
+    //   );
+    // } else if (storesProvider.searchItems != null &&
+    //     storesProvider.searchItems!.any((it) => it.id == widget.item.id)) {
+    //   item = storesProvider.searchItems!.firstWhere(
+    //     (item) => item.id == widget.item.id,
+    //   );
+    // } else {
+    //   // for the case if the item was deleted from all lists
+    //   // this happens when purchased amount == existing amount
+    //   item = widget.item;
+    // }
+    StoreItem item = purchaseViewModel.storeItem!;
     return Scaffold(
       appBar: AppBar(
         title: Text(item.name),
@@ -168,32 +196,44 @@ class _PurchaseItemScreenState extends State<PurchaseItemScreen> {
                   ],
                 ),
                 const SizedBox(height: 15),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width - 120,
                   height: 45,
-                  child: storesProvider.purchaseLoadingStatus ==
-                          LoadingStatus.loading
-                      ? Center(child: CircularProgressIndicator())
-                      : RoundedButton(
-                          title: "Purchase",
-                          onPressed: () => submitPurchase(item.id!),
-                        ),
+                  child: StreamBuilder<bool>(
+                    stream: purchaseViewModel.purchasingLoadingController,
+                    builder: (context, snapshot) {
+                      if (snapshot.data ?? false) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      return RoundedButton(
+                        title: "Purchase",
+                        onPressed: () => submitPurchase(item.id!),
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(height: 20),
-                Container(
-                    width: MediaQuery.of(context).size.width - 120,
-                    height: 45,
-                    child: storesProvider.addToMyStoreLoadingStatus ==
-                            LoadingStatus.loading
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.orange,
-                            ),
-                          )
-                        : RoundedButton(
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 120,
+                  height: 45,
+                  child: StreamBuilder<bool>(
+                    stream: purchaseViewModel.addingLoadingController,
+                    builder: (contet, snapshot) {
+                      if (snapshot.data ?? false) {
+                        return Center(
+                          child: CircularProgressIndicator(
                             color: Colors.orange,
-                            title: "Add To My Store",
-                            onPressed: () => submitAddToMyStore(item.id!))),
+                          ),
+                        );
+                      }
+                      return RoundedButton(
+                        color: Colors.orange,
+                        title: "Add To My Store",
+                        onPressed: () => submitAddToMyStore(item.id!),
+                      );
+                    },
+                  ),
+                ),
                 const SizedBox(height: 20),
               ],
             )

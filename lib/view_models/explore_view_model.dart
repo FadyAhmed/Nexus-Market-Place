@@ -52,4 +52,12 @@ class ExploreViewModel {
 
     storeItemsController.add(storeItems!);
   }
+
+  void decreaseAmount(String id, int amount) {
+    StoreItem item = storeItems!.firstWhere((i) => i.id == id);
+    item.amount -= amount;
+    if (item.amount == 0) {
+      storeItems!.remove(item);
+    }
+  }
 }
