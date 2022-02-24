@@ -4,6 +4,18 @@ import 'package:ds_market_place/models/inventory_item.dart';
 
 part 'requests.g.dart';
 
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// Users
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+
 @JsonSerializable()
 class LoginRequest {
   String username;
@@ -15,6 +27,76 @@ class LoginRequest {
       _$LoginRequestFromJson(json);
   Map<String, dynamic> toJson() => _$LoginRequestToJson(this);
 }
+
+@JsonSerializable()
+class SignUpRequest {
+  String firsName;
+  String lastName;
+  String username;
+  String email;
+  String phoneNumber;
+  String password;
+  String storeName;
+  SignUpRequest({
+    required this.firsName,
+    required this.lastName,
+    required this.username,
+    required this.email,
+    required this.phoneNumber,
+    required this.password,
+    required this.storeName,
+  });
+
+  factory SignUpRequest.fromJson(Map<String, Object?> json) =>
+      _$SignUpRequestFromJson(json);
+  Map<String, dynamic> toJson() => _$SignUpRequestToJson(this);
+}
+
+@JsonSerializable()
+class AddBalanceRequest {
+  String cardNum;
+  double amount;
+  String cvv;
+
+  AddBalanceRequest({
+    required this.cardNum,
+    required this.amount,
+    required this.cvv,
+  });
+
+  factory AddBalanceRequest.fromJson(Map<String, Object?> json) =>
+      _$AddBalanceRequestFromJson(json);
+  Map<String, dynamic> toJson() => _$AddBalanceRequestToJson(this);
+}
+
+@JsonSerializable()
+class RemoveBalanceRequest {
+  String cardNum;
+  double amount;
+  String cvv;
+
+  RemoveBalanceRequest({
+    required this.cardNum,
+    required this.amount,
+    required this.cvv,
+  });
+
+  factory RemoveBalanceRequest.fromJson(Map<String, Object?> json) =>
+      _$RemoveBalanceRequestFromJson(json);
+  Map<String, dynamic> toJson() => _$RemoveBalanceRequestToJson(this);
+}
+
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// Inventory
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
 
 @JsonSerializable()
 class EditInventoryItemRequest {
@@ -73,6 +155,18 @@ class AddInventoryItemRequest {
     );
   }
 }
+
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// Store
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
 
 @JsonSerializable()
 class AddItemInMyInventoryToMyStoreRequest {

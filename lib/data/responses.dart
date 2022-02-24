@@ -3,31 +3,24 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/models/inventory_item.dart';
+import 'package:ds_market_place/models/profile.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/models/transaction.dart';
+import 'package:ds_market_place/models/user.dart';
 
 part 'responses.g.dart';
 
-@JsonSerializable()
-class LoginResponse {
-  bool success;
-  String status;
-  String token;
-  bool admin;
-  String storeName;
-
-  LoginResponse({
-    required this.success,
-    required this.status,
-    required this.token,
-    required this.admin,
-    required this.storeName,
-  });
-
-  factory LoginResponse.fromJson(Map<String, Object?> json) =>
-      _$LoginResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
-}
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// Inventory
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
 
 @JsonSerializable()
 class GetAllInventoryItemsResponse {
@@ -170,6 +163,18 @@ class InventoryItemResponse {
         description: description,
       );
 }
+
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// Store
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
 
 @JsonSerializable()
 class GetAllStoreItemsFromMyStoreResponse {
@@ -421,6 +426,18 @@ class PurchaseStoreItemResponse {
   Map<String, dynamic> toJson() => _$PurchaseStoreItemResponseToJson(this);
 }
 
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// Transactions
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+
 @JsonSerializable()
 class GetMySoldItemsResponse {
   bool success;
@@ -585,4 +602,173 @@ class GetAllTransactionsResponse {
 
   List<Transaction> get transactions =>
       transactionResponses.map((t) => t.transaction).toList();
+}
+
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// Users
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+// ===========================
+
+@JsonSerializable()
+class LoginResponse {
+  bool success;
+  String status;
+  String token;
+  bool admin;
+  String storeName;
+
+  LoginResponse({
+    required this.success,
+    required this.status,
+    required this.token,
+    required this.admin,
+    required this.storeName,
+  });
+
+  factory LoginResponse.fromJson(Map<String, Object?> json) =>
+      _$LoginResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
+}
+
+@JsonSerializable()
+class SignUpResponse {
+  bool success;
+  String status;
+  SignUpResponse({
+    required this.success,
+    required this.status,
+  });
+
+  factory SignUpResponse.fromJson(Map<String, Object?> json) =>
+      _$SignUpResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$SignUpResponseToJson(this);
+}
+
+@JsonSerializable()
+class ProfileResponse {
+  bool success;
+  MiniUserResponse user;
+  ProfileResponse({
+    required this.success,
+    required this.user,
+  });
+
+  factory ProfileResponse.fromJson(Map<String, Object?> json) =>
+      _$ProfileResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$ProfileResponseToJson(this);
+
+  Profile get profile => user.profile;
+}
+
+@JsonSerializable()
+class MiniUserResponse {
+  String id;
+  String firstName;
+  String lastName;
+  double balance;
+
+  MiniUserResponse({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.balance,
+  });
+
+  factory MiniUserResponse.fromJson(Map<String, Object?> json) =>
+      _$MiniUserResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$MiniUserResponseToJson(this);
+
+  Profile get profile => Profile(
+        id: id,
+        firstName: firstName,
+        lastName: lastName,
+        balance: balance,
+      );
+}
+
+@JsonSerializable()
+class GetAllUsersResponse {
+  bool success;
+  @JsonKey(name: 'users')
+  List<CompleteUserResponse> userResponses;
+  GetAllUsersResponse({
+    required this.success,
+    required this.userResponses,
+  });
+
+  factory GetAllUsersResponse.fromJson(Map<String, Object?> json) =>
+      _$GetAllUsersResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$GetAllUsersResponseToJson(this);
+
+  List<User> get users => userResponses.map((uR) => uR.user).toList();
+}
+
+@JsonSerializable()
+class CompleteUserResponse {
+  String id;
+  String firstName;
+  String lastName;
+  String storeName;
+  String email;
+  String phoneNumber;
+  double balance;
+
+  CompleteUserResponse({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.storeName,
+    required this.email,
+    required this.phoneNumber,
+    required this.balance,
+  });
+
+  factory CompleteUserResponse.fromJson(Map<String, Object?> json) =>
+      _$CompleteUserResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$CompleteUserResponseToJson(this);
+
+  User get user => User(
+        id: id,
+        firstName: firstName,
+        lastName: lastName,
+        storeName: storeName,
+        email: email,
+        phoneNumber: phoneNumber,
+        balance: balance,
+      );
+}
+
+@JsonSerializable()
+class AddBalanceResponse {
+  bool success;
+  String status;
+  AddBalanceResponse({
+    required this.success,
+    required this.status,
+  });
+
+  factory AddBalanceResponse.fromJson(Map<String, Object?> json) =>
+      _$AddBalanceResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$AddBalanceResponseToJson(this);
+}
+
+@JsonSerializable()
+class RemoveBalanceResponse {
+  bool success;
+  String status;
+  RemoveBalanceResponse({
+    required this.success,
+    required this.status,
+  });
+
+  factory RemoveBalanceResponse.fromJson(Map<String, Object?> json) =>
+      _$RemoveBalanceResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$RemoveBalanceResponseToJson(this);
 }

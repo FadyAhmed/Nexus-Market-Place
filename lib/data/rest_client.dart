@@ -15,9 +15,6 @@ abstract class RestClient {
   // ===============
   // ===============
 
-  @POST('/api/users/login')
-  Future<LoginResponse> signIn(@Body() LoginRequest loginRequest);
-
   @GET('/api/myinventory')
   Future<GetAllInventoryItemsResponse> getAllInventoryItems();
 
@@ -91,4 +88,29 @@ abstract class RestClient {
 
   @GET('/api/transactions')
   Future<GetAllTransactionsResponse> getAllTransactions();
+
+  // ===========
+  // ===========
+  // Users
+  // ===========
+  // ===========
+
+  @POST('/api/users/signup')
+  Future<SignUpResponse> signUp(@Body() SignUpRequest request);
+
+  @POST('/api/users/login')
+  Future<LoginResponse> signIn(@Body() LoginRequest loginRequest);
+
+  @GET('/api/users/profile')
+  Future<ProfileResponse> getProfile();
+
+  @GET('/api/users')
+  Future<GetAllUsersResponse> getAllUsers();
+
+  @PUT('/api/users/wallet/deposit')
+  Future<AddBalanceResponse> addBalance(@Body() AddBalanceRequest request);
+
+  @PUT('/api/users/wallet/withdraw')
+  Future<RemoveBalanceResponse> removeBalance(
+      @Body() RemoveBalanceRequest request);
 }

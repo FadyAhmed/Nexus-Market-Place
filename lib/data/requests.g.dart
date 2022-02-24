@@ -17,6 +17,58 @@ Map<String, dynamic> _$LoginRequestToJson(LoginRequest instance) =>
       'password': instance.password,
     };
 
+SignUpRequest _$SignUpRequestFromJson(Map<String, dynamic> json) =>
+    SignUpRequest(
+      firsName: json['firsName'] as String,
+      lastName: json['lastName'] as String,
+      username: json['username'] as String,
+      email: json['email'] as String,
+      phoneNumber: json['phoneNumber'] as String,
+      password: json['password'] as String,
+      storeName: json['storeName'] as String,
+    );
+
+Map<String, dynamic> _$SignUpRequestToJson(SignUpRequest instance) =>
+    <String, dynamic>{
+      'firsName': instance.firsName,
+      'lastName': instance.lastName,
+      'username': instance.username,
+      'email': instance.email,
+      'phoneNumber': instance.phoneNumber,
+      'password': instance.password,
+      'storeName': instance.storeName,
+    };
+
+AddBalanceRequest _$AddBalanceRequestFromJson(Map<String, dynamic> json) =>
+    AddBalanceRequest(
+      cardNum: json['cardNum'] as String,
+      amount: (json['amount'] as num).toDouble(),
+      cvv: json['cvv'] as String,
+    );
+
+Map<String, dynamic> _$AddBalanceRequestToJson(AddBalanceRequest instance) =>
+    <String, dynamic>{
+      'cardNum': instance.cardNum,
+      'amount': instance.amount,
+      'cvv': instance.cvv,
+    };
+
+RemoveBalanceRequest _$RemoveBalanceRequestFromJson(
+        Map<String, dynamic> json) =>
+    RemoveBalanceRequest(
+      cardNum: json['cardNum'] as String,
+      amount: (json['amount'] as num).toDouble(),
+      cvv: json['cvv'] as String,
+    );
+
+Map<String, dynamic> _$RemoveBalanceRequestToJson(
+        RemoveBalanceRequest instance) =>
+    <String, dynamic>{
+      'cardNum': instance.cardNum,
+      'amount': instance.amount,
+      'cvv': instance.cvv,
+    };
+
 EditInventoryItemRequest _$EditInventoryItemRequestFromJson(
         Map<String, dynamic> json) =>
     EditInventoryItemRequest(

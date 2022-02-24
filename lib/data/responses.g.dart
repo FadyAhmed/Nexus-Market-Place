@@ -481,3 +481,108 @@ Map<String, dynamic> _$GetAllTransactionsResponseToJson(
       'success': instance.success,
       'transactions': instance.transactionResponses,
     };
+
+SignUpResponse _$SignUpResponseFromJson(Map<String, dynamic> json) =>
+    SignUpResponse(
+      success: json['success'] as bool,
+      status: json['status'] as String,
+    );
+
+Map<String, dynamic> _$SignUpResponseToJson(SignUpResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+    };
+
+ProfileResponse _$ProfileResponseFromJson(Map<String, dynamic> json) =>
+    ProfileResponse(
+      success: json['success'] as bool,
+      user: MiniUserResponse.fromJson(json['user'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$ProfileResponseToJson(ProfileResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'user': instance.user,
+    };
+
+MiniUserResponse _$MiniUserResponseFromJson(Map<String, dynamic> json) =>
+    MiniUserResponse(
+      id: json['id'] as String,
+      firstName: json['firstName'] as String,
+      lastName: json['lastName'] as String,
+      balance: (json['balance'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$MiniUserResponseToJson(MiniUserResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'firstName': instance.firstName,
+      'lastName': instance.lastName,
+      'balance': instance.balance,
+    };
+
+GetAllUsersResponse _$GetAllUsersResponseFromJson(Map<String, dynamic> json) =>
+    GetAllUsersResponse(
+      success: json['success'] as bool,
+      userResponses: (json['users'] as List<dynamic>)
+          .map((e) => CompleteUserResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$GetAllUsersResponseToJson(
+        GetAllUsersResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'users': instance.userResponses,
+    };
+
+CompleteUserResponse _$CompleteUserResponseFromJson(
+        Map<String, dynamic> json) =>
+    CompleteUserResponse(
+      id: json['id'] as String,
+      firstName: json['firstName'] as String,
+      lastName: json['lastName'] as String,
+      storeName: json['storeName'] as String,
+      email: json['email'] as String,
+      phoneNumber: json['phoneNumber'] as String,
+      balance: (json['balance'] as num).toDouble(),
+    );
+
+Map<String, dynamic> _$CompleteUserResponseToJson(
+        CompleteUserResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'firstName': instance.firstName,
+      'lastName': instance.lastName,
+      'storeName': instance.storeName,
+      'email': instance.email,
+      'phoneNumber': instance.phoneNumber,
+      'balance': instance.balance,
+    };
+
+AddBalanceResponse _$AddBalanceResponseFromJson(Map<String, dynamic> json) =>
+    AddBalanceResponse(
+      success: json['success'] as bool,
+      status: json['status'] as String,
+    );
+
+Map<String, dynamic> _$AddBalanceResponseToJson(AddBalanceResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+    };
+
+RemoveBalanceResponse _$RemoveBalanceResponseFromJson(
+        Map<String, dynamic> json) =>
+    RemoveBalanceResponse(
+      success: json['success'] as bool,
+      status: json['status'] as String,
+    );
+
+Map<String, dynamic> _$RemoveBalanceResponseToJson(
+        RemoveBalanceResponse instance) =>
+    <String, dynamic>{
+      'success': instance.success,
+      'status': instance.status,
+    };
