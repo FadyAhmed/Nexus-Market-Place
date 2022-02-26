@@ -1,21 +1,19 @@
-import 'dart:async';
 import 'dart:io';
 
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
-import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
-import 'package:ds_market_place/providers/inventories_provider.dart';
-import 'package:ds_market_place/view_models/add_inventory_item_view_model.dart';
+import 'package:ds_market_place/providers.dart';
+import 'package:ds_market_place/states/add_inventory_item_state.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddItemToInventory extends StatefulWidget {
+class AddItemToInventory extends ConsumerStatefulWidget {
   const AddItemToInventory({Key? key}) : super(key: key);
 
   @override
@@ -24,12 +22,7 @@ class AddItemToInventory extends StatefulWidget {
 
 final _formKey = GlobalKey<FormState>();
 
-class _AddItemToInventoryState extends State<AddItemToInventory> {
-  AddInventoryItemViewModel addInventoryItemViewModel = GetIt.I();
-
-  late StreamSubscription isAddedSub;
-  late StreamSubscription failureSub;
-
+class _AddItemToInventoryState extends ConsumerState<AddItemToInventory> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
@@ -51,34 +44,20 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
         description: _descController.text,
         imageLink: _imageUrlController.text,
       );
-
       final request = AddInventoryItemRequest.fromItem(item);
-      addInventoryItemViewModel.addInventoryItem(request);
 
-      showSnackbar(context, Text("Item added to inventory"));
+      ref.read(addInventoryItemsProvider.notifier).addInventoryItem(request);
     }
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    isAddedSub =
-        addInventoryItemViewModel.isAddedController.stream.listen((isAdded) {
-      if (isAdded) {
+  Widget build(BuildContext context) {
+    ref.listen<AddInventoryItemState>(addInventoryItemsProvider, (_, next) {
+      if (next is AddInventoryItemLoadedState) {
+        showSnackbar(context, Text('${_nameController.text} is added'));
         Navigator.pop(context);
       }
     });
-
-    failureSub =
-        addInventoryItemViewModel.failureController.stream.listen((failure) {
-      showMessageDialogue(context, failure.message);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var inventoriesProvider = Provider.of<InventoriesProvider>(context);
     List<KFormField> fields = [
       KFormField(
           key: 'name',
@@ -190,19 +169,29 @@ class _AddItemToInventoryState extends State<AddItemToInventory> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: StreamBuilder<bool>(
-                        stream: addInventoryItemViewModel
-                            .addingLoadingController.stream,
-                        builder: (context, snapshot) {
-                          if (snapshot.data ?? false) {
+                      child: Builder(builder: (context) {
+                        final state = ref.watch(addInventoryItemsProvider);
+                        switch (state.runtimeType) {
+                          case AddInventoryItemInitialState:
+                            return RoundedButton(
+                              onPressed: submitForm,
+                              title: 'Add Item',
+                            );
+                          case AddInventoryItemLoadingState:
                             return Center(child: CircularProgressIndicator());
-                          }
-                          return RoundedButton(
-                            onPressed: submitForm,
-                            title: 'Add Item',
-                          );
-                        },
-                      ),
+                          case AddInventoryItemErrorState:
+                            return MyErrorWidget(
+                              failure:
+                                  (state as AddInventoryItemErrorState).failure,
+                              onRetry: submitForm,
+                            );
+                          default:
+                            return RoundedButton(
+                              onPressed: submitForm,
+                              title: 'Add Item',
+                            );
+                        }
+                      }),
                     ),
                   ],
                 ),

@@ -14,6 +14,7 @@ import 'package:ds_market_place/screens/welcome_screen.dart';
 import 'package:ds_market_place/services/authentication_web_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   injectDependencies();
-  runApp(const MyApp());
+  runApp(riverpod.ProviderScope(child: const MyApp()));
 }
 
 class ExpApp extends StatelessWidget {
