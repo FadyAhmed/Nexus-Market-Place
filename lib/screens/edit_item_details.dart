@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
@@ -13,15 +14,19 @@ import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
+import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
+import 'package:ds_market_place/states/inventory_item_delete_state.dart';
+import 'package:ds_market_place/states/inventory_item_edit_state.dart';
 import 'package:ds_market_place/view_models/edit_item_view_model.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-class EditItemDetails extends StatefulWidget {
+class EditItemDetails extends ConsumerStatefulWidget {
   final onSubmit;
   final String submitButtonText;
   final InventoryItem? inventoryItem;
@@ -40,7 +45,7 @@ class EditItemDetails extends StatefulWidget {
   _EditItemDetailsState createState() => _EditItemDetailsState();
 }
 
-class _EditItemDetailsState extends State<EditItemDetails> {
+class _EditItemDetailsState extends ConsumerState<EditItemDetails> {
   EditItemViewModel editInventoryItemViewModel = GetIt.I<EditItemViewModel>();
 
   late StreamSubscription isEditedSub;
@@ -102,8 +107,9 @@ class _EditItemDetailsState extends State<EditItemDetails> {
           description: _description.text,
           imageLink: _imageLink.text,
         );
-        await editInventoryItemViewModel.editInventoryItem(
-            widget.inventoryItem!.id!, request);
+        ref
+            .read(inventoryItemsEditProvider.notifier)
+            .editInventoryItem(widget.inventoryItem!.id!, request);
       } else {
         EditStoreItemRequest request = EditStoreItemRequest(
           name: _name.text,
@@ -120,8 +126,13 @@ class _EditItemDetailsState extends State<EditItemDetails> {
 
   @override
   Widget build(BuildContext context) {
-    var inventoriesProvider = Provider.of<InventoriesProvider>(context);
-    var storesProvider = Provider.of<StoresProvider>(context);
+    ref.listen(inventoryItemsEditProvider, (previous, next) {
+      if (next is InventoryItemEditLoadedState) {
+        showSnackbar(context, Text('${_name.text} is edited successfully'));
+        Navigator.pop(context);
+      }
+    });
+
     List<KFormField> fields = [
       KFormField(
           key: 'name',
@@ -224,23 +235,25 @@ class _EditItemDetailsState extends State<EditItemDetails> {
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: inventoriesProvider.loadingStatus ==
-                                LoadingStatus.loading ||
-                            storesProvider.loadingStatus ==
-                                LoadingStatus.loading
-                        ? Center(child: CircularProgressIndicator())
-                        : StreamBuilder<bool>(
-                            stream: editInventoryItemViewModel
-                                .editingLoadingController.stream,
-                            builder: (context, snapshot) {
-                              return (snapshot.data ?? false)
-                                  ? Center(child: CircularProgressIndicator())
-                                  : RoundedButton(
-                                      onPressed: submitEditItem,
-                                      title: widget.submitButtonText,
-                                    );
-                            },
-                          ),
+                    child: Builder(builder: (context) {
+                      final button = RoundedButton(
+                        onPressed: submitEditItem,
+                        title: widget.submitButtonText,
+                      );
+                      final state = ref.watch(inventoryItemsEditProvider);
+                      if (state is InventoryItemEditInitialState) {
+                        return button;
+                      } else if (state is InventoryItemEditLoadingState) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (state is InventoryItemEditErrorState) {
+                        return MyErrorWidget(
+                          failure: state.failure,
+                          onRetry: submitEditItem,
+                        );
+                      } else {
+                        return button;
+                      }
+                    }),
                   ),
                   const SizedBox(height: 30)
                 ],

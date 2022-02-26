@@ -89,6 +89,7 @@ class _SellScreenState extends State<SellScreen> {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ItemCard(
+                            itemId: item.id!,
                             // put another value to get it in menu
                             menuItems: item.state == StoreItemState.imported
                                 ? ["Remove"]

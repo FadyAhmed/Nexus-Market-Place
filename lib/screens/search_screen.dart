@@ -170,6 +170,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   padding: const EdgeInsets.all(0.0),
                                   child: Column(children: [
                                     ItemCard(
+                                      itemId: item.id!,
                                       // menuItems: ["Edit", "Remove"],
                                       sellerName: item.storeName,
                                       showActions: false,

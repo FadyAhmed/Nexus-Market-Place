@@ -39,6 +39,7 @@ class _OnSaleItemsScreenState extends State<OnSaleItemsScreen> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: ItemCard(
+            itemId: item.id!,
             menuItems: ["Edit", "Remove"],
             itemName: item.name,
             amount: item.amount.toString(),

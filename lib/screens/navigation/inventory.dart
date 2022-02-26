@@ -18,6 +18,7 @@ import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/screens/inventory/add_item_to_inventory.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
+import 'package:ds_market_place/states/inventory_item_delete_state.dart';
 import 'package:ds_market_place/states/inventory_items_list_state.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
 import 'package:flutter/material.dart';
@@ -88,13 +89,6 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
   @override
   void initState() {
     super.initState();
-    // Future.delayed(Duration.zero,
-    //         ref.read(inventoryItemsProvider.notifier).getAllInventoryItems)
-    //     .catchError((e) {
-    //   if (e is DioError) {
-    //     showMessageDialogue(context, e.failure.message);
-    //   }
-    // });
     Future.delayed(
       Duration.zero,
       ref.read(inventoryItemsListProvider.notifier).getAllInventoryItems,
@@ -112,6 +106,7 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: ItemCard(
+            itemId: item.id!,
             menuItems: ["Edit", "Remove"],
             onSelectMenuItem: (choice) {
               if (choice == "Edit") {
@@ -123,7 +118,9 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
                   ),
                 ));
               } else {
-                inventoryViewModel.delete(item.id!);
+                ref
+                    .read(inventoryItemsDeleteProvider.notifier)
+                    .removeInventoryItem(item.id!);
               }
             },
             itemName: item.name,
@@ -141,40 +138,6 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
     );
   }
 
-  Widget buildBody() {
-    return StreamBuilder<Failure?>(
-      stream: inventoryViewModel.failureController.stream,
-      builder: (context, snapshot) {
-        if (snapshot.data != null) {
-          return Center(
-            child: MyErrorWidget(
-              failure: snapshot.data!,
-              onRetry: inventoryViewModel.getAllInventoryItems,
-            ),
-          );
-        }
-        return StreamBuilder<bool>(
-          stream: inventoryViewModel.isLoadingController.stream,
-          builder: (context, snapshot) {
-            if (snapshot.data ?? false) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return StreamBuilder<List<InventoryItem>>(
-              stream: inventoryViewModel.inventoryItemsListController.stream,
-              builder: (context, snapshot) {
-                List<InventoryItem>? items = snapshot.data;
-                if (items == null || items.isEmpty) {
-                  return GreyBar(
-                      'No items are found in your inventory.\nPress \'+\' to add one.');
-                }
-                return buildList(items);
-              },
-            );
-          },
-        );
-      },
-    );
-  }
 
   @override
   void dispose() {
@@ -184,6 +147,11 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(inventoryItemsDeleteProvider, (previous, next) {
+      if (next is InventoryItemDeleteLoadedState) {
+        showSnackbar(context, Text('item deleted successfully'));
+      }
+    });
     return RefreshIndicator(
       onRefresh: inventoryViewModel.getAllInventoryItems,
       child: Scaffold(

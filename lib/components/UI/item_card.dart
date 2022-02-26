@@ -2,11 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/data_text.dart';
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/providers.dart';
+import 'package:ds_market_place/states/inventory_item_delete_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants.dart';
 
 class ItemCard extends StatelessWidget {
+  final String itemId;
   final String itemName;
   final String amount;
   final String sellerName;
@@ -18,6 +22,7 @@ class ItemCard extends StatelessWidget {
   final bool showActions;
   const ItemCard(
       {Key? key,
+      required this.itemId,
       required this.itemName,
       required this.amount,
       required this.price,
@@ -28,6 +33,41 @@ class ItemCard extends StatelessWidget {
       this.sellerName = "",
       this.menuItems})
       : super(key: key);
+
+  Widget _buildPopUpMenuButton() {
+    return Consumer(
+      builder: (context, ref, child) {
+        final state = ref.watch(inventoryItemsDeleteProvider);
+        if (state is InventoryItemDeleteInitialState) {
+          return child!;
+        } else if (state is InventoryItemDeleteLoadingState) {
+          // execluding pop up buttons that don't belong to deleted inventory
+          // item's item card
+          if (state.deletedItemId != itemId) return child!;
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (state is InventoryItemDeleteErrorState) {
+          if (state.deletedItemId != itemId) return child!;
+          showMessageDialogue(context, state.failure.message);
+          return child!;
+        } else {
+          return child!;
+        }
+      },
+      child: PopupMenuButton<String>(
+        onSelected: onSelectMenuItem,
+        itemBuilder: (BuildContext context) {
+          return menuItems!.map((item) {
+            return PopupMenuItem<String>(value: item, child: Text(item));
+          }).toList();
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,15 +120,7 @@ class ItemCard extends StatelessWidget {
                       .copyWith(fontWeight: FontWeight.normal)),
               const SizedBox(width: 0),
               showActions && menuItems != null
-                  ? PopupMenuButton<String>(
-                      onSelected: onSelectMenuItem,
-                      itemBuilder: (BuildContext context) {
-                        return menuItems!.map((item) {
-                          return PopupMenuItem<String>(
-                              value: item, child: Text(item));
-                        }).toList();
-                      },
-                    )
+                  ? _buildPopUpMenuButton()
                   : Container(),
             ],
           ),

@@ -81,6 +81,7 @@ class _StoreDetailsScreenState extends State<StoreDetailsScreen> {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ItemCard(
+                          itemId: item.id!,
                           showActions: false,
                           itemName: item.name,
                           amount: item.amount.toString(),

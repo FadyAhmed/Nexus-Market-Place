@@ -1,3 +1,4 @@
+import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/states/inventory_items_list_state.dart';
@@ -25,6 +26,31 @@ class InventoryItemListNotifier extends StateNotifier<InventoryItemListState> {
           item
         ],
       );
+    }
+  }
+
+  void removeItemFromState(String id) {
+    if (state is InventoryItemListLoadedState) {
+      final currentState = state as InventoryItemListLoadedState;
+      List<InventoryItem> items =
+          currentState.inventoryItems.where((item) => item.id != id).toList();
+      state = InventoryItemListLoadedState(inventoryItems: items);
+    }
+  }
+
+  void editItemInState(String id, EditInventoryItemRequest request) {
+    if (state is InventoryItemListLoadedState) {
+      final currentState = state as InventoryItemListLoadedState;
+      List<InventoryItem> items = currentState.inventoryItems.map((item) {
+        if (item.id != id) return item;
+        item.name = request.name ?? item.name;
+        item.description = request.description ?? item.description;
+        item.amount = request.amount ?? item.amount;
+        item.price = request.price ?? item.price;
+        item.imageLink = request.imageLink ?? item.imageLink;
+        return item;
+      }).toList();
+      state = InventoryItemListLoadedState(inventoryItems: items);
     }
   }
 }
