@@ -20,6 +20,9 @@ class SelectItemToSellScreen extends ConsumerStatefulWidget {
 class _SelectItemToInvenSellnState
     extends ConsumerState<SelectItemToSellScreen> {
   Widget _buildList(List<InventoryItem> items) {
+    if (items.isEmpty) {
+      return GreyBar("You have no items in your inventory.");
+    }
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {

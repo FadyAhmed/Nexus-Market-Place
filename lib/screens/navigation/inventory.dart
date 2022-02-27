@@ -95,9 +95,9 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
     );
   }
 
-  Widget buildList(List<InventoryItem>? items) {
-    if (items == null) {
-      return Container();
+  Widget buildList(List<InventoryItem> items) {
+    if (items.isEmpty) {
+      return GreyBar("You have items in your inventory\nPress '+' to add some");
     }
     return ListView.builder(
       itemCount: items.length,
@@ -137,7 +137,6 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
       },
     );
   }
-
 
   @override
   void dispose() {

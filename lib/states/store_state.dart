@@ -3,39 +3,39 @@ import 'package:equatable/equatable.dart';
 
 import 'package:ds_market_place/domain/failure.dart';
 
-abstract class ExploreState extends Equatable {}
+abstract class StoreState extends Equatable {}
 
-class ExploreInitialState extends ExploreState {
+class StoreInitialState extends StoreState {
   @override
   List<Object?> get props => [];
 }
 
-class ExploreLoadingState extends ExploreState {
+class StoreLoadingState extends StoreState {
   @override
   List<Object?> get props => [];
 }
 
-class ExploreLoadedState extends ExploreState {
+class StoreLoadedState extends StoreState {
   final List<StoreItem> storeItems;
-  ExploreLoadedState({
+  StoreLoadedState({
     required this.storeItems,
   });
 
   @override
   List<Object?> get props => [storeItems];
 
-  ExploreLoadedState copyWith({
+  StoreLoadedState copyWith({
     List<StoreItem>? storeItems,
   }) {
-    return ExploreLoadedState(
+    return StoreLoadedState(
       storeItems: storeItems ?? this.storeItems,
     );
   }
 }
 
-class ExploreErrorState extends ExploreState {
+class StoreErrorState extends StoreState {
   final Failure failure;
-  ExploreErrorState({
+  StoreErrorState({
     required this.failure,
   });
 

@@ -5,8 +5,6 @@ import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/constants/enums.dart';
-import 'package:ds_market_place/domain/failure.dart';
-import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
@@ -41,6 +39,9 @@ class _SellScreenState extends ConsumerState<SellScreen> {
   }
 
   Widget _buildList(List<StoreItem> items) {
+    if (items.isEmpty) {
+      return GreyBar("You have no items in your store\nPress '+' to add some");
+    }
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) {
@@ -84,12 +85,6 @@ class _SellScreenState extends ConsumerState<SellScreen> {
         );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    storeViewModel.clearFailure();
-    super.dispose();
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/models/store_item.dart';
@@ -16,6 +17,9 @@ class ExploreScreen extends ConsumerStatefulWidget {
 
 class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   Widget _buildGrid(List<StoreItem> items) {
+    if (items.isEmpty) {
+      return GreyBar("No items are available to buy.");
+    }
     return GridView.builder(
       itemCount: items.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

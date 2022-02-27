@@ -1,4 +1,3 @@
-
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
@@ -138,7 +137,8 @@ class _PurchaseItemScreenState extends ConsumerState<PurchaseItemScreen> {
   @override
   Widget build(BuildContext context) {
     ref.listen(purchaseProvider, (previous, next) {
-      if (next is PurchaseLoadedState) {
+      if (next is PurchaseLoadedState &&
+          (ModalRoute.of(context)?.isCurrent ?? false)) {
         String message =
             "$amount" "X of ${widget.item.name} is purchased succesfully";
         showSnackbar(context, Text(message));
@@ -146,71 +146,84 @@ class _PurchaseItemScreenState extends ConsumerState<PurchaseItemScreen> {
       }
     });
     ref.listen(itemEditProvider, (previous, next) {
-      if (next is ItemEditLoadedState) {
+      if (next is ItemEditLoadedState &&
+          (ModalRoute.of(context)?.isCurrent ?? false)) {
         showSnackbar(context,
             Text("${widget.item.name} is added to your store succesfully"));
         Navigator.of(context).pop();
       }
     });
     StoreItem item = widget.item;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(item.name),
-        centerTitle: true,
-      ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                MyCachedImg(
-                  item.imageLink,
-                  MediaQuery.of(context).size.width / 3,
-                  100,
-                )
-              ],
+    return WillPopScope(
+      onWillPop: () {
+        // multiple purchase screens could be stacked over each other.
+        // all of them use the same set of providers.
+        // refresh provider when screen is poped so that errors from popped
+        // screen would not show on screens below it in the stack because of the
+        // provider preserving of state between screens.
+        ref.refresh(purchaseProvider);
+        ref.refresh(itemEditProvider);
+        return Future.value(true);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(item.name),
+          centerTitle: true,
+        ),
+        body: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  MyCachedImg(
+                    item.imageLink,
+                    MediaQuery.of(context).size.width / 3,
+                    100,
+                  )
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 40),
-          _buildTable(),
-          const SizedBox(height: 50),
-          if (item.storeName != globals.storeName)
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Center(
-                    child: Text("Amount",
-                        style: TextStyle(
-                            color: Colors.grey.shade700, fontSize: 20))),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    RoundedButton(title: "-", onPressed: _decreaseAmount),
-                    const SizedBox(width: 20),
-                    Text(
-                      amount.toString(),
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(width: 20),
-                    RoundedButton(title: "+", onPressed: _increaseAmount),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _buildPurchaseButton(),
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: _buildAddToMyStoreButton(),
-                ),
-                const SizedBox(height: 20),
-              ],
-            )
-        ],
+            const SizedBox(height: 40),
+            _buildTable(),
+            const SizedBox(height: 50),
+            if (item.storeName != globals.storeName)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Center(
+                      child: Text("Amount",
+                          style: TextStyle(
+                              color: Colors.grey.shade700, fontSize: 20))),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      RoundedButton(title: "-", onPressed: _decreaseAmount),
+                      const SizedBox(width: 20),
+                      Text(
+                        amount.toString(),
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                      const SizedBox(width: 20),
+                      RoundedButton(title: "+", onPressed: _increaseAmount),
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: _buildPurchaseButton(),
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: _buildAddToMyStoreButton(),
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              )
+          ],
+        ),
       ),
     );
   }
