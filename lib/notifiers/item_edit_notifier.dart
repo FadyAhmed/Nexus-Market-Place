@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:riverpod/riverpod.dart';
 
 class ItemEditNotifier extends StateNotifier<ItemEditState> {
-  StateNotifierProviderRef ref;
+  AutoDisposeStateNotifierProviderRef ref;
 
   ItemEditNotifier(this.ref) : super(ItemEditInitialState());
 
@@ -60,6 +60,20 @@ class ItemEditNotifier extends StateNotifier<ItemEditState> {
       (failure) => state = ItemEditErrorState(failure: failure),
       (_) {
         ref.read(storeItemsListProvider.notifier).editItemInState(id, request);
+        state = ItemEditLoadedState();
+      },
+    );
+  }
+
+  void addItemInOtherStoreToMyStore(String id) async {
+    state = ItemEditLoadingState();
+    final response = await GetIt.I<Repository>().addItemInOtherStoreToMyStore(
+      id,
+    );
+    response.fold(
+      (failure) => state = ItemEditErrorState(failure: failure),
+      (item) {
+        ref.read(storeItemsListProvider.notifier).addStoreItemToState(item);
         state = ItemEditLoadedState();
       },
     );

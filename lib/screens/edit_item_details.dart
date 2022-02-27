@@ -46,8 +46,6 @@ class _EditItemDetailsState extends ConsumerState<EditItemDetails> {
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    ref.refresh(itemEditProvider);
-
     if (widget.inventoryItem != null) {
       var item = widget.inventoryItem;
       _name = TextEditingController(text: item!.name);

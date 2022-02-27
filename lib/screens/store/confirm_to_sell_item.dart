@@ -38,8 +38,6 @@ class _ConfirmItemToSellScreenState
     InventoryItem item = widget.item;
     _amount = TextEditingController(text: '1');
     _price = TextEditingController(text: item.price.toStringAsFixed(2));
-
-    ref.refresh(itemEditProvider);
   }
 
   void submitConfirm() async {

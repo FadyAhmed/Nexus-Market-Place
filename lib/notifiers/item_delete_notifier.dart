@@ -8,7 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:riverpod/riverpod.dart';
 
 class ItemDeleteNotifier extends StateNotifier<ItemDeleteState> {
-  StateNotifierProviderRef ref;
+  AutoDisposeStateNotifierProviderRef ref;
 
   ItemDeleteNotifier(this.ref) : super(ItemDeleteInitialState());
 

@@ -51,12 +51,6 @@ class _AddItemToInventoryState extends ConsumerState<AddItemToInventory> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    ref.refresh(itemEditProvider);
-  }
-
-  @override
   Widget build(BuildContext context) {
     ref.listen<ItemEditState>(itemEditProvider, (_, next) {
       if (next is ItemEditLoadedState) {
