@@ -18,7 +18,7 @@ import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/screens/inventory/add_item_to_inventory.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
-import 'package:ds_market_place/states/inventory_item_delete_state.dart';
+import 'package:ds_market_place/states/item_delete_state.dart';
 import 'package:ds_market_place/states/inventory_items_list_state.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +119,7 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
                 ));
               } else {
                 ref
-                    .read(inventoryItemsDeleteProvider.notifier)
+                    .read(itemsDeleteProvider.notifier)
                     .removeInventoryItem(item.id!);
               }
             },
@@ -147,8 +147,8 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(inventoryItemsDeleteProvider, (previous, next) {
-      if (next is InventoryItemDeleteLoadedState) {
+    ref.listen(itemsDeleteProvider, (previous, next) {
+      if (next is ItemDeleteLoadedState) {
         showSnackbar(context, Text('item deleted successfully'));
       }
     });

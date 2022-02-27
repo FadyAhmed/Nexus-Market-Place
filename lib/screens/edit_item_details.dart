@@ -17,7 +17,7 @@ import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/providers/inventories_provider.dart';
 import 'package:ds_market_place/providers/stores_provider.dart';
-import 'package:ds_market_place/states/inventory_item_delete_state.dart';
+import 'package:ds_market_place/states/item_delete_state.dart';
 import 'package:ds_market_place/states/inventory_item_edit_state.dart';
 import 'package:ds_market_place/view_models/edit_item_view_model.dart';
 import 'package:ds_market_place/view_models/inventory_view_model.dart';

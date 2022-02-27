@@ -2,35 +2,35 @@ import 'package:equatable/equatable.dart';
 
 import 'package:ds_market_place/domain/failure.dart';
 
-abstract class InventoryItemDeleteState extends Equatable {}
+abstract class ItemDeleteState extends Equatable {}
 
-class InventoryItemDeleteInitialState extends InventoryItemDeleteState {
+class ItemDeleteInitialState extends ItemDeleteState {
   @override
   List<Object?> get props => [];
 }
 
-class InventoryItemDeleteLoadingState extends InventoryItemDeleteState {
+class ItemDeleteLoadingState extends ItemDeleteState {
   final String deletedItemId;
-  InventoryItemDeleteLoadingState({
+  ItemDeleteLoadingState({
     required this.deletedItemId,
   });
   @override
   List<Object?> get props => [deletedItemId];
 }
 
-class InventoryItemDeleteLoadedState extends InventoryItemDeleteState {
+class ItemDeleteLoadedState extends ItemDeleteState {
   final String deletedItemId;
-  InventoryItemDeleteLoadedState({
+  ItemDeleteLoadedState({
     required this.deletedItemId,
   });
   @override
   List<Object?> get props => [deletedItemId];
 }
 
-class InventoryItemDeleteErrorState extends InventoryItemDeleteState {
+class ItemDeleteErrorState extends ItemDeleteState {
   final Failure failure;
   final String deletedItemId;
-  InventoryItemDeleteErrorState({
+  ItemDeleteErrorState({
     required this.failure,
     required this.deletedItemId,
   });

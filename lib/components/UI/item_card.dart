@@ -3,7 +3,7 @@ import 'package:ds_market_place/components/UI/data_text.dart';
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/providers.dart';
-import 'package:ds_market_place/states/inventory_item_delete_state.dart';
+import 'package:ds_market_place/states/item_delete_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -37,10 +37,10 @@ class ItemCard extends StatelessWidget {
   Widget _buildPopUpMenuButton() {
     return Consumer(
       builder: (context, ref, child) {
-        final state = ref.watch(inventoryItemsDeleteProvider);
-        if (state is InventoryItemDeleteInitialState) {
+        final state = ref.watch(itemsDeleteProvider);
+        if (state is ItemDeleteInitialState) {
           return child!;
-        } else if (state is InventoryItemDeleteLoadingState) {
+        } else if (state is ItemDeleteLoadingState) {
           // execluding pop up buttons that don't belong to deleted inventory
           // item's item card
           if (state.deletedItemId != itemId) return child!;
@@ -50,7 +50,7 @@ class ItemCard extends StatelessWidget {
               child: CircularProgressIndicator(),
             ),
           );
-        } else if (state is InventoryItemDeleteErrorState) {
+        } else if (state is ItemDeleteErrorState) {
           if (state.deletedItemId != itemId) return child!;
           showMessageDialogue(context, state.failure.message);
           return child!;
