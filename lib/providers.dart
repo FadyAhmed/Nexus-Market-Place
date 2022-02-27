@@ -4,6 +4,7 @@ import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/models/profile.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/models/transaction.dart';
+import 'package:ds_market_place/models/user.dart';
 import 'package:ds_market_place/notifiers/explore_notifier.dart';
 import 'package:ds_market_place/notifiers/item_edit_notifier.dart';
 import 'package:ds_market_place/notifiers/item_delete_notifier.dart';
@@ -65,4 +66,15 @@ final purchasedItemsProvider =
     FutureProvider.autoDispose<List<Transaction>>((ref) async {
   final response = await GetIt.I<RestClient>().getMyPurchasedItems();
   return response.transactions;
+});
+
+final allTransactionsProvider =
+    FutureProvider.autoDispose<List<Transaction>>((ref) async {
+  final response = await GetIt.I<RestClient>().getAllTransactions();
+  return response.transactions;
+});
+
+final allUsersProvider = FutureProvider.autoDispose<List<User>>((ref) async {
+  final response = await GetIt.I<RestClient>().getAllUsers();
+  return response.users;
 });
