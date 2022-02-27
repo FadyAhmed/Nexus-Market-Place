@@ -6,6 +6,7 @@ class Failure {
     'invalid amount',
     'amount is larger than the available',
     "item doesn't exist",
+    'amount is larger than the amount presented in the inventory for that item',
   ];
 
   String message;

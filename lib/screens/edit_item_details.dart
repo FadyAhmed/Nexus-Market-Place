@@ -1,30 +1,21 @@
 import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
-import 'package:ds_market_place/constants.dart';
-import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/data/requests.dart';
-import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers.dart';
-import 'package:ds_market_place/providers/inventories_provider.dart';
-import 'package:ds_market_place/providers/stores_provider.dart';
-import 'package:ds_market_place/states/item_delete_state.dart';
-import 'package:ds_market_place/states/inventory_item_edit_state.dart';
+import 'package:ds_market_place/states/item_edit_state.dart';
 import 'package:ds_market_place/view_models/edit_item_view_model.dart';
-import 'package:ds_market_place/view_models/inventory_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
 class EditItemDetails extends ConsumerStatefulWidget {
   final onSubmit;
@@ -46,10 +37,6 @@ class EditItemDetails extends ConsumerStatefulWidget {
 }
 
 class _EditItemDetailsState extends ConsumerState<EditItemDetails> {
-  EditItemViewModel editInventoryItemViewModel = GetIt.I<EditItemViewModel>();
-
-  late StreamSubscription isEditedSub;
-
   TextEditingController _name = TextEditingController();
   TextEditingController _description = TextEditingController();
   TextEditingController _amount = TextEditingController();
@@ -59,13 +46,7 @@ class _EditItemDetailsState extends ConsumerState<EditItemDetails> {
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
-    isEditedSub =
-        editInventoryItemViewModel.isEditedController.stream.listen((isEdited) {
-      if (isEdited) {
-        showSnackbar(context, Text("Item edited successfully"));
-        Navigator.of(context).pop();
-      }
-    });
+    ref.refresh(itemEditProvider);
 
     if (widget.inventoryItem != null) {
       var item = widget.inventoryItem;
@@ -85,12 +66,6 @@ class _EditItemDetailsState extends ConsumerState<EditItemDetails> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    isEditedSub.cancel();
-    super.dispose();
-  }
-
   void submitEditItem() async {
     if (_formKey.currentState!.validate()) {
       bool isImageValid = await isValidImage(_imageLink.text);
@@ -108,7 +83,7 @@ class _EditItemDetailsState extends ConsumerState<EditItemDetails> {
           imageLink: _imageLink.text,
         );
         ref
-            .read(inventoryItemsEditProvider.notifier)
+            .read(itemEditProvider.notifier)
             .editInventoryItem(widget.inventoryItem!.id!, request);
       } else {
         EditStoreItemRequest request = EditStoreItemRequest(
@@ -118,16 +93,17 @@ class _EditItemDetailsState extends ConsumerState<EditItemDetails> {
           imageLink: _imageLink.text,
           description: _description.text,
         );
-        await editInventoryItemViewModel.editStoreItem(
-            widget.storeItem!.id!, request);
+        ref
+            .read(itemEditProvider.notifier)
+            .editStoreItem(widget.storeItem!.id!, request);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(inventoryItemsEditProvider, (previous, next) {
-      if (next is InventoryItemEditLoadedState) {
+    ref.listen(itemEditProvider, (previous, next) {
+      if (next is ItemEditLoadedState) {
         showSnackbar(context, Text('${_name.text} is edited successfully'));
         Navigator.pop(context);
       }
@@ -240,12 +216,12 @@ class _EditItemDetailsState extends ConsumerState<EditItemDetails> {
                         onPressed: submitEditItem,
                         title: widget.submitButtonText,
                       );
-                      final state = ref.watch(inventoryItemsEditProvider);
-                      if (state is InventoryItemEditInitialState) {
+                      final state = ref.watch(itemEditProvider);
+                      if (state is ItemEditInitialState) {
                         return button;
-                      } else if (state is InventoryItemEditLoadingState) {
+                      } else if (state is ItemEditLoadingState) {
                         return Center(child: CircularProgressIndicator());
-                      } else if (state is InventoryItemEditErrorState) {
+                      } else if (state is ItemEditErrorState) {
                         return MyErrorWidget(
                           failure: state.failure,
                           onRetry: submitEditItem,

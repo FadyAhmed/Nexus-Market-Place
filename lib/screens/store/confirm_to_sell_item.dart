@@ -1,24 +1,16 @@
-import 'dart:async';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
-import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
-import 'package:ds_market_place/constants.dart';
-import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/data/requests.dart';
-import 'package:ds_market_place/helpers/exceptions.dart';
-import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
-import 'package:ds_market_place/providers/stores_provider.dart';
-import 'package:ds_market_place/view_models/confirm_to_sell_item_view_model.dart';
+import 'package:ds_market_place/providers.dart';
+import 'package:ds_market_place/states/item_edit_state.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ConfirmItemToSellScreen extends StatefulWidget {
+class ConfirmItemToSellScreen extends ConsumerStatefulWidget {
   final onSubmit;
   final String submitButtonText;
   final InventoryItem item;
@@ -34,12 +26,8 @@ class ConfirmItemToSellScreen extends StatefulWidget {
       _ConfirmItemToSellScreenState();
 }
 
-class _ConfirmItemToSellScreenState extends State<ConfirmItemToSellScreen> {
-  ConfirmToSellItemViewModel confirmToSellItemViewModel = GetIt.I();
-
-  late StreamSubscription isConfirmedSub;
-  late StreamSubscription failureSub;
-
+class _ConfirmItemToSellScreenState
+    extends ConsumerState<ConfirmItemToSellScreen> {
   TextEditingController _amount = TextEditingController();
   TextEditingController _price = TextEditingController();
 
@@ -51,20 +39,7 @@ class _ConfirmItemToSellScreenState extends State<ConfirmItemToSellScreen> {
     _amount = TextEditingController(text: '1');
     _price = TextEditingController(text: item.price.toStringAsFixed(2));
 
-    isConfirmedSub = confirmToSellItemViewModel.isConfirmedController.stream
-        .listen((isConfirmed) {
-      if (isConfirmed) {
-        showSnackbar(context, Text('Item is added to store'));
-        Navigator.of(context).pop();
-      }
-    });
-
-    failureSub =
-        confirmToSellItemViewModel.failureController.stream.listen((failure) {
-      if (failure != null) {
-        showMessageDialogue(context, failure.message);
-      }
-    });
+    ref.refresh(itemEditProvider);
   }
 
   void submitConfirm() async {
@@ -73,14 +48,19 @@ class _ConfirmItemToSellScreenState extends State<ConfirmItemToSellScreen> {
       double price = double.parse(_price.text);
       AddItemInMyInventoryToMyStoreRequest request =
           AddItemInMyInventoryToMyStoreRequest(price: price, amount: amount);
-      confirmToSellItemViewModel.addItemInMyInventoryToMyStore(
-          widget.item.id!, request);
+      ref
+          .read(itemEditProvider.notifier)
+          .addItemInMyInventoryToMyStore(widget.item.id!, request);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    var storesProvider = Provider.of<StoresProvider>(context);
+    ref.listen(itemEditProvider, (previous, next) {
+      if (next is ItemEditLoadedState) {
+        Navigator.pop(context);
+      }
+    });
     List<KFormField> fields = [
       KFormField(
           key: 'amount',
@@ -156,18 +136,24 @@ class _ConfirmItemToSellScreenState extends State<ConfirmItemToSellScreen> {
                 const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: StreamBuilder<bool>(
-                    stream: confirmToSellItemViewModel
-                        .confirmingLoadingController.stream,
-                    builder: (context, snapshot) {
-                      if (snapshot.data ?? false) {
-                        return Center(child: CircularProgressIndicator());
+                  child: Center(
+                    child: Builder(builder: (context) {
+                      final state = ref.watch(itemEditProvider);
+                      if (state is ItemEditLoadingState) {
+                        return CircularProgressIndicator();
+                      } else if (state is ItemEditErrorState) {
+                        return MyErrorWidget(
+                          failure: state.failure,
+                          onRetry: submitConfirm,
+                        );
+                      } else {
+                        // inital - loaded
+                        return RoundedButton(
+                          onPressed: submitConfirm,
+                          title: widget.submitButtonText,
+                        );
                       }
-                      return RoundedButton(
-                        onPressed: submitConfirm,
-                        title: widget.submitButtonText,
-                      );
-                    },
+                    }),
                   ),
                 ),
                 const SizedBox(height: 30)

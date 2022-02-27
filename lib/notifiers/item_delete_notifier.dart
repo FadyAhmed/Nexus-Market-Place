@@ -1,7 +1,7 @@
 import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/providers.dart';
-import 'package:ds_market_place/states/inventory_item_edit_state.dart';
+import 'package:ds_market_place/states/item_edit_state.dart';
 import 'package:ds_market_place/states/item_delete_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';

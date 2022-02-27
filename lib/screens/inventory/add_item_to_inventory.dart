@@ -9,7 +9,7 @@ import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/providers.dart';
-import 'package:ds_market_place/states/inventory_item_edit_state.dart';
+import 'package:ds_market_place/states/item_edit_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -46,14 +46,20 @@ class _AddItemToInventoryState extends ConsumerState<AddItemToInventory> {
       );
       final request = AddInventoryItemRequest.fromItem(item);
 
-      ref.read(inventoryItemsEditProvider.notifier).addInventoryItem(request);
+      ref.read(itemEditProvider.notifier).addInventoryItem(request);
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+    ref.refresh(itemEditProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    ref.listen<InventoryItemEditState>(inventoryItemsEditProvider, (_, next) {
-      if (next is InventoryItemEditLoadedState) {
+    ref.listen<ItemEditState>(itemEditProvider, (_, next) {
+      if (next is ItemEditLoadedState) {
         showSnackbar(context, Text('${_nameController.text} is added'));
         Navigator.pop(context);
       }
@@ -170,20 +176,18 @@ class _AddItemToInventoryState extends ConsumerState<AddItemToInventory> {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Builder(builder: (context) {
-                        final state = ref.watch(inventoryItemsEditProvider);
+                        final state = ref.watch(itemEditProvider);
                         switch (state.runtimeType) {
-                          case InventoryItemEditInitialState:
+                          case ItemEditInitialState:
                             return RoundedButton(
                               onPressed: submitForm,
                               title: 'Add Item',
                             );
-                          case InventoryItemEditLoadingState:
+                          case ItemEditLoadingState:
                             return Center(child: CircularProgressIndicator());
-                          case InventoryItemEditErrorState:
+                          case ItemEditErrorState:
                             return MyErrorWidget(
-                              failure:
-                                  (state as InventoryItemEditErrorState)
-                                  .failure,
+                              failure: (state as ItemEditErrorState).failure,
                               onRetry: submitForm,
                             );
                           default:
