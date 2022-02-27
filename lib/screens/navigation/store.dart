@@ -69,15 +69,11 @@ class _SellScreenState extends ConsumerState<SellScreen> {
                   builder: (context) => EditItemDetails(
                     storeItem: item,
                     submitButtonText: "Edit",
-                    onSubmit: () => {
-                      //TODO: add edit habdler
-                      Navigator.of(context).pop()
-                    },
                   ),
                 ));
               } else {
                 ref
-                    .read(itemsDeleteProvider.notifier)
+                    .read(itemDeleteProvider.notifier)
                     .removeStoreItemFromMyStore(item.id!);
               }
             },
@@ -89,7 +85,7 @@ class _SellScreenState extends ConsumerState<SellScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(itemsDeleteProvider, (previous, next) {
+    ref.listen(itemDeleteProvider, (previous, next) {
       if (next is ItemDeleteLoadedState) {
         showSnackbar(context, Text('item is deleted successfully'));
       }

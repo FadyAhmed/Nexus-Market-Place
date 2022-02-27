@@ -114,12 +114,11 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
                   builder: (context) => EditItemDetails(
                     inventoryItem: item,
                     submitButtonText: "Edit",
-                    onSubmit: () => {Navigator.of(context).pop()},
                   ),
                 ));
               } else {
                 ref
-                    .read(itemsDeleteProvider.notifier)
+                    .read(itemDeleteProvider.notifier)
                     .removeInventoryItem(item.id!);
               }
             },
@@ -146,7 +145,7 @@ class _InventoryScreenState extends ConsumerState<InventoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(itemsDeleteProvider, (previous, next) {
+    ref.listen(itemDeleteProvider, (previous, next) {
       if (next is ItemDeleteLoadedState) {
         showSnackbar(context, Text('item deleted successfully'));
       }

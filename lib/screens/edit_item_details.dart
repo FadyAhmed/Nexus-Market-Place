@@ -18,14 +18,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 
 class EditItemDetails extends ConsumerStatefulWidget {
-  final onSubmit;
   final String submitButtonText;
   final InventoryItem? inventoryItem;
   final StoreItem? storeItem;
 
   EditItemDetails({
     Key? key,
-    required this.onSubmit,
     required this.submitButtonText,
     this.inventoryItem,
     this.storeItem,

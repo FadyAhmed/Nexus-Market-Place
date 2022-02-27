@@ -27,7 +27,7 @@ final itemEditProvider =
     StateNotifierProvider.autoDispose<ItemEditNotifier, ItemEditState>(
         (ref) => ItemEditNotifier(ref));
 
-final itemsDeleteProvider =
+final itemDeleteProvider =
     StateNotifierProvider.autoDispose<ItemDeleteNotifier, ItemDeleteState>(
         (ref) => ItemDeleteNotifier(ref));
 

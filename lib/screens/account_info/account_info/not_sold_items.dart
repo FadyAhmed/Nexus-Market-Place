@@ -1,19 +1,16 @@
-import 'dart:async';
-
-import 'package:dio/dio.dart';
 import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
-import 'package:ds_market_place/domain/failure.dart';
-import 'package:ds_market_place/helpers/functions.dart';
+import 'package:ds_market_place/components/UI/show_snackbar.dart';
+import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/screens/edit_item_details.dart';
 import 'package:ds_market_place/screens/seller_item_details.dart';
-import 'package:ds_market_place/view_models/account_info_view_model.dart';
+import 'package:ds_market_place/states/item_delete_state.dart';
+import 'package:ds_market_place/states/store_items_list_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
 
 class OnSaleItemsScreen extends ConsumerStatefulWidget {
   const OnSaleItemsScreen({Key? key}) : super(key: key);
@@ -23,11 +20,6 @@ class OnSaleItemsScreen extends ConsumerStatefulWidget {
 }
 
 class _OnSaleItemsScreenState extends ConsumerState<OnSaleItemsScreen> {
-  AccountInfoViewModel accountInfoViewModel = GetIt.I();
-
-  late StreamSubscription removingLoadingSub;
-  late StreamSubscription removingFailureSub;
-
   Widget buildList(List<StoreItem> items) {
     if (items.isEmpty) {
       return GreyBar('You have no owned items exisiting in your store.');
@@ -56,14 +48,12 @@ class _OnSaleItemsScreenState extends ConsumerState<OnSaleItemsScreen> {
                   builder: (context) => EditItemDetails(
                     storeItem: item,
                     submitButtonText: "Edit",
-                    onSubmit: () => {
-                      //TODO: add edit habdler
-                      Navigator.of(context).pop()
-                    },
                   ),
                 ));
               } else {
-                accountInfoViewModel.removeStoreItemFromMyStore(item.id!);
+                ref
+                    .read(itemDeleteProvider.notifier)
+                    .removeStoreItemFromMyStore(item.id!);
               }
             },
           ),
@@ -75,51 +65,44 @@ class _OnSaleItemsScreenState extends ConsumerState<OnSaleItemsScreen> {
   @override
   void initState() {
     super.initState();
-    accountInfoViewModel.getNotSoldItems();
-
-    removingLoadingSub =
-        accountInfoViewModel.removingLoadingController.listen((isLoading) {
-      if (isLoading) {
-        showLoadingDialog(context);
-      } else {
-        if (!(ModalRoute.of(context)?.isCurrent ?? true)) {
-          Navigator.of(context).pop();
-        }
-      }
-    });
-
-    removingFailureSub =
-        accountInfoViewModel.removingFailureController.listen((failure) {
-      if (failure != null) {
-        showMessageDialogue(context, failure.message);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    accountInfoViewModel.clearFailure();
-    removingFailureSub.cancel();
-    removingLoadingSub.cancel();
-    super.dispose();
+    Future.delayed(
+      Duration.zero,
+      ref.read(storeItemsListProvider.notifier).getAllStoreItemsFromMyStore,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(itemDeleteProvider, (previous, next) {
+      if (next is ItemDeleteLoadedState) {
+        showSnackbar(context, Text('item is deleted successfully.'));
+      }
+    });
     return Scaffold(
       body: Center(
-        child: ref.watch(notSoldItemsProvider).when(
-              data: buildList,
-              error: (err, _) {
-                if (err is DioError) {
-                  return MyErrorWidget(
-                    failure: err.failure,
-                    onRetry: () => ref.refresh(notSoldItemsProvider),
-                  );
-                }
-              },
-              loading: () => CircularProgressIndicator(),
-            ),
+        child: Builder(
+          builder: (context) {
+            final state = ref.watch(storeItemsListProvider);
+            if (state is StoreItemListInitialState) {
+              return Container();
+            } else if (state is StoreItemListLoadingState) {
+              return CircularProgressIndicator();
+            } else if (state is StoreItemListErrorState) {
+              return MyErrorWidget(
+                failure: state.failure,
+                onRetry: ref
+                    .read(storeItemsListProvider.notifier)
+                    .getAllStoreItemsFromMyStore,
+              );
+            } else {
+              final currentState = state as StoreItemListLoadedState;
+              List<StoreItem> items = currentState.storeItems
+                  .where((item) => item.state == StoreItemState.owned)
+                  .toList();
+              return buildList(items);
+            }
+          },
+        ),
       ),
     );
   }

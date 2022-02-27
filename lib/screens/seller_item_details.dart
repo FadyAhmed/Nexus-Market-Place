@@ -46,11 +46,11 @@ class _OnSaleItemDetailsScreenState
   void submitDelete() async {
     if (widget.inventoryItem != null) {
       ref
-          .read(itemsDeleteProvider.notifier)
+          .read(itemDeleteProvider.notifier)
           .removeInventoryItem(widget.inventoryItem!.id!);
     } else {
       ref
-          .read(itemsDeleteProvider.notifier)
+          .read(itemDeleteProvider.notifier)
           .removeStoreItemFromMyStore(widget.storeItem!.id!);
     }
   }
@@ -68,9 +68,6 @@ class _OnSaleItemDetailsScreenState
         builder: (context) => EditItemDetails(
           inventoryItem: inventoryItem,
           storeItem: storeItem,
-          onSubmit: () {
-            Navigator.of(context).pop();
-          },
           submitButtonText: "Edit",
         ),
       ),
@@ -114,7 +111,7 @@ class _OnSaleItemDetailsScreenState
                     const SizedBox(width: 15),
                     Builder(
                       builder: ((context) {
-                        final state = ref.watch(itemsDeleteProvider);
+                        final state = ref.watch(itemDeleteProvider);
                         if (state is ItemDeleteLoadingState) {
                           return SizedBox(
                             height: 30,
@@ -175,7 +172,7 @@ class _OnSaleItemDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(itemsDeleteProvider, (previous, next) {
+    ref.listen(itemDeleteProvider, (previous, next) {
       if (next is ItemDeleteLoadedState) {
         Navigator.pop(context);
       }

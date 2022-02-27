@@ -38,12 +38,12 @@ class ItemCard extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         // if i put the showDialog code with the logic below, it causes an error
-        ref.listen(itemsDeleteProvider, (previous, next) {
+        ref.listen(itemDeleteProvider, (previous, next) {
           if (next is ItemDeleteErrorState && next.deletedItemId == itemId) {
             showMessageDialogue(context, next.failure.message);
           }
         });
-        final state = ref.watch(itemsDeleteProvider);
+        final state = ref.watch(itemDeleteProvider);
         if (state is ItemDeleteInitialState) {
           return child!;
         } else if (state is ItemDeleteLoadingState) {
