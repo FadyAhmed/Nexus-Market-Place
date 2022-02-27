@@ -44,4 +44,12 @@ class ExploreNotifier extends StateNotifier<ExploreState> {
         .where((item) => item.storeName == storeName)
         .toList();
   }
+
+  List<StoreItem> searchItemsInState(String term) {
+    if (state is! ExploreLoadedState) return [];
+    final currentState = state as ExploreLoadedState;
+    return currentState.storeItems
+        .where((item) => item.name.startsWith(term))
+        .toList();
+  }
 }
