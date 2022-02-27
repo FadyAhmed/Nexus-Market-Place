@@ -60,7 +60,8 @@ class _AccountInfoScreenState extends ConsumerState<AccountInfoScreen> {
               children: [
                 const Icon(Icons.account_balance_wallet_outlined),
                 Text(
-                  " " "${profile.balance.toStringAsFixed(2)}\$",
+                  " "
+                  "${ref.watch(balanceAmountProvider)?.toStringAsFixed(2) ?? profile.balance.toStringAsFixed(2)}\$",
                   style: Theme.of(context)
                       .textTheme
                       .subtitle1!

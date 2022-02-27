@@ -7,6 +7,9 @@ class Failure {
     'amount is larger than the available',
     "item doesn't exist",
     'amount is larger than the amount presented in the inventory for that item',
+    'storeName already exists',
+    'invalid email',
+    'login unsuccessful',
   ];
 
   String message;

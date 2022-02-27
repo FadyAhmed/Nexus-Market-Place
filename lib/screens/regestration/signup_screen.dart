@@ -1,51 +1,38 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:ds_market_place/components/UI/circular-loading.dart';
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
-import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/data/requests.dart';
-import 'package:ds_market_place/helpers/exceptions.dart';
-import 'package:ds_market_place/helpers/functions.dart';
-import 'package:ds_market_place/models/signup.dart';
-import 'package:ds_market_place/providers/authentication_provider.dart';
+import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/screens/regestration/signin_screen.dart';
-import 'package:ds_market_place/view_models/signup_view_model.dart';
+import 'package:ds_market_place/states/auth_state.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants.dart';
-import '../home_page_screen.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
+
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  SignUpViewModel signUpViewModel = GetIt.I();
-
-  late StreamSubscription loadingSub;
-  late StreamSubscription failureSub;
-  late StreamSubscription isSignedUpSub;
-
-  TextEditingController _firstName = TextEditingController();
-  TextEditingController _lastName = TextEditingController();
-  TextEditingController _storeName = TextEditingController();
-  TextEditingController _userName = TextEditingController();
-  TextEditingController _email = TextEditingController();
-  TextEditingController _confirmEmail = TextEditingController();
-  TextEditingController _phoneNum = TextEditingController();
-  TextEditingController _password = TextEditingController();
-  TextEditingController _confirmPassword = TextEditingController();
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
+  final TextEditingController _firstName = TextEditingController();
+  final TextEditingController _lastName = TextEditingController();
+  final TextEditingController _storeName = TextEditingController();
+  final TextEditingController _userName = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _confirmEmail = TextEditingController();
+  final TextEditingController _phoneNum = TextEditingController();
+  final TextEditingController _password = TextEditingController();
+  final TextEditingController _confirmPassword = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
-  bool _loading = false;
-  bool _bigLoading = false;
 
   Future<void> submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -58,30 +45,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
         password: _password.text,
         storeName: _storeName.text,
       );
-      signUpViewModel.signUp(request);
+      ref.read(authProvider.notifier).signUp(request);
+    }
+  }
+
+  Widget _buildSignUpButton() {
+    final state = ref.watch(authProvider);
+    if (state is AuthLoadingState) {
+      return Center(child: CircularProgressIndicator());
+    } else if (state is AuthErrorState) {
+      return MyErrorWidget(failure: state.failure, onRetry: submitForm);
+    } else {
+      // initial - loaded
+      return Semantics(
+        label: 'send signup request',
+        child: RoundedButton(
+          myKey: 'signupBtn',
+          onPressed: submitForm,
+          title: 'Sign up',
+        ),
+      );
     }
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    loadingSub = signUpViewModel.loadingController.listen((isLoading) {
-      if (isLoading) {
-        showLoadingDialog(context);
-      } else {
-        Navigator.pop(context);
-      }
-    });
-
-    failureSub = signUpViewModel.failureController.listen((failure) {
-      if (failure != null) {
-        showMessageDialogue(context, failure.message);
-      }
-    });
-
-    isSignedUpSub = signUpViewModel.isSignedUpController.listen((isSignedUp) {
-      if (isSignedUp) {
+  Widget build(BuildContext context) {
+    ref.listen(authProvider, (previous, next) {
+      if (next is AuthLoadedState) {
         showSnackbar(
           context,
           Text('You have been registered successfully, Log in to your account'),
@@ -90,10 +80,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Navigator.of(context).pop();
       }
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     List<KFormField> _fields = [
       KFormField(
           key: 'firstName',
@@ -188,9 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     ];
 
     return Scaffold(
-      body: _bigLoading
-          ? loading()
-          : GestureDetector(
+      body: GestureDetector(
               onTap: Platform.isWindows
                   ? null
                   : () {
@@ -238,14 +222,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                Semantics(
-                                  label: 'send signup request',
-                                  child: RoundedButton(
-                                    myKey: 'signupBtn',
-                                    onPressed: submitForm,
-                                    title: 'Sign up',
-                                  ),
-                                ),
+                          _buildSignUpButton(),
                                 SizedBox(height: 15),
                                 Center(
                                   child: Text(

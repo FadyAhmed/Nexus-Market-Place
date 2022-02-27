@@ -1,16 +1,19 @@
 import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/data/rest_client.dart';
-import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/models/profile.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/models/transaction.dart';
 import 'package:ds_market_place/models/user.dart';
+import 'package:ds_market_place/notifiers/auth_notifier.dart';
 import 'package:ds_market_place/notifiers/explore_notifier.dart';
 import 'package:ds_market_place/notifiers/item_edit_notifier.dart';
 import 'package:ds_market_place/notifiers/item_delete_notifier.dart';
 import 'package:ds_market_place/notifiers/inventory_items_list_notifier.dart';
 import 'package:ds_market_place/notifiers/purchase_notifier.dart';
 import 'package:ds_market_place/notifiers/store_item_list_notifier.dart';
+import 'package:ds_market_place/notifiers/balance_notifier.dart';
+import 'package:ds_market_place/states/auth_state.dart';
+import 'package:ds_market_place/states/balance_state.dart';
 import 'package:ds_market_place/states/explore_state.dart';
 import 'package:ds_market_place/states/item_edit_state.dart';
 import 'package:ds_market_place/states/item_delete_state.dart';
@@ -42,6 +45,20 @@ final exploreProvider = StateNotifierProvider<ExploreNotifier, ExploreState>(
 final purchaseProvider =
     StateNotifierProvider.autoDispose<PurchaseNotifier, PurchaseState>(
         (ref) => PurchaseNotifier(ref));
+
+final balanceProvider =
+    StateNotifierProvider.autoDispose<BalanceNotifier, BalanceState>(
+        (ref) => BalanceNotifier(ref));
+
+// final balanceProvider = StateNotifierProvider<BalanceNotifier, BalanceState>(
+//     (ref) => BalanceNotifier(ref));
+
+final authProvider = StateNotifierProvider.autoDispose<AuthNotifier, AuthState>(
+    (ref) => AuthNotifier(ref));
+
+final balanceAmountProvider = StateProvider<double?>((ref) {
+  return null;
+});
 
 final accountInfoProvider = FutureProvider.autoDispose<Profile>((ref) async {
   final response = await GetIt.I<RestClient>().getProfile();

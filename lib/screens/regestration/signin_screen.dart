@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:dio/dio.dart';
 import 'package:ds_market_place/components/UI/circular-loading.dart';
+import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
@@ -15,97 +16,42 @@ import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/helpers/exceptions.dart';
 import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/login.dart';
+import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/screens/home_page_screen.dart';
 import 'package:ds_market_place/screens/regestration/signup_screen.dart';
+import 'package:ds_market_place/states/auth_state.dart';
 import 'package:ds_market_place/view_models/login_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends ConsumerStatefulWidget {
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
-  LoginViewModel loginViewModel = GetIt.I<LoginViewModel>();
-
-  late StreamSubscription screenStateSub;
-  late StreamSubscription failureSub;
-  late StreamSubscription logInSub;
-
+class _SignInScreenState extends ConsumerState<SignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _username = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
   Future<void> submitForm() async {
     if (_formKey.currentState!.validate()) {
-      loginViewModel.signIn(
-        LoginRequest(
-          username: _username.text,
-          password: _password.text,
-        ),
+      LoginRequest request = LoginRequest(
+        username: _username.text,
+        password: _password.text,
       );
+      ref.read(authProvider.notifier).signIn(request);
     }
   }
 
-  void handleScreenStatus(ScreenStatus screenStatus) {
-    if (!(ModalRoute.of(context)?.isCurrent ?? true)) {
-      Navigator.of(context).pop();
-    }
-    switch (screenStatus) {
-      case ScreenStatus.loading:
-        showDialog(
-            context: context,
-            builder: (context) => Dialog(
-                  child: SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                ));
-        break;
-      case ScreenStatus.error:
-        break;
-      case ScreenStatus.content:
-        break;
-    }
-  }
-
-  void handleFailure(Failure? failure) {
-    if (failure != null) {
-      showMessageDialogue(context, failure.message);
-    }
-  }
-
-  void handleUserLogin(isUserloggedIn) {
-    if (isUserloggedIn) {
-      showSnackbar(context, Text('Logged in successfully'));
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MarketHomePage()),
-          (Route<dynamic> route) => false);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loginViewModel.start();
-    screenStateSub = loginViewModel.screenStatusStreamController.stream
-        .listen(handleScreenStatus);
-    failureSub =
-        loginViewModel.failureStreamController.stream.listen(handleFailure);
-    logInSub =
-        loginViewModel.isUserLoggedInController.stream.listen(handleUserLogin);
-  }
-
-  @override
-  void dispose() {
-    screenStateSub.cancel();
-    failureSub.cancel();
-    logInSub.cancel();
-    super.dispose();
+  void handleUserLogin() {
+    showSnackbar(context, Text('Logged in successfully'));
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => MarketHomePage()),
+        (Route<dynamic> route) => false);
   }
 
   Form buildForm() {
@@ -146,8 +92,31 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
+  Widget _buildLoginButton() {
+    final state = ref.watch(authProvider);
+    if (state is AuthLoadingState) {
+      return Center(child: CircularProgressIndicator());
+    } else if (state is AuthErrorState) {
+      return MyErrorWidget(failure: state.failure, onRetry: submitForm);
+    } else {
+      // initial - loaded
+      return RoundedButton(
+        onPressed: submitForm,
+        title: 'Log in',
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(authProvider, (previous, next) {
+      if (next is AuthLoadedState) {
+        showSnackbar(context, Text('Logged in successfully'));
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => MarketHomePage()),
+            (Route<dynamic> route) => false);
+      }
+    });
     return Scaffold(
       body: GestureDetector(
         onTap: Platform.isWindows
@@ -180,10 +149,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      RoundedButton(
-                        onPressed: submitForm,
-                        title: 'Log in',
-                      ),
+                      _buildLoginButton(),
                       SizedBox(height: 15),
                       Center(
                           child: Text(
