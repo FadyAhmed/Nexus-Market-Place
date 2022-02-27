@@ -37,6 +37,12 @@ class ItemCard extends StatelessWidget {
   Widget _buildPopUpMenuButton() {
     return Consumer(
       builder: (context, ref, child) {
+        // if i put the showDialog code with the logic below, it causes an error
+        ref.listen(itemsDeleteProvider, (previous, next) {
+          if (next is ItemDeleteErrorState && next.deletedItemId == itemId) {
+            showMessageDialogue(context, next.failure.message);
+          }
+        });
         final state = ref.watch(itemsDeleteProvider);
         if (state is ItemDeleteInitialState) {
           return child!;
@@ -52,7 +58,6 @@ class ItemCard extends StatelessWidget {
           );
         } else if (state is ItemDeleteErrorState) {
           if (state.deletedItemId != itemId) return child!;
-          showMessageDialogue(context, state.failure.message);
           return child!;
         } else {
           return child!;
