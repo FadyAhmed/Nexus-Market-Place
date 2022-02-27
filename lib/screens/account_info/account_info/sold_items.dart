@@ -1,42 +1,32 @@
+import 'package:dio/dio.dart';
 import 'package:ds_market_place/components/UI/detailed_item_card.dart';
 import 'package:ds_market_place/components/UI/grey_bar.dart';
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
-import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/domain/failure.dart';
-import 'package:ds_market_place/helpers/exceptions.dart';
-import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/transaction.dart';
-import 'package:ds_market_place/providers/transactions_provider.dart';
-import 'package:ds_market_place/view_models/account_info_view_model.dart';
+import 'package:ds_market_place/providers.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-class SoldItemsScreen extends StatefulWidget {
+class SoldItemsScreen extends ConsumerStatefulWidget {
   const SoldItemsScreen({Key? key}) : super(key: key);
 
   @override
   _SoldItemsScreenState createState() => _SoldItemsScreenState();
 }
 
-class _SoldItemsScreenState extends State<SoldItemsScreen> {
-  AccountInfoViewModel accountInfoViewModel = GetIt.I();
-
-  @override
-  void initState() {
-    super.initState();
-    accountInfoViewModel.getMySoldItems();
-  }
-
-  @override
-  void dispose() {
-    accountInfoViewModel.clearFailure();
-    super.dispose();
-  }
-
+class _SoldItemsScreenState extends ConsumerState<SoldItemsScreen> {
   Widget buildList(List<Transaction> transactions) {
+    assert(
+      transactions.first.buyerStoreName != null,
+      'transaction should have a buyer store name',
+    );
+    if (transactions.isEmpty) {
+      return GreyBar('You haven\'t sold any item yet.');
+    }
     return ListView.builder(
+      reverse: true,
       itemCount: transactions.length,
       itemBuilder: (context, index) {
         Transaction transaction = transactions[index];
@@ -59,38 +49,21 @@ class _SoldItemsScreenState extends State<SoldItemsScreen> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: accountInfoViewModel.getMySoldItems,
+      onRefresh: () async => ref.refresh(soldItemsProvider),
       child: Scaffold(
-        body: StreamBuilder<Failure?>(
-          stream: accountInfoViewModel.failureController.stream,
-          builder: (context, snapshot) {
-            if (snapshot.data != null) {
-              return Center(
-                child: MyErrorWidget(
-                  failure: snapshot.data!,
-                  onRetry: accountInfoViewModel.getMySoldItems,
-                ),
-              );
-            }
-            return StreamBuilder<bool>(
-              stream: accountInfoViewModel.gettingLoadingController.stream,
-              builder: (context, snapshot) {
-                if (snapshot.data ?? false) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                return StreamBuilder<List<Transaction>>(
-                  stream: accountInfoViewModel.transactionsController.stream,
-                  builder: (context, snapshot) {
-                    List<Transaction>? transactions = snapshot.data;
-                    if (transactions == null || transactions.isEmpty) {
-                      return GreyBar('You haven\'t sold any item yet.');
-                    }
-                    return buildList(transactions);
-                  },
-                );
-              },
-            );
-          },
+        body: Center(
+          child: ref.watch(soldItemsProvider).when(
+                data: buildList,
+                error: (err, _) {
+                  if (err is DioError) {
+                    return MyErrorWidget(
+                      failure: err.failure,
+                      onRetry: () => ref.refresh(soldItemsProvider),
+                    );
+                  }
+                },
+                loading: () => CircularProgressIndicator(),
+              ),
         ),
       ),
     );

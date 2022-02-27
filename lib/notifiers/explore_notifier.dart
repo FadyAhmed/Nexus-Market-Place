@@ -1,3 +1,4 @@
+import 'package:ds_market_place/data/requests.dart';
 import 'package:ds_market_place/domain/repository.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/states/explore_state.dart';
@@ -51,5 +52,38 @@ class ExploreNotifier extends StateNotifier<ExploreState> {
     return currentState.storeItems
         .where((item) => item.name.startsWith(term))
         .toList();
+  }
+
+  void addStoreItemToState(StoreItem item) {
+    if (state is ExploreLoadedState) {
+      state = (state as ExploreLoadedState).copyWith(
+        storeItems: [...(state as ExploreLoadedState).storeItems, item],
+      );
+    }
+  }
+
+  void removeItemFromState(String id) {
+    if (state is! ExploreLoadedState) return;
+    final currentState = state as ExploreLoadedState;
+    if (currentState.storeItems.any((item) => item.id == id)) return;
+    List<StoreItem> items =
+        currentState.storeItems.where((item) => item.id != id).toList();
+    state = ExploreLoadedState(storeItems: items);
+  }
+
+  void editItemInState(String id, EditStoreItemRequest request) {
+    if (state is ExploreLoadedState) {
+      final currentState = state as ExploreLoadedState;
+      List<StoreItem> items = currentState.storeItems.map((item) {
+        if (item.id != id) return item;
+        item.name = request.name ?? item.name;
+        item.description = request.description ?? item.description;
+        item.amount = request.amount ?? item.amount;
+        item.price = request.price ?? item.price;
+        item.imageLink = request.imageLink ?? item.imageLink;
+        return item;
+      }).toList();
+      state = ExploreLoadedState(storeItems: items);
+    }
   }
 }

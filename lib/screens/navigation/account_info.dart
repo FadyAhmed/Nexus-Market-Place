@@ -1,20 +1,17 @@
+import 'package:dio/dio.dart';
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
-import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/models/profile.dart';
-import 'package:ds_market_place/providers/users_provider.dart';
+import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/screens/account_info/account_info/acc_info_containre.dart';
 import 'package:ds_market_place/screens/account_info/reports_screens/reports_container.dart';
 import 'package:ds_market_place/screens/account_info/wallet.dart';
-import 'package:ds_market_place/screens/navigation/inventory.dart';
 import 'package:ds_market_place/screens/welcome_screen.dart';
-import 'package:ds_market_place/view_models/menu_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AccountInfoScreen extends StatefulWidget {
+class AccountInfoScreen extends ConsumerStatefulWidget {
   final Function navToInventoryScreen;
   const AccountInfoScreen({Key? key, required this.navToInventoryScreen})
       : super(key: key);
@@ -44,9 +41,7 @@ ListTile itemTile(BuildContext context,
       ));
 }
 
-class _AccountInfoScreenState extends State<AccountInfoScreen> {
-  MenuViewModel menuViewModel = GetIt.I();
-
+class _AccountInfoScreenState extends ConsumerState<AccountInfoScreen> {
   Widget buildProfile(BuildContext context, Profile profile) {
     return Row(
       children: [
@@ -80,56 +75,32 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    menuViewModel.getProfile();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(150),
-            child: Container(
-                padding: const EdgeInsets.only(top: 16, left: 25),
-                height: 130,
-                color: Theme.of(context).primaryColor,
-                child: StreamBuilder<Failure?>(
-                  stream: menuViewModel.failureController.stream,
-                  builder: (context, snapshot) {
-                    if (snapshot.data != null) {
-                      return Center(
-                        child: MyErrorWidget(
-                          failure: snapshot.data!,
-                          onRetry: menuViewModel.getProfile,
-                        ),
-                      );
-                    }
-                    return StreamBuilder<bool>(
-                      stream: menuViewModel.gettingLoadingController.stream,
-                      builder: (context, snapshot) {
-                        if (snapshot.data ?? false) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                          );
-                        }
-                        return StreamBuilder<Profile>(
-                          stream: menuViewModel.profileController.stream,
-                          builder: (context, snapshot) {
-                            Profile? profile = snapshot.data;
-                            if (profile != null) {
-                              return buildProfile(context, profile);
-                            } else {
-                              return Container();
-                            }
-                          },
+          preferredSize: const Size.fromHeight(150),
+          child: Container(
+            padding: const EdgeInsets.only(top: 16, left: 25),
+            height: 130,
+            color: Theme.of(context).primaryColor,
+            child: Center(
+              child: ref.watch(accountInfoProvider).when(
+                    data: (profile) => buildProfile(context, profile),
+                    error: (err, errStack) {
+                      if (err is DioError) {
+                        return MyErrorWidget(
+                          failure: err.failure,
+                          onRetry: () => ref.refresh(accountInfoProvider),
                         );
-                      },
-                    );
-                  },
-                ))),
+                      }
+                    },
+                    loading: () => CircularProgressIndicator(
+                      color: Colors.grey,
+                    ),
+                  ),
+            ),
+          ),
+        ),
         body: Padding(
           padding: const EdgeInsets.only(left: 40.0),
           child: ListView(

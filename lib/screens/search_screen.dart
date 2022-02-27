@@ -3,10 +3,8 @@ import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/screens/explore/purchase_item.dart';
-import 'package:ds_market_place/view_models/search_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -16,8 +14,6 @@ class SearchScreen extends ConsumerStatefulWidget {
 }
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
-  SearchViewModel searchViewModel = GetIt.I();
-
   final TextEditingController _termController = TextEditingController();
   String? _errorText;
   late List<StoreItem> storeItems;

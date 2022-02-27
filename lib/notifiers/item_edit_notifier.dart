@@ -48,6 +48,7 @@ class ItemEditNotifier extends StateNotifier<ItemEditState> {
       (failure) => state = ItemEditErrorState(failure: failure),
       (item) {
         ref.read(storeItemsListProvider.notifier).addStoreItemToState(item);
+        ref.read(exploreProvider.notifier).addStoreItemToState(item);
         state = ItemEditLoadedState();
       },
     );
@@ -60,6 +61,7 @@ class ItemEditNotifier extends StateNotifier<ItemEditState> {
       (failure) => state = ItemEditErrorState(failure: failure),
       (_) {
         ref.read(storeItemsListProvider.notifier).editItemInState(id, request);
+        ref.read(exploreProvider.notifier).editItemInState(id, request);
         state = ItemEditLoadedState();
       },
     );
