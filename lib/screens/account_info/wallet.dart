@@ -3,22 +3,13 @@ import 'dart:io';
 
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
-import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/components/UI/text_form_field_class.dart';
-import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/data/requests.dart';
-import 'package:ds_market_place/helpers/exceptions.dart';
-import 'package:ds_market_place/helpers/functions.dart';
-import 'package:ds_market_place/models/profile.dart';
 import 'package:ds_market_place/providers.dart';
-import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:ds_market_place/states/balance_state.dart';
-import 'package:ds_market_place/view_models/wallet_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
 enum TransactionType { withdraw, deposit }
 
@@ -32,9 +23,9 @@ class WalletScreen extends ConsumerStatefulWidget {
 final _formKey = GlobalKey<FormState>();
 
 class _WalletScreenState extends ConsumerState<WalletScreen> {
-  TextEditingController _amountController = TextEditingController();
-  TextEditingController _cardNumberController = TextEditingController();
-  TextEditingController _cvvNumberController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _cardNumberController = TextEditingController();
+  final TextEditingController _cvvNumberController = TextEditingController();
 
   TransactionType? _transactionType = TransactionType.deposit;
 

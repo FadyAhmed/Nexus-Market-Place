@@ -1,6 +1,4 @@
 import 'package:ds_market_place/components/UI/item_card.dart';
-import 'package:ds_market_place/main.dart' as app;
-import 'package:ds_market_place/screens/navigation/explore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -30,7 +28,7 @@ void main() {
     await _navigateToIInventoryScreen(tester);
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
-    List<String> keys = ['name', 'amount', 'price', 'description', 'link'];
+    // List<String> keys = ['name', 'amount', 'price', 'description', 'link'];
     await tester.tap(find.byKey(const Key('name')));
     await tester.enterText(find.byKey(const Key('name')), 'test item 1');
     await tester.tap(find.byKey(const Key('amount')));

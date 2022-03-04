@@ -1,6 +1,5 @@
 import 'package:ds_market_place/globals.dart' as globals;
 import 'package:ds_market_place/main.dart' as app;
-import 'package:ds_market_place/screens/navigation/explore.dart';
 import 'package:ds_market_place/screens/welcome_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';

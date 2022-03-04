@@ -8,7 +8,7 @@ import 'package:riverpod/riverpod.dart';
 class StoreItemListNotifier extends StateNotifier<StoreItemListState> {
   StoreItemListNotifier() : super(StoreItemListInitialState());
 
-  void getAllStoreItemsFromMyStore() async {
+  Future<void> getAllStoreItemsFromMyStore() async {
     state = StoreItemListLoadingState();
     final response = await GetIt.I<Repository>().getAllStoreItemsFromMyStore();
     response.fold(

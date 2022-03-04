@@ -1,6 +1,5 @@
 import 'package:ds_market_place/components/UI/bottom_nav_bar.dart';
 import 'package:ds_market_place/constants.dart';
-import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/screens/navigation/account_info.dart';
 import 'package:ds_market_place/screens/navigation/explore.dart';
 import 'package:ds_market_place/screens/navigation/inventory.dart';
@@ -64,8 +63,6 @@ class _MarketHomePageState extends State<MarketHomePage> {
                     onPressed: () async {
                       await Navigator.of(context).push(
                           MaterialPageRoute(builder: (ctx) => SearchScreen()));
-                      Provider.of<StoresProvider>(context, listen: false)
-                          .clearSearchItems();
                     },
                     icon: const Icon(Icons.search))
               ],

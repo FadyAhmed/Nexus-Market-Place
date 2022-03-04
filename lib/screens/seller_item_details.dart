@@ -1,28 +1,16 @@
-import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
-import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/table_row.dart';
 import 'package:ds_market_place/constants/enums.dart';
-import 'package:ds_market_place/helpers/exceptions.dart';
-import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers.dart';
-import 'package:ds_market_place/providers/inventories_provider.dart';
-import 'package:ds_market_place/providers/stores_provider.dart';
 import 'package:ds_market_place/states/inventory_items_list_state.dart';
 import 'package:ds_market_place/states/item_delete_state.dart';
 import 'package:ds_market_place/states/store_items_list_state.dart';
-import 'package:ds_market_place/view_models/item_details_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
-import '../constants.dart';
 import 'edit_item_details.dart';
 
 class OnSaleItemDetailsScreen extends ConsumerStatefulWidget {

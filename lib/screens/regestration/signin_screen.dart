@@ -1,31 +1,18 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
-import 'package:dio/dio.dart';
-import 'package:ds_market_place/components/UI/circular-loading.dart';
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/components/UI/show_snackbar.dart';
 import 'package:ds_market_place/components/UI/text_field.dart';
 import 'package:ds_market_place/constants.dart';
-import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/data/requests.dart';
-import 'package:ds_market_place/data/rest_client.dart';
-import 'package:ds_market_place/domain/failure.dart';
-import 'package:ds_market_place/domain/repository.dart';
-import 'package:ds_market_place/helpers/exceptions.dart';
-import 'package:ds_market_place/helpers/functions.dart';
-import 'package:ds_market_place/models/login.dart';
 import 'package:ds_market_place/providers.dart';
-import 'package:ds_market_place/providers/authentication_provider.dart';
 import 'package:ds_market_place/screens/home_page_screen.dart';
 import 'package:ds_market_place/screens/regestration/signup_screen.dart';
 import 'package:ds_market_place/states/auth_state.dart';
-import 'package:ds_market_place/view_models/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   @override

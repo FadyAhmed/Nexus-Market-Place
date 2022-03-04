@@ -12,7 +12,6 @@ import 'package:ds_market_place/screens/seller_item_details.dart';
 import 'package:ds_market_place/screens/store/select_item_to_sell.dart';
 import 'package:ds_market_place/states/item_delete_state.dart';
 import 'package:ds_market_place/states/store_items_list_state.dart';
-import 'package:ds_market_place/view_models/store_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
@@ -25,8 +24,6 @@ class SellScreen extends ConsumerStatefulWidget {
 }
 
 class _SellScreenState extends ConsumerState<SellScreen> {
-  StoreViewModel storeViewModel = GetIt.I();
-
   late StreamSubscription removingLoadingSub;
 
   @override
@@ -91,7 +88,8 @@ class _SellScreenState extends ConsumerState<SellScreen> {
       }
     });
     return RefreshIndicator(
-      onRefresh: storeViewModel.getAllStoreItemsFromMyStore,
+      onRefresh:
+          ref.read(storeItemsListProvider.notifier).getAllStoreItemsFromMyStore,
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.of(context).push(

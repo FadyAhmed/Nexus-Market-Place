@@ -1,21 +1,12 @@
 import 'package:dio/dio.dart';
-import 'package:ds_market_place/components/UI/detailed_item_card.dart';
 import 'package:ds_market_place/components/UI/grey_bar.dart';
-import 'package:ds_market_place/components/UI/item_transaction_card.dart';
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
-import 'package:ds_market_place/constants/enums.dart';
 import 'package:ds_market_place/domain/failure.dart';
-import 'package:ds_market_place/helpers/exceptions.dart';
-import 'package:ds_market_place/helpers/functions.dart';
 import 'package:ds_market_place/models/user.dart';
 import 'package:ds_market_place/providers.dart';
-import 'package:ds_market_place/providers/users_provider.dart';
 import 'package:ds_market_place/screens/account_info/reports_screens/user_details.dart';
-import 'package:ds_market_place/view_models/user_reports_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 
 class UsersListScreen extends ConsumerStatefulWidget {
   const UsersListScreen({Key? key}) : super(key: key);

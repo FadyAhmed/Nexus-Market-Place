@@ -5,10 +5,8 @@ import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/domain/failure.dart';
 import 'package:ds_market_place/models/transaction.dart';
 import 'package:ds_market_place/providers.dart';
-import 'package:ds_market_place/view_models/account_info_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
 class PurchasedItemsScreen extends ConsumerStatefulWidget {
@@ -19,20 +17,6 @@ class PurchasedItemsScreen extends ConsumerStatefulWidget {
 }
 
 class _PurchasedItemsScreenState extends ConsumerState<PurchasedItemsScreen> {
-  AccountInfoViewModel accountInfoViewModel = GetIt.I();
-
-  @override
-  void initState() {
-    super.initState();
-    accountInfoViewModel.getMyPurchasedItems();
-  }
-
-  @override
-  void dispose() {
-    accountInfoViewModel.clearFailure();
-    super.dispose();
-  }
-
   Widget buildList(List<Transaction> transactions) {
     assert(
       transactions.first.sellerStoreName != null,
@@ -65,7 +49,10 @@ class _PurchasedItemsScreenState extends ConsumerState<PurchasedItemsScreen> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: accountInfoViewModel.getMyPurchasedItems,
+      onRefresh: () {
+        ref.refresh(purchasedItemsProvider);
+        return Future.value(null);
+      },
       child: Scaffold(
         body: Center(
           child: ref.watch(purchasedItemsProvider).when(

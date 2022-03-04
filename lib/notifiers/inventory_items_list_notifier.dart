@@ -8,7 +8,7 @@ import 'package:riverpod/riverpod.dart';
 class InventoryItemListNotifier extends StateNotifier<InventoryItemListState> {
   InventoryItemListNotifier() : super(InventoryItemListInitialState());
 
-  void getAllInventoryItems() async {
+  Future<void> getAllInventoryItems() async {
     state = InventoryItemListLoadingState();
     final response = await GetIt.I<Repository>().getAllInventoryItems();
     response.fold(

@@ -1,7 +1,6 @@
 import 'package:ds_market_place/components/UI/item_card.dart';
 import 'package:ds_market_place/main.dart' as app;
 import 'package:ds_market_place/screens/navigation/explore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

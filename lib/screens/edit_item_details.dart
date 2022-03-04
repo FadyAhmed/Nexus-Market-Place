@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:ds_market_place/components/UI/my_cached_img.dart';
 import 'package:ds_market_place/components/UI/my_error_widget.dart';
 import 'package:ds_market_place/components/UI/rounded_button.dart';
@@ -12,10 +10,8 @@ import 'package:ds_market_place/models/inventory_item.dart';
 import 'package:ds_market_place/models/store_item.dart';
 import 'package:ds_market_place/providers.dart';
 import 'package:ds_market_place/states/item_edit_state.dart';
-import 'package:ds_market_place/view_models/edit_item_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
 
 class EditItemDetails extends ConsumerStatefulWidget {
   final String submitButtonText;
@@ -168,68 +164,66 @@ class _EditItemDetailsState extends ConsumerState<EditItemDetails> {
             : "Confirm item details"),
         centerTitle: true,
       ),
-      body: Container(
-        child: Center(
-          child: Form(
-            autovalidateMode: AutovalidateMode.always,
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: ListView(
-                children: [
-                  const SizedBox(height: 5),
-                  Container(
-                    width: 150,
-                    height: 150,
-                    child: MyCachedImg(
-                      widget.inventoryItem?.imageLink ??
-                          widget.storeItem!.imageLink,
-                      150,
-                      150,
-                    ),
+      body: Center(
+        child: Form(
+          autovalidateMode: AutovalidateMode.always,
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: ListView(
+              children: [
+                const SizedBox(height: 5),
+                SizedBox(
+                  width: 150,
+                  height: 150,
+                  child: MyCachedImg(
+                    widget.inventoryItem?.imageLink ??
+                        widget.storeItem!.imageLink,
+                    150,
+                    150,
                   ),
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: fields.map((e) {
-                        return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: myTextFormField(
-                                key: e.key,
-                                context: context,
-                                textInputType: e.textInputType,
-                                obsecure: false,
-                                hint: e.hint,
-                                label: e.label,
-                                validator: e.validator,
-                                controller: e.controller));
-                      }).toList()),
-                  const SizedBox(height: 10),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Builder(builder: (context) {
-                      final button = RoundedButton(
-                        onPressed: submitEditItem,
-                        title: widget.submitButtonText,
+                ),
+                Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: fields.map((e) {
+                      return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: myTextFormField(
+                              key: e.key,
+                              context: context,
+                              textInputType: e.textInputType,
+                              obsecure: false,
+                              hint: e.hint,
+                              label: e.label,
+                              validator: e.validator,
+                              controller: e.controller));
+                    }).toList()),
+                const SizedBox(height: 10),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Builder(builder: (context) {
+                    final button = RoundedButton(
+                      onPressed: submitEditItem,
+                      title: widget.submitButtonText,
+                    );
+                    final state = ref.watch(itemEditProvider);
+                    if (state is ItemEditInitialState) {
+                      return button;
+                    } else if (state is ItemEditLoadingState) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (state is ItemEditErrorState) {
+                      return MyErrorWidget(
+                        failure: state.failure,
+                        onRetry: submitEditItem,
                       );
-                      final state = ref.watch(itemEditProvider);
-                      if (state is ItemEditInitialState) {
-                        return button;
-                      } else if (state is ItemEditLoadingState) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (state is ItemEditErrorState) {
-                        return MyErrorWidget(
-                          failure: state.failure,
-                          onRetry: submitEditItem,
-                        );
-                      } else {
-                        return button;
-                      }
-                    }),
-                  ),
-                  const SizedBox(height: 30)
-                ],
-              ),
+                    } else {
+                      return button;
+                    }
+                  }),
+                ),
+                const SizedBox(height: 30)
+              ],
             ),
           ),
         ),
