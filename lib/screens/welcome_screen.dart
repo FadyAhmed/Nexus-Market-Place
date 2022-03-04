@@ -3,6 +3,7 @@ import 'package:ds_market_place/components/UI/rounded_button.dart';
 import 'package:ds_market_place/screens/regestration/signin_screen.dart';
 import 'package:ds_market_place/screens/regestration/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../constants.dart';
 
@@ -30,7 +31,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 tag: 'logo',
                 child: Image.asset(
                   kLogo,
-                  height: 100,
+                  height: 100.h,
                   fit: BoxFit.fill,
                 ),
               ),
@@ -40,7 +41,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: Text(
                   'Market',
                   style: TextStyle(
-                    fontSize: 40.0,
+                    fontSize: 40.sp,
                     fontWeight: FontWeight.w900,
                     color: Colors.grey[900],
                   ),
@@ -48,36 +49,29 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ],
           ),
-          _loading
-              ? loading()
-              // register buttons
-              : Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      RoundedButton(
-                          title: 'Log In',
-                          onPressed: () => {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => SignInScreen(),
-                                  ),
-                                )
-                              }),
-                      const SizedBox(height: 10),
-                      RoundedButton(
-                          title: 'Register',
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => SignUpScreen()),
-                            );
-                          }),
-                    ],
-                  ),
-                ),
+          98.verticalSpace,
+          Column(
+            children: [
+              RoundedButton(
+                title: 'Log In',
+                onPressed: () => {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SignInScreen(),
+                    ),
+                  )
+                },
+              ),
+              46.verticalSpace,
+              RoundedButton(
+                  title: 'Register',
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SignUpScreen()),
+                    );
+                  }),
+            ],
+          ),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RoundedButton extends StatelessWidget {
   RoundedButton(
@@ -14,19 +15,23 @@ class RoundedButton extends StatelessWidget {
   final onPressed;
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      key: key != null ? Key(myKey!) : null,
-      onPressed: onPressed,
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 18),
-        textAlign: TextAlign.center,
+    return SizedBox(
+      width: 310.w,
+      height: 42.h,
+      child: ElevatedButton(
+        key: key != null ? Key(myKey!) : null,
+        onPressed: onPressed,
+        child: Text(
+          title,
+          style: const TextStyle(fontSize: 18),
+          textAlign: TextAlign.center,
+        ),
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            primary: color),
       ),
-      style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-          ),
-          primary: color),
     );
   }
 }

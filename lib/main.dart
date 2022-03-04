@@ -3,6 +3,7 @@ import 'package:ds_market_place/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'components/UI/dialog.dart';
 
@@ -18,14 +19,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Market Place',
-      theme: ThemeData(
-        primarySwatch: Colors.yellow,
-        scaffoldBackgroundColor: const Color(0xFFD6D6D6),
+    return ScreenUtilInit(
+      designSize: Size(411, 731),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: () => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        builder: (context, widget) {
+          ScreenUtil.setContext(context);
+          return MediaQuery(
+            //Setting font does not change with system font size
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: widget!,
+          );
+        },
+        title: 'Market Place',
+        theme: ThemeData(
+          primarySwatch: Colors.yellow,
+          scaffoldBackgroundColor: const Color(0xFFD6D6D6),
+        ),
+        home: const MyHomePage(title: 'Market Place'),
       ),
-      home: const MyHomePage(title: 'Market Place'),
     );
   }
 }
