@@ -23,7 +23,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const SizedBox(height: 15),
+          15.verticalSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -31,20 +31,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 tag: 'logo',
                 child: Image.asset(
                   kLogo,
-                  height: 100.h,
-                  fit: BoxFit.fill,
+                  height: 100.sp,
+                  fit: BoxFit.scaleDown,
                 ),
               ),
-              const SizedBox(width: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                child: Text(
-                  'Market',
-                  style: TextStyle(
-                    fontSize: 40.sp,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.grey[900],
-                  ),
+              20.horizontalSpace,
+              Text(
+                'Market',
+                style: TextStyle(
+                  fontSize: 40.sp,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.grey[900],
                 ),
               ),
             ],

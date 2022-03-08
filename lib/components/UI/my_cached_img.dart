@@ -19,11 +19,12 @@ class MyCachedImg extends StatelessWidget {
             imageUrl: imageLink,
             errorWidget: (context, _, __) => Image.asset(
               kLogo,
-              fit: BoxFit.scaleDown,
+              fit: BoxFit.contain,
             ),
-            fit: BoxFit.scaleDown,
+            fit: BoxFit.contain,
             width: width,
             height: height,
+            alignment: Alignment.centerLeft,
           );
   }
 }

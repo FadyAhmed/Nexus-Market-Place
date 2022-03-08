@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 TableRow tableRow(String title, String info, BuildContext context) {
   return TableRow(children: [
     Padding(
-      padding: const EdgeInsets.only(left: 35.0),
+      padding: EdgeInsets.only(left: 66.w),
       child: Text(title,
-          style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 18)),
+          style:
+              Theme.of(context).textTheme.caption!.copyWith(fontSize: 13.sp)),
     ),
     Padding(
-      padding: const EdgeInsets.only(left: 8.0),
-      child: Text(info, style: const TextStyle(fontSize: 18)),
+      padding: EdgeInsets.only(left: 40.w),
+      child: Text(info, style: TextStyle(fontSize: 13.sp)),
     ),
   ]);
 }

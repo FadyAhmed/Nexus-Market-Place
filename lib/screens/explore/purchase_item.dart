@@ -12,6 +12,7 @@ import 'package:ds_market_place/states/item_edit_state.dart';
 import 'package:ds_market_place/states/purchase_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PurchaseItemScreen extends ConsumerStatefulWidget {
   final StoreItem item;
@@ -52,14 +53,14 @@ class _PurchaseItemScreenState extends ConsumerState<PurchaseItemScreen> {
         tableRow("", "", context),
         TableRow(children: [
           Padding(
-            padding: const EdgeInsets.only(left: 35.0),
+            padding: EdgeInsets.only(left: 66.w),
             child: Text("Seller: ",
                 style: Theme.of(context).textTheme.caption!.copyWith(
-                      fontSize: 18,
+                      fontSize: 13.sp,
                     )),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0),
+            padding: EdgeInsets.only(left: 40.w),
             child: InkWell(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
@@ -70,7 +71,7 @@ class _PurchaseItemScreenState extends ConsumerState<PurchaseItemScreen> {
               },
               child: Text(item.storeName,
                   style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 13.sp,
                       color: Color(0xFF487E89),
                       fontWeight: FontWeight.w700)),
             ),
@@ -173,53 +174,63 @@ class _PurchaseItemScreenState extends ConsumerState<PurchaseItemScreen> {
         body: ListView(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.only(left: 33.w, top: 23.h, bottom: 59.h),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   MyCachedImg(
                     item.imageLink,
-                    MediaQuery.of(context).size.width / 3,
-                    100,
-                  )
+                    164.w,
+                    134.h,
+                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 40),
             _buildTable(),
-            const SizedBox(height: 50),
+            59.verticalSpace,
             if (item.storeName != globals.storeName)
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Center(
-                      child: Text("Amount",
-                          style: TextStyle(
-                              color: Colors.grey.shade700, fontSize: 20))),
+                    child: Text(
+                      "Amount",
+                      style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 18.sp,
+                      ),
+                    ),
+                  ),
+                  15.verticalSpace,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      RoundedButton(title: "-", onPressed: _decreaseAmount),
-                      const SizedBox(width: 20),
-                      Text(
-                        amount.toString(),
-                        style: const TextStyle(fontSize: 18),
+                      RoundedButton(
+                        title: "-",
+                        onPressed: _decreaseAmount,
+                        large: false,
                       ),
-                      const SizedBox(width: 20),
-                      RoundedButton(title: "+", onPressed: _increaseAmount),
+                      SizedBox(width: 8.w),
+                      ConstrainedBox(
+                        constraints: BoxConstraints(minWidth: 94.w),
+                        child: Text(
+                          amount.toString(),
+                          style: TextStyle(fontSize: 13.sp),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      RoundedButton(
+                        title: "+",
+                        onPressed: _increaseAmount,
+                        large: false,
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 15),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: _buildPurchaseButton(),
-                  ),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: _buildAddToMyStoreButton(),
-                  ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 22.h),
+                  _buildPurchaseButton(),
+                  SizedBox(height: 15.h),
+                  _buildAddToMyStoreButton(),
+                  SizedBox(height: 20.h),
                 ],
               )
           ],
