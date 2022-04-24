@@ -22,13 +22,44 @@ class PurchaseItemScreen extends ConsumerStatefulWidget {
   _PurchaseItemScreenState createState() => _PurchaseItemScreenState();
 }
 
-class _PurchaseItemScreenState extends ConsumerState<PurchaseItemScreen> {
+class _PurchaseItemScreenState extends ConsumerState<PurchaseItemScreen>
+    with TickerProviderStateMixin {
+  late AnimationController minusController;
+  late AnimationController plusController;
+  late AnimationController amountController;
   int amount = 1;
-  void _increaseAmount() => setState(() => amount++);
+  final Duration duration = Duration(milliseconds: 100);
+  TextStyle amountTextStyle = TextStyle(color: Colors.black);
 
-  void _decreaseAmount() {
+  @override
+  void initState() {
+    super.initState();
+    minusController = AnimationController(vsync: this, duration: duration);
+    plusController = AnimationController(vsync: this, duration: duration);
+    amountController = AnimationController(vsync: this, duration: duration);
+  }
+
+  void _increaseAmount() async {
+    setState(() {
+      amount++;
+      amountTextStyle = TextStyle(color: Colors.green);
+    });
+    await plusController.forward();
+    plusController.reverse();
+    setState(() {
+      amountTextStyle = TextStyle(color: Colors.black);
+    });
+  }
+
+  void _decreaseAmount() async {
     setState(() {
       if (amount - 1 >= 1) amount--;
+      amountTextStyle = TextStyle(color: Colors.red);
+    });
+    await minusController.forward();
+    minusController.reverse();
+    setState(() {
+      amountTextStyle = TextStyle(color: Colors.black);
     });
   }
 
@@ -135,6 +166,52 @@ class _PurchaseItemScreenState extends ConsumerState<PurchaseItemScreen> {
     );
   }
 
+  Widget _buildAmountWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ScaleTransition(
+          scale: Tween<double>(begin: 1.0, end: 1.25).animate(minusController),
+          child: RoundedButton(
+            title: "-",
+            onPressed: _decreaseAmount,
+            large: false,
+          ),
+        ),
+        SizedBox(width: 8.w),
+        ConstrainedBox(
+          constraints: BoxConstraints(minWidth: 94.w),
+          child: AnimatedDefaultTextStyle(
+            duration: duration,
+            style: amountTextStyle,
+            child: ScaleTransition(
+              scale:
+                  Tween<double>(begin: 1.0, end: 0.75).animate(minusController),
+              child: ScaleTransition(
+                scale: Tween<double>(begin: 1.0, end: 1.75)
+                    .animate(plusController),
+                child: Text(
+                  amount.toString(),
+                  style: TextStyle(fontSize: 13.sp),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(width: 8.w),
+        ScaleTransition(
+          scale: Tween<double>(begin: 1.0, end: 1.25).animate(plusController),
+          child: RoundedButton(
+            title: "+",
+            onPressed: _increaseAmount,
+            large: false,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     ref.listen(purchaseProvider, (previous, next) {
@@ -201,31 +278,7 @@ class _PurchaseItemScreenState extends ConsumerState<PurchaseItemScreen> {
                     ),
                   ),
                   15.verticalSpace,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      RoundedButton(
-                        title: "-",
-                        onPressed: _decreaseAmount,
-                        large: false,
-                      ),
-                      SizedBox(width: 8.w),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(minWidth: 94.w),
-                        child: Text(
-                          amount.toString(),
-                          style: TextStyle(fontSize: 13.sp),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      SizedBox(width: 8.w),
-                      RoundedButton(
-                        title: "+",
-                        onPressed: _increaseAmount,
-                        large: false,
-                      ),
-                    ],
-                  ),
+                  _buildAmountWidget(),
                   SizedBox(height: 22.h),
                   _buildPurchaseButton(),
                   SizedBox(height: 15.h),
